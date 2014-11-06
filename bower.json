@@ -4,7 +4,8 @@
   "dependencies": {
     "angular": "~1.2.0",
     "json3": "~3.3.1",
-    "es5-shim": "~3.1.0"
+    "es5-shim": "~3.1.0",
+    "bootswatch-dist": "3.3.0-simplex"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.0",
