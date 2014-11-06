@@ -9,4 +9,7 @@
  * Main module of the application.
  */
 angular
-  .module('gulfstreamApp', []);
+  .module('gulfstreamApp', [
+    'ui.router',
+    'ngResource'
+  ]);
