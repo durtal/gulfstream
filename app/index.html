@@ -22,9 +22,37 @@
 
     <!-- Add your site or application content here -->
     <div class="container">
-        <div class="header">
+        <div class="header visible-xs">
+            <div class="navbar navbar-inverse">
+                <div class="navbar-header">
+                    <a href="http://durtal.github.io" class="navbar-brand">durtal.github.io</a>
+                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#nav-menu">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="navbar-collapse collapse" id="nav-menu">
+                <ul class="nav navbar-nav">
+                    <li data-toggle="collapse" data-target="#nav-menu">
+                        <a ui-sref="home">Home</a>
+                    </li>
+                    <li data-toggle="collapse" data-target="#nav-menu">
+                        <a ui-sref="about">About</a>
+                    </li>
+                    <li data-toggle="collapse" data-target="#nav-menu">
+                        <a ui-sref="ratings">Ratings</a>
+                    </li>
+                    <li data-toggle="collapse" data-target="#nav-menu">
+                        <a ui-sref="track_profiles">Track Profiles</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="header hidden-xs">
             <ul class="nav nav-pills pull-left">
-                <li><a href="http://durtal.github.io">back to RcappeR</a></li>
+                <li><a href="http://durtal.github.io" target="_blank">back to durtal.github.io</a></li>
                 <li ui-sref-active="active"><a ui-sref="home">Home</a></li>
                 <li ui-sref-active="active"><a ui-sref="about">About</a></li>
             </ul>
