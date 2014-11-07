@@ -13,7 +13,9 @@ angular
     'ui.router',
     'ngResource'
   ])
-  .config(function($stateProvider, $urlRouterProvider) {
+  .config(['$stateProvider', '$urlRouterProvider',
+    function($stateProvider, $urlRouterProvider) {
+
       $urlRouterProvider.otherwise('/home');
 
       $stateProvider
@@ -25,5 +27,13 @@ angular
           .state('about', {
               url: '/about',
               templateUrl: 'views/about.html',
+          })
+          .state('ratings', {
+              url: '/ratings',
+              template: '<h1>Hello</h1>'
+          })
+          .state('track_profiles', {
+              url: '/track_profiles',
+              template: '<h2>Oh Hello Again</h2>'
           });
-  });
+  }]);
