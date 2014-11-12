@@ -30,10 +30,18 @@ angular
           })
           .state('ratings', {
               url: '/ratings',
-              template: '<h1>Hello</h1>'
+              templateUrl: 'views/ratings.html'
           })
           .state('track_profiles', {
-              url: '/track_profiles',
-              template: '<h2>Oh Hello Again</h2>'
+              url: '/track-profiles',
+              templateUrl: 'views/track_profiles.html'
+          })
+          .state('track_profiles.5fturf', {
+              url: '/5-furlong-races',
+              templateUrl: 'views/track_profiles.5fturf.html'
+          })
+          .state('track_profiles.111', {
+              url: '/111',
+              template: '<div class="container"><p>happy again</p></div>'
           });
   }]);

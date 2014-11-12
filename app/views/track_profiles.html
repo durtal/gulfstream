@@ -1,0 +1,49 @@
+<div class="container">
+    <h1>Track Profiles</h1>
+
+    <p>Track/Distance profiles are available for all race distances at Gulfstream Park.
+    Some distances race over both turf and dirt, where this is the case, dirt is covered
+    first, turf second, under their own headings.  Subjects for analysis include:</p>
+    <ul>
+        <li>Draw</li>
+        <li>Pace (via Finishing Speed %'s)</li>
+        <li>Distance travelled (via Trakus data)</li>
+    </ul>
+    <p>The content behind each tab, is dynamically created using the
+        <a href="http://rmarkdown.rstudio.com" target="_blank">rmarkdown</a> package,
+        which means the document stays consistent, but any analysis (code output) is updated to
+        include the latest data from races - the date shows when the content was last updated.</p>
+    <ul class="nav nav-tabs nav-default">
+        <li ui-sref-active="active">
+            <a ui-sref="track_profiles.5fturf">5f</a>
+        </li>
+        <li ui-sref-active="active">
+            <a ui-sref="track_profiles.111">5.5f</a>
+        </li>
+        <li ui-sref-active="active">
+            <a ui-sref="track_profiles.5fturf">6f</a>
+        </li>
+        <li ui-sref-active="active">
+            <a ui-sref="track_profiles.111">6.5f</a>
+        </li>
+        <li ui-sref-active="active">
+            <a ui-sref="track_profiles.111">7f</a>
+        </li>
+        <li ui-sref-active="active">
+            <a ui-sref="track_profiles.5fturf">7.5f</a>
+        </li>
+        <li ui-sref-active="active">
+            <a ui-sref="track_profiles.111">8f</a>
+        </li>
+        <li ui-sref-active="active">
+            <a ui-sref="track_profiles.5fturf">8.5f</a>
+        </li>
+        <li ui-sref-active="active">
+            <a ui-sref="track_profiles.111">9f</a>
+        </li>
+        <li ui-sref-active="active">
+            <a ui-sref="track_profiles.5fturf">11f, 11.5f, 12f</a>
+        </li>
+    </ul>
+    <div ui-view></div>
+</div>

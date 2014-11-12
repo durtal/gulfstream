@@ -1,0 +1,58 @@
+<div id="tattersalls-sales" class="section level3">
+<h3>Tattersalls sales</h3>
+<p>A quick look at Tattersalls sales over the last 5 years. Load libraries <code>rBloodstock</code>, <code>dplyr</code> and <code>ggplot2</code>.</p>
+<pre class="r"><code>library(rBloodstock)
+library(dplyr)
+library(ggplot2)</code></pre>
+<p>Load all 5 datasets (1 for each year), combine them into one large dataset</p>
+<pre class="r"><code>data(tatts_2010, tatts_2011, tatts_2012, tatts_2013, tatts_2014)
+tattersalls &lt;- rbind(tatts_2010, tatts_2011, tatts_2012, tatts_2013, tatts_2014)
+rm(tatts_2010, tatts_2011, tatts_2012, tatts_2013, tatts_2014)</code></pre>
+<p>The new <code>tattersalls</code> dataset has 33322 rows and 12 columns, the columns are: <em>year, sale, sale_name, lot_no, horse, sex, color, sire, dam, seller, buyer, price</em>.</p>
+<p>A few summaries, first number of lots each year</p>
+<pre class="r"><code>tattersalls %&gt;%
+    group_by(year) %&gt;%
+    summarise(n = n())</code></pre>
+<pre><code>## Source: local data frame [5 x 2]
+## 
+##   year    n
+## 1 2010 8346
+## 2 2011 7488
+## 3 2012 7739
+## 4 2013 8280
+## 5 2014 1469</code></pre>
+<p>Next a look at the 20 buyers with the highest mean purchase (with at least 50 purchases):</p>
+<pre class="r"><code>tattersalls %&gt;%
+    group_by(buyer) %&gt;%
+    summarise(n = n(),
+              mean = mean(price, na.rm=T),
+              sd = sd(price, na.rm=T),
+              min = min(price, na.rm=T),
+              max = max(price, na.rm=T)) %&gt;%
+    filter(n &gt;= 50) %&gt;%
+    arrange(desc(mean)) %&gt;%
+    head(20)</code></pre>
+<pre><code>## Source: local data frame [20 x 6]
+## 
+##                            buyer   n      mean        sd   min     max
+## 1                   demi o'byrne  50 344060.00 267094.37  6000 1300000
+## 2       john ferguson bloodstock 240 183129.17 273817.36 25000 4000000
+## 3        shadwell estate company 201 156452.74 131199.46 35000 1100000
+## 4     c gordon-watson bloodstock 229 142248.03 194525.93   800 1700000
+## 5       david redvers bloodstock 183 122916.39 231336.37  5000 2500000
+## 6           mccalmont bloodstock  50 120390.00 208791.74  6500 1150000
+## 7         john warren bloodstock  93 118645.16  95735.10 11000  600000
+## 8             cheveley park stud  56 112732.14  99345.04 32000  535000
+## 9                   dwayne woods  60  95391.67  78483.30  3000  450000
+## 10          blandford bloodstock 399  77259.65 102672.45   800  925000
+## 11     richard frisby bloodstock  79  77018.99  87915.26  2000  370000
+## 12     anthony stroud bloodstock 194  72798.97  70492.26   800  380000
+## 13     brian grassick bloodstock  50  66064.00  63530.76  2200  360000
+## 14 peter &amp; ross doyle bloodstock 337  64910.09  68904.44   800  800000
+## 15     stephen hillen bloodstock 160  64431.25 171809.90  3000 2100000
+## 16         hugo merry bloodstock 129  63468.22  90082.13  1700  675000
+## 17               jeremy brummitt  55  60072.73  80168.54 10000  475000
+## 18               sackvilledonald 194  58110.82  57870.58  2500  460000
+## 19  kern/lillingston association 117  53904.27  61999.16  3800  460000
+## 20                   bba ireland 574  49861.67 205220.74   800 4700000</code></pre>
+</div>
