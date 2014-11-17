@@ -36,12 +36,45 @@ angular
               url: '/track-profiles',
               templateUrl: 'views/track_profiles.html'
           })
-          .state('track_profiles.5fturf', {
-              url: '/5-furlong-races',
-              templateUrl: 'views/track_profiles.5fturf.html'
+          .state('track_profiles.5f', {
+              url: '/5-furlong-profile',
+              templateUrl: 'views/track_profiles/track_profiles.5f.html'
           })
-          .state('track_profiles.111', {
-              url: '/111',
-              template: '<div class="container"><p>happy again</p></div>'
-          });
+          .state('track_profiles.5-5f', {
+              url: '/5.5-furlong-profile',
+              templateUrl: 'views/track_profiles/track_profiles.5-5f.html'
+          })
+          .state('track_profiles.6f', {
+              url: '/6-furlong-profile',
+              templateUrl: 'views/track_profiles/track_profiles.5f.html'
+          })
+          .state('track_profiles.6-5f', {
+              url: '/6.5-furlong-profile',
+              templateUrl: 'views/track_profiles/track_profiles.5f.html'
+          })
+          .state('track_profiles.7f', {
+              url: '/7-furlong-profile',
+              templateUrl: 'views/track_profiles/track_profiles.5f.html'
+          })
+          .state('track_profiles.7-5f', {
+              url: '/7.5-furlong-profile',
+              templateUrl: 'views/track_profiles/track_profiles.5f.html'
+          })
+          .state('track_profiles.8f', {
+              url: '/8-furlong-profile',
+              templateUrl: 'views/track_profiles/track_profiles.5f.html'
+          })
+          .state('track_profiles.8-5f', {
+              url: '/8.5-furlong-profile',
+              templateUrl: 'views/track_profiles/track_profiles.5f.html'
+          })
+          .state('track_profiles.9f', {
+              url: '/9-furlong-profile',
+              templateUrl: 'views/track_profiles/track_profiles.5f.html'
+          })
+          .state('track_profiles.11-12f', {
+              url: '/11-to-12-furlong-profile',
+              templateUrl: 'views/track_profiles/track_profiles.5f.html'
+          })
+;
   }]);

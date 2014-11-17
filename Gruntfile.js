@@ -382,6 +382,11 @@ module.exports = function (grunt) {
     ]);
   });
 
+  grunt.registerTask('trackprofiles', [
+    'clean:trackprofiles',
+    'copy:trackprofiles'
+  ]);
+
   grunt.registerTask('server', 'DEPRECATED TASK. Use the "serve" task instead', function (target) {
     grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
     grunt.task.run(['serve:' + target]);
@@ -397,8 +402,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
-    'clean:trackprofiles',
-    'copy:trackprofiles',
+    'trackprofiles',
     'wiredep',
     'useminPrepare',
     'concurrent:dist',
