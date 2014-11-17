@@ -142,7 +142,8 @@ module.exports = function (grunt) {
           ]
         }]
       },
-      server: '.tmp'
+      server: '.tmp',
+      trackprofiles: ['<%= yeoman.app %>/views/track_profiles/track_profiles.*.html']
     },
 
     // Add vendor prefixed styles
@@ -322,6 +323,20 @@ module.exports = function (grunt) {
         cwd: '<%= yeoman.app %>/styles',
         dest: '.tmp/styles/',
         src: '{,*/}*.css'
+      },
+      trackprofiles: {
+          expand: true,
+          cwd: '<%= yeoman.app %>/views/track_profiles/',
+          dest: '<%= yeoman.app %>/views/track_profiles/',
+          src: '*.html',
+          rename: function(dest, src) {
+              var name = 'track_profiles';
+              if(src.substring(0, name.length) !== name) {
+                  return dest.concat(name.concat('.'.concat(src)));
+              } else {
+                  return dest.concat(src);
+              }
+          }
       }
     },
 
@@ -357,6 +372,8 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'clean:trackprofiles',
+      'copy:trackprofiles',
       'wiredep',
       'concurrent:server',
       'autoprefixer',
@@ -380,6 +397,8 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
+    'clean:trackprofiles',
+    'copy:trackprofiles',
     'wiredep',
     'useminPrepare',
     'concurrent:dist',
