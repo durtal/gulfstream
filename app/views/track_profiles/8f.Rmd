@@ -1,0 +1,47 @@
+---
+output: html_fragment
+---
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+## This code unfortunately can't be run by others.
+library(tomhes)
+library(dplyr, warn.conflicts = FALSE, quietly = TRUE)
+library(ggplot2)
+library(reshape)
+
+mongo <- mongo.create()
+if(mongo.is.connected(mongo)) {
+    buf <- mongo.bson.buffer.create()
+    mongo.bson.buffer.append(buf, name = "details.dist", value = 8)
+    query <- mongo.bson.from.buffer(buf = buf)
+    count <- mongo.count(mongo = mongo, ns = "gulf.races", query = query)
+    cursor <- mongo.find(mongo = mongo, ns = "gulf.races", query = query)
+    output <- vector("list", count)
+    i <- 1
+    while(mongo.cursor.next(cursor)) {
+        output[[i]] <- mongo.bson.to.list(mongo.cursor.value(cursor))
+        i <- i + 1
+    }
+    df <- gulf_races_df(races = output)
+}
+rm(buf, count, cursor, i, output, query)
+fill = "#D9220F"
+dirt <- filter(df, surf == "dirt")
+dirtwnrs <- filter(dirt, pos == 1)
+turf <- filter(df, surf == "turf")
+turfwnrs <- filter(turf, pos == 1)
+```
+_Last Updated `r Sys.Date()`_
+
+# Dirt
+
+This is the track profile for all `r paste(unique(dirt$dist), collapse = ", ")` furlong `r paste(unique(dirt$surf), collapse = ", ")` races at Gulfstream Park, there are **`r length(unique(dirt$date_race))`** races in the dataset, contested by **`r length(dirt$date)`** runners.  The oldest race in the dataset was run on **`r min(as.Date(dirt$date, format = "%d/%m/%y"))`** while the most recent was run on **`r max(as.Date(dirt$date, format = "%d/%m/%y"))`**.
+
+# Turf
+
+This is the track profile for all `r paste(unique(turf$dist), collapse = ", ")` furlong `r paste(unique(turf$surf), collapse = ", ")` races at Gulfstream Park, there are **`r length(unique(turf$date_race))`** races in the dataset, contested by **`r length(turf$date)`** runners.  The oldest race in the dataset was run on **`r min(as.Date(turf$date, format = "%d/%m/%y"))`** while the most recent was run on **`r max(as.Date(turf$date, format = "%d/%m/%y"))`**.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+mongo.destroy(mongo)
+rm(list=ls())
+```

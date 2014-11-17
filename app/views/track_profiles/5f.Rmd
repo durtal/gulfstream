@@ -1,0 +1,126 @@
+---
+output: html_fragment
+---
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+## This code unfortunately can't be run by others.
+library(tomhes)
+library(dplyr, warn.conflicts = FALSE, quietly = TRUE)
+library(ggplot2)
+library(reshape)
+
+mongo <- mongo.create()
+if(mongo.is.connected(mongo)) {
+    buf <- mongo.bson.buffer.create()
+    mongo.bson.buffer.append(buf, name = "details.dist", value = 5)
+    query <- mongo.bson.from.buffer(buf = buf)
+    count <- mongo.count(mongo = mongo, ns = "gulf.races", query = query)
+    cursor <- mongo.find(mongo = mongo, ns = "gulf.races", query = query)
+    output <- vector("list", count)
+    i <- 1
+    while(mongo.cursor.next(cursor)) {
+        output[[i]] <- mongo.bson.to.list(mongo.cursor.value(cursor))
+        i <- i + 1
+    }
+    df <- gulf_races_df(races = output)
+}
+rm(buf, count, cursor, i, output, query)
+fill = "#D9220F"
+wnrs <- filter(df, pos == 1)
+```
+_Last Updated `r Sys.Date()`_
+
+# Turf
+
+This is the track profile for all `r paste(unique(df$dist), collapse = ", ")` furlong `r paste(unique(df$surf), collapse = ", ")` races at Gulfstream Park, there are **`r length(unique(df$date_race))`** races in the dataset, contested by **`r length(df$date)`** runners.  The oldest race in the dataset was run on **`r min(as.Date(df$date, format = "%d/%m/%y"))`** while the most recent was run on **`r max(as.Date(df$date, format = "%d/%m/%y"))`**.
+
+### Draw
+
+The five furlong course is run round one turn, which starts roughly 1.5furlongs from the starting gates, and continues for roughly 2 furlongs, meaning the home straight is ~1.5f.  Counting winners is the typical way to assess any draw bias, but winners ignore a large number of runners, and if there was any such bias, it should be seen across all runners, so percentage of runners beaten is to be used:
+
+```{r echo=FALSE, fig.align="center", out.height="300px", out.width="500px"}
+tmp <- df %>%
+    group_by(date_race) %>%
+    mutate(rnrs_btn = RcappeR::rnrs_btn(pos)) %>%
+    ungroup() %>%
+    group_by(gate) %>%
+    summarise(pct_btn = mean(rnrs_btn, na.rm = TRUE),
+              mean_pos = mean(pos, na.rm = T))
+
+tmp$gate <- factor(tmp$gate, levels=tmp$gate)
+ggplot(data = tmp, aes(x = gate, y = pct_btn)) +
+    geom_bar(fill = fill, col = "#fcfcfc", stat = "identity") +
+    RcappeR::theme_rcapper() +
+    labs(title = "Percentage of rivals beaten")
+```
+
+A fair draw would expect to see each draw beat 50% of their rivals, runners drawn in `r if(length(tmp$gate[which(tmp$pct_btn >= .55)]) >= 2) { paste("gates") } else { paste("gate") }` **`r paste(tmp$gate[which(tmp$pct_btn >= .55)], collapse = ", ")`** beat more than 55% of their rivals.
+
+### Race Shape
+
+Race shape is something that is far easier to highlight at sprint distances, they are the fastest run races and as such take on a similar shape.  That is, by and large, all runners are slowing at the finish, almost irrespective of the pace they showed early in the race - of course the extent of the slowing will be down to pace.  The plot below shows the sectional speeds of winners, to be clear these aren't cumulative speeds, but the speed from one sectional to the next (taking into account the distance travelled - Trakus data - for each horse), so from the start to 2f, from 2f to 3f, etc.  As shown, winners are slowing all the way to the finish, runners behind all show the same fatigue late only more sharply.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, out.height="350px", out.width="500px", fig.align='center'}
+sspds <- select(df, pos, ss2f:ss5f)
+y <- melt(sspds, id.vars = "pos")
+y$variable <- gsub(pattern = "ss", replacement = "", x = y$variable)
+y$variable <- gsub(pattern = "_", replacement = ".", x = y$variable)
+y$variable <- factor(x = y$variable, levels = c("2f", "3f", "3.5f", "4f", "4.5f", "5f"))
+
+ggplot(subset(y, pos ==1), aes(x = variable, y = value)) + 
+    geom_boxplot() + 
+    geom_jitter(position = position_jitter(width = .4), color=fill, alpha=.5) + 
+    RcappeR::theme_rcapper() +
+    labs(x = "Sectional", y = "Speed (ft per sec)", title="Sectional Speeds of Winners")
+```
+
+The fastest opening quarter by a horse who went on to win was by **`r wnrs$horse[which.max(wnrs$ss2f)]`** on `r wnrs$date[which.max(wnrs$ss2f)]` in race number `r wnrs$race[which.max(wnrs$ss2f)]`, recording a speed of **`r wnrs$ss2f[which.max(wnrs$ss2f)]`** feet per second.  There were horses who ran faster, **`r df$horse[which.max(df$ss2f)]`** ran the opening quarter in a speed of **`r df$ss2f[which.max(df$ss2f)]`** ft per sec.  `r if(wnrs$date_race[which.max(wnrs$ss2f)] ==  df$date_race[which.max(df$ss2f)]) { paste("Both horses were competing in the same ", toupper(df$race_type[which.max(df$ss2f)]), "'s race, potentially benefitting from a runup of ", df$runup[which.max(df$ss2f)], " feet.", sep = "") }`
+
+
+The distribution of the number of runners per race is plotted below, the average field size is `r round(length(df$date) / length(unique(df$date_race)), 2)`.  
+
+```{r echo=FALSE, fig.align="center", fig.height=2.5, fig.width=6, eval=FALSE}
+tmp <- df %>%
+    group_by(date_race) %>%
+    summarise(runners = max(pos)) %>%
+    group_by(runners) %>%
+    summarise(n = n())
+
+ggplot(data = tmp, aes(x = runners, y = n)) +
+    geom_bar(fill = fill, stat = "identity") +
+    RcappeR::theme_rcapper() +
+    labs(title = "No. of runners")
+```
+
+### Race Details
+
+```{r echo=FALSE, fig.align="center", fig.height=2.5, fig.width=6, eval=FALSE}
+tmp <- df %>%
+    filter(pos == 1) %>%
+    group_by(race_type) %>%
+    summarise(n = n()) %>%
+    arrange(desc(n))
+
+tmp$race_type <- factor(tmp$race_type, levels = tmp$race_type)
+
+ggplot(data = tmp, aes(x = race_type, y = n)) +
+    geom_bar(fill = fill, stat = "identity") +
+    RcappeR::theme_rcapper() +
+    theme(axis.text.x=element_text(angle = 45, vjust = 1, hjust = 1)) +
+    labs(title = "Counts per race type")
+
+tmp <- df %>%
+    filter(pos == 1) %>%
+    group_by(value) %>%
+    summarise(counts = n())
+
+ggplot(data = tmp, aes(x = value)) +
+    geom_histogram(binwidth = 5000, fill = fill, col = "#fcfcfc") +
+    RcappeR::theme_rcapper() +
+    labs(title = "Hist of race values")
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+mongo.destroy(mongo)
+rm(list=ls())
+```
