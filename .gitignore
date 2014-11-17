@@ -4,3 +4,6 @@ dist
 .sass-cache
 bower_components
 .Rproj.user
+.RData
+.Rhistory
+.Rproj
