@@ -63,7 +63,10 @@ module.exports = function (grunt) {
       },
       trackprofiles: {
           files: ['<%= yeoman.app %>/views/track_profiles/*.html'],
-          tasks: ['trackprofiles']
+          tasks: ['trackprofiles'],
+          options: {
+              livereload: '<%= connect.options.livereload %>'
+          }
       }
     },
 
