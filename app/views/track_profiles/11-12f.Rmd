@@ -1,7 +1,6 @@
 ---
 output: html_fragment
 ---
-
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 ## This code unfortunately can't be run by others.
 library(tomhes)
@@ -9,10 +8,11 @@ library(dplyr, warn.conflicts = FALSE, quietly = TRUE)
 library(ggplot2)
 library(reshape)
 
+dist <- 11
 mongo <- mongo.create()
 if(mongo.is.connected(mongo)) {
     buf <- mongo.bson.buffer.create()
-    mongo.bson.buffer.append(buf, name = "details.dist", value = 11)
+    mongo.bson.buffer.append(buf, name = "details.dist", value = dist)
     query <- mongo.bson.from.buffer(buf = buf)
     count <- mongo.count(mongo = mongo, ns = "gulf.races", query = query)
     cursor <- mongo.find(mongo = mongo, ns = "gulf.races", query = query)
@@ -32,14 +32,17 @@ _Last Updated `r Sys.Date()`_
 
 # 11f Turf
 
-This is the track profile for all `r paste(unique(df$dist), collapse = ", ")` furlong `r paste(unique(df$surf), collapse = ", ")` races at Gulfstream Park, there are **`r length(unique(df$date_race))`** races in the dataset, contested by **`r length(df$date)`** runners.  The oldest race in the dataset was run on **`r min(as.Date(df$date, format = "%d/%m/%y"))`** while the most recent was run on **`r max(as.Date(df$date, format = "%d/%m/%y"))`**.
+This is the track profile for all `r dist` furlong turf races at Gulfstream Park, there are **`r length(unique(df$date_race))`** races in the dataset, contested by **`r length(df$date)`** runners.  The oldest race in the dataset was run on **`r min(as.Date(df$date, format = "%d/%m/%y"))`** while the most recent was run on **`r max(as.Date(df$date, format = "%d/%m/%y"))`**.
+
+A full profile for `r dist` furlong races will be up shortly.
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 ## This code unfortunately can't be run by others.
+dist <- 11.5
 mongo <- mongo.create()
 if(mongo.is.connected(mongo)) {
     buf <- mongo.bson.buffer.create()
-    mongo.bson.buffer.append(buf, name = "details.dist", value = 11.5)
+    mongo.bson.buffer.append(buf, name = "details.dist", value = dist)
     query <- mongo.bson.from.buffer(buf = buf)
     count <- mongo.count(mongo = mongo, ns = "gulf.races", query = query)
     cursor <- mongo.find(mongo = mongo, ns = "gulf.races", query = query)
@@ -59,13 +62,16 @@ wnrs <- filter(df, pos == 1)
 
 # 11.5f Turf
 
-This is the track profile for all `r paste(unique(df$dist), collapse = ", ")` furlong `r paste(unique(df$surf), collapse = ", ")` races at Gulfstream Park, there are **`r length(unique(df$date_race))`** races in the dataset, contested by **`r length(df$date)`** runners.  The oldest race in the dataset was run on **`r min(as.Date(df$date, format = "%d/%m/%y"))`** while the most recent was run on **`r max(as.Date(df$date, format = "%d/%m/%y"))`**.
+This is the track profile for all `r dist` furlong turf races at Gulfstream Park, there are **`r length(unique(df$date_race))`** races in the dataset, contested by **`r length(df$date)`** runners.  The oldest race in the dataset was run on **`r min(as.Date(df$date, format = "%d/%m/%y"))`** while the most recent was run on **`r max(as.Date(df$date, format = "%d/%m/%y"))`**.
+
+A full profile for `r dist` furlong races will be up shortly.
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
+dist <- 12
 mongo <- mongo.create()
 if(mongo.is.connected(mongo)) {
     buf <- mongo.bson.buffer.create()
-    mongo.bson.buffer.append(buf, name = "details.dist", value = 12)
+    mongo.bson.buffer.append(buf, name = "details.dist", value = dist)
     query <- mongo.bson.from.buffer(buf = buf)
     count <- mongo.count(mongo = mongo, ns = "gulf.races", query = query)
     cursor <- mongo.find(mongo = mongo, ns = "gulf.races", query = query)
@@ -84,7 +90,9 @@ wnrs <- filter(df, pos == 1)
 
 # 12f Turf
 
-This is the track profile for all `r paste(unique(df$dist), collapse = ", ")` furlong `r paste(unique(df$surf), collapse = ", ")` races at Gulfstream Park, there are **`r length(unique(df$date_race))`** races in the dataset, contested by **`r length(df$date)`** runners.  The oldest race in the dataset was run on **`r min(as.Date(df$date, format = "%d/%m/%y"))`** while the most recent was run on **`r max(as.Date(df$date, format = "%d/%m/%y"))`**.
+This is the track profile for all `r dist` furlong turf races at Gulfstream Park, there are **`r length(unique(df$date_race))`** races in the dataset, contested by **`r length(df$date)`** runners.  The oldest race in the dataset was run on **`r min(as.Date(df$date, format = "%d/%m/%y"))`** while the most recent was run on **`r max(as.Date(df$date, format = "%d/%m/%y"))`**.
+
+A full profile for `r dist` furlong races will be up shortly.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 mongo.destroy(mongo)
