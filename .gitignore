@@ -7,3 +7,4 @@ bower_components
 .RData
 .Rhistory
 .Rproj
+app/views/track_profiles/[0-9]f.html
