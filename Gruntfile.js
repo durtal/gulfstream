@@ -60,13 +60,6 @@ module.exports = function (grunt) {
           '.tmp/styles/{,*/}*.css',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
-      },
-      trackprofiles: {
-          files: ['<%= yeoman.app %>/views/track_profiles/*.html'],
-          tasks: ['trackprofiles'],
-          options: {
-              livereload: '<%= connect.options.livereload %>'
-          }
       }
     },
 
