@@ -309,7 +309,8 @@ module.exports = function (grunt) {
             '*.html',
             'views/{,*/}*.html',
             'images/{,*/}*.{webp}',
-            'fonts/*'
+            'fonts/*',
+            'data/*.json'
           ]
         }, {
           expand: true,
@@ -402,7 +403,8 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
-    'trackprofiles',
+    'clean:trackprofiles',
+    'copy:trackprofiles',
     'wiredep',
     'useminPrepare',
     'concurrent:dist',
