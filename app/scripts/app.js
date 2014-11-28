@@ -11,7 +11,8 @@
 angular
   .module('gulfstreamApp', [
     'ui.router',
-    'ngResource'
+    'ngResource',
+    'angularUtils.directives.dirPagination'
   ])
   .config(['$stateProvider', '$urlRouterProvider',
     function($stateProvider, $urlRouterProvider) {
@@ -22,7 +23,7 @@ angular
           .state('home', {
               url: '/home',
               templateUrl: 'views/main.html',
-              controller: 'MainCtrl'
+              controller: 'RatingsCtrl'
           })
           .state('about', {
               url: '/about',
@@ -30,7 +31,8 @@ angular
           })
           .state('ratings', {
               url: '/ratings',
-              templateUrl: 'views/ratings.html'
+              templateUrl: 'views/ratings.html',
+              controller: 'RatingsCtrl'
           })
           .state('track_profiles', {
               url: '/track-profiles',
