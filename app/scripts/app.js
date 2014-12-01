@@ -34,6 +34,16 @@ angular
               templateUrl: 'views/ratings.html',
               controller: 'RatingsCtrl'
           })
+          .state('ratings.all', {
+              url: '/all',
+              templateUrl: 'views/all_ratings.html',
+              controller: 'HorseCtrl'
+          })
+          .state('ratings.horse', {
+              url: '/horse/{horse_id:[A-Za-z]{1}[0-9]{3}}',
+              templateUrl: 'views/horse.html',
+              controller: 'HorseCtrl'
+          })
           .state('track_profiles', {
               url: '/track-profiles',
               templateUrl: 'views/track_profiles.html'

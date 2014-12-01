@@ -57,14 +57,12 @@
                 <li ui-sref-active="active"><a ui-sref="about">About</a></li>
             </ul>
             <ul class="nav nav-pills pull-right">
-                <li ui-sref-active="active" class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown">Ratings <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a ui-sref="ratings">Ratings</a></li>
-                        <li><a ui-sref="ratings">Track Profiles</a></li>
-                    </ul>
+                <li ui-sref-active="active">
+                    <a ui-sref="ratings">Ratings</a>
                 </li>
-                <li ui-sref-active="active"><a ui-sref="track_profiles">Track Profiles</a></li>
+                <li ui-sref-active="active">
+                    <a ui-sref="track_profiles">Track Profiles</a>
+                </li>
             </ul>
         </div>
 
@@ -102,12 +100,17 @@
     <script src="bower_components/bootswatch-dist/js/bootstrap.js"></script>
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-utils-pagination/dirPagination.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/main.js"></script>
+        <script src="scripts/controllers/ratings.js"></script>
+        <script src="scripts/services/rcapperhorses.js"></script>
+        <script src="scripts/controllers/horse.js"></script>
+        <script src="scripts/services/underscore.js"></script>
         <!-- endbuild -->
 </body>
 </html>

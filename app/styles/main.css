@@ -85,3 +85,33 @@ p {
     font-size: 13px;
     color: #424242;
 }
+
+.centeredImage {
+    margin-left: auto;
+    margin-right: auto
+}
+
+.jumbotron > div > p {
+    font-size: 13px;
+}
+
+.rcapper-table th {
+    background-color: #D9220F;
+    color: #FCFCFC;
+    text-align: center;
+}
+
+tr > td {
+    color: #424242;
+    text-align: center;
+}
+
+.pos1 {
+    background-color: #F7C0BA;
+    color: #FCFCFC;
+    font-weight: bold;
+}
+
+table > thead > tr > th {
+    text-align: center;
+}
