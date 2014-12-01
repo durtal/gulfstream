@@ -2,7 +2,26 @@
     <h1>RcappeR</h1>
     <h2>@ Gulfstream Park</h2>
     <p><a href="https://twitter.com/_RcappeR" class="twitter-follow-button" data-show-count="false">Follow @_RcappeR</a></p>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    <script>
+        !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+    </script>
+    <div class="col-md-4">
+        <a ui-sref="ratings">
+            <h3>Ratings</h3>
+        </a>
+        <img src="images/zipf_hcp_eg.png" style="width:200px;height:200px;" class="img-responsive img-circle centeredImage">
+        <p>Ratings are available for {{ horses.length }} horses.</p>
+    </div>
+    <div class="col-md-4">
+        <h3>Blog</h3>
+        <img src="images/zipf_hcp_eg.png" style="width:200px;height:200px;" class="img-responsive img-circle centeredImage">
+        <p>Ratings are available for {{ horses.length }} horses.</p>
+    </div>
+    <div class="col-md-4">
+        <h3>Track Profiles</h3>
+        <img src="images/zipf_hcp_eg.png" style="width:200px;height:200px;" class="img-responsive img-circle centeredImage">
+        <p>Ratings are available for {{ horses.length }} horses.</p>
+    </div>
 
-    <img src="images/zipf_hcp_eg.png" class="img-responsive" style="margin-left:auto;margin-right:auto;">
+    <img src="images/zipf_hcp_eg.png" class="img-responsive centeredImage">
 </div>

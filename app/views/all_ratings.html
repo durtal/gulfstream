@@ -1,0 +1,45 @@
+<div class="container">
+	<div class="col-md-2">
+		<h3>Ratings</h3>
+	</div>
+	<div class="col-md-3">
+		<br>
+		<label for="search">Search:</label>
+		<input type="text" ng-model="query.horse" id="search" class="form-control" placeholder="filter horses">
+	</div>
+	<div class="col-md-3">
+		<br>
+		<label for="search">Items per Page:</label>
+		<select ng-model="pageSize" ng-options="num for num in [10, 20, 40, 100]"></select>
+	</div>
+	<div class="col-md-4"></div>
+	<br>
+
+	<br>
+	<div class="col-md-8">
+		<table class="table table-condensed table-hover">
+			<thead>
+				<tr class="rcapper-table">
+					<th>ID</th>
+					<th>Horse</th>
+					<th>Trainer</th>
+					<th>Age</th>
+					<th>Rtg</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr dir-paginate="horse in horses | orderBy:predicate:reverse | filter:query | itemsPerPage:pageSize" current-page="currentPage">
+					<td><a ui-sref="ratings.horse({horse_id: '{{ horse._id }}'})">{{ horse._id }}</a></td>
+					<td>{{ horse.horse }}</td>
+					<td>{{ horse.details.trainer }}</td>
+					<td>{{ horse.details.age }}</td>
+					<td>{{ horse.details.hk_rtg }}</td>
+				</tr>
+			</tbody>
+		</table>
+		<dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="views/directiveViews/dirPagination.tpl.html" max-size="6"></dir-pagination-controls>
+	</div>
+	<div class="col-md-4">
+		<h4>Key</h4>
+	</div>
+</div>
