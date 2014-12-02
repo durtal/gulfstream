@@ -1,30 +1,28 @@
 <div class="container">
-	<div class="col-md-2">
-		<h3>Ratings</h3>
-	</div>
-	<div class="col-md-3">
-		<br>
+	<div class="col-md-4">
+		<p></p>
 		<label for="search">Search:</label>
 		<input type="text" ng-model="query.horse" id="search" class="form-control" placeholder="filter horses">
-	</div>
-	<div class="col-md-3">
-		<br>
-		<label for="search">Items per Page:</label>
+		<p></p>
+		<label for="search">Horses per Page:</label>
 		<select ng-model="pageSize" ng-options="num for num in [10, 20, 40, 100]"></select>
-	</div>
-	<div class="col-md-4"></div>
-	<br>
+		<p></p>
+		<p class="text-muted">Use the search box above to filter horses by name.  Any horse whose name contains the search parameter will be kept in the table.</p>
+		<p class="text-muted">Use the Horses per Page to limit the number of horses in the table, as there are {{horses.length}} entries it requires a lot of pagination.</p>
+		<p class="text-muted">To view an individual horse's race record at Gulfstream Park click on corresponding 'show' link to the left of the horses name.</p>
 
-	<br>
+	</div>
 	<div class="col-md-8">
+		<p></p>
 		<table class="table table-condensed table-hover">
 			<thead>
-				<tr class="rcapper-table">
+				<tr class="rcapper">
 					<th>ID</th>
 					<th>Horse</th>
 					<th>Trainer</th>
 					<th>Age</th>
 					<th>Rtg</th>
+					<th># races</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -34,12 +32,10 @@
 					<td>{{ horse.details.trainer }}</td>
 					<td>{{ horse.details.age }}</td>
 					<td>{{ horse.details.hk_rtg }}</td>
+					<td>{{ horse.details.racerecord.starts }}</td>
 				</tr>
 			</tbody>
 		</table>
 		<dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="views/directiveViews/dirPagination.tpl.html" max-size="6"></dir-pagination-controls>
-	</div>
-	<div class="col-md-4">
-		<h4>Key</h4>
 	</div>
 </div>
