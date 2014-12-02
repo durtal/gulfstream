@@ -95,15 +95,10 @@ p {
     font-size: 13px;
 }
 
-.rcapper-table th {
-    background-color: #D9220F;
-    color: #FCFCFC;
-    text-align: center;
-}
-
 tr > td {
     color: #424242;
     text-align: center;
+    font-size: 11.5px;
 }
 
 .pos1 {
@@ -114,4 +109,16 @@ tr > td {
 
 table > thead > tr > th {
     text-align: center;
+    color: #FCFCFC;
+}
+
+.rcapper {
+    background-color: #4395A4;
+    color: #FCFCFC;
+}
+
+.btn-rcapper {
+    background-color: #4395A4;
+    color: #FCFCFC;
+    font-weight: bold;
 }

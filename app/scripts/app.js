@@ -37,12 +37,16 @@ angular
           .state('ratings.all', {
               url: '/all',
               templateUrl: 'views/all_ratings.html',
-              controller: 'HorseCtrl'
+              controller: 'RatingsCtrl'
           })
           .state('ratings.horse', {
               url: '/horse/{horse_id:[A-Za-z]{1}[0-9]{3}}',
               templateUrl: 'views/horse.html',
               controller: 'HorseCtrl'
+          })
+          .state('ratings.methodology', {
+              url: '/methodology',
+              templateUrl: 'views/methodology.html'
           })
           .state('track_profiles', {
               url: '/track-profiles',
