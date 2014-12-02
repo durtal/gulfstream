@@ -44,9 +44,9 @@ angular
               templateUrl: 'views/horse.html',
               controller: 'HorseCtrl'
           })
-          .state('ratings.methodology', {
-              url: '/methodology',
-              templateUrl: 'views/methodology.html'
+          .state('ratings.handicappingmethod', {
+              url: '/handicapping-method',
+              templateUrl: 'views/handicapping_method.html'
           })
           .state('track_profiles', {
               url: '/track-profiles',
