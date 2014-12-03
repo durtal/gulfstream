@@ -1,29 +1,40 @@
 <div class="jumbotron">
+
     <h1>RcappeR</h1>
+
     <h2>@ Gulfstream Park</h2>
-    <p><a href="https://twitter.com/_RcappeR" class="twitter-follow-button" data-show-count="false">Follow @_RcappeR</a></p>
+
+    <p>
+        <a href="https://twitter.com/_RcappeR" class="twitter-follow-button" data-show-count="false">Follow @_RcappeR</a>
+    </p>
+
     <script>
         !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
     </script>
+
+    <ul>
+        <li>Performance Ratings for {{horses.length}} horses</li>
+        <li>Track Profiles for each course and distance raced over at Gulfstream Park</li>
+    </ul>
+</div>
+<div class="container" style="text-align:center;">
     <div class="col-md-4">
         <a ui-sref="ratings">
-            <button class="btn btn-rcapper">Ratings</button>
+            <button class="btn btn-rcapper  btn-lg">Ratings</button>
         </a>
         <img src="images/zipf_hcp_eg.png" style="width:200px;height:200px;" class="img-responsive img-circle centeredImage">
-        <p>Ratings are available for {{ horses.length }} horses.</p>
     </div>
     <div class="col-md-4">
-        <h3>Blog</h3>
+        <button class="btn btn-rcapper btn-lg">Blog</button>
         <img src="images/zipf_hcp_eg.png" style="width:200px;height:200px;" class="img-responsive img-circle centeredImage">
-        <p>Ratings are available for {{ horses.length }} horses.</p>
-    </div>
-    <div class="col-md-4">
-        <a ui-sref="track_profiles">
-            <button class="btn btn-rcapper">Track Profiles</button>
-        </a>
-        <img src="images/zipf_hcp_eg.png" style="width:200px;height:200px;" class="img-responsive img-circle centeredImage">
-        <p>Ratings are available for {{ horses.length }} horses.</p>
     </div>
 
-    <img src="images/zipf_hcp_eg.png" class="img-responsive centeredImage">
+    <div class="col-md-4">
+        <a ui-sref="track_profiles">
+            <button class="btn btn-rcapper btn-lg">Track Profiles</button>
+        </a>
+        <img src="images/zipf_hcp_eg.png" style="width:200px;height:200px;" class="img-responsive img-circle centeredImage">
+    </div>
+    <!-- <br>
+    <img src="images/zipf_hcp_eg.png" class="img-responsive centeredImage"> -->
 </div>

@@ -121,4 +121,5 @@ table > thead > tr > th {
     background-color: #4395A4;
     color: #FCFCFC;
     font-weight: bold;
+    width: 90%;
 }
