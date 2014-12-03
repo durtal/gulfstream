@@ -91,6 +91,12 @@ p {
     margin-right: auto
 }
 
+.rcapper-img-main {
+    width: 300px;
+    height: 300px;
+    border: 1px solid #d8d8d8;
+}
+
 .jumbotron > div > p {
     font-size: 13px;
 }
@@ -122,4 +128,8 @@ table > thead > tr > th {
     color: #FCFCFC;
     font-weight: bold;
     width: 90%;
+}
+
+.rcapper-center-text {
+    text-align: center;
 }
