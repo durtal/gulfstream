@@ -11,11 +11,11 @@
         alternatives, and to share with other race fans.</p>
 
     <p>It was June 2013 that I started to learn R on my old wordpress blog, I also knew very little HTML and CSS, just enough to
-        highlight some clumsy R code.  At the time I had no idea I would end up with a web app like this (which is still very much a work in progress).
+        highlight some clumsy R code (when I used to use <code>attach()</code>).  At the time I had no idea I would end up with a web app like this (which is still very much a work in progress).
           I have taken advantage of a lot of open source software in the creation, storage, saving, building, and presentation of the ratings/analysis
         found in these pages.  The primary software I have used includes:</p>
     <ul>
-        <li><strong><a href="http://cran.r-project.org/" target="_blank">R</a></strong> - programming language</li>
+        <li><strong><a href="http://cran.r-project.org/" target="_blank">R</a></strong> - programming language, I use <strong><a href="http://www.rstudio.com/">RStudio</a>,</strong></li>
         <li><strong><a href="http://git-scm.com/" target="_blank">Git</a></strong> - version control,
             <strong><a href="http://github.com" target="_blank">Github</a></strong> also hosts this app</li>
         <li><strong><a href="http://www.mongodb.org/" target="_blank">MongoDB</a></strong> - database</li>
@@ -46,9 +46,23 @@
 
     <h3>Get Involved</h3>
 
-    <p>If anyone is interested in contributing or want to ask any questions, don't hesistate to get in touch via twitter or email (both listed below).</p>
+    <p>If anyone is interested in contributing, has any questions, ideas for features, visualisations, don't hesistate to get in touch via twitter or email (both listed below).</p>
 
-    <p>As this site is hosted by github, everything to re-create the site locally is available for others, simply fork the repo, run <code>npm install</code>  and <code>bower install</code>, (make sure <a href="http://nodejs.org" target="_blank">NodeJS</a> is installed, and bower is installed via npm), to install the dependencies and play around with the site, make changes, suggest features, create visualisations using the ratings data, <strong>improve my code</strong> (please, improve my code).</p>
+    <p>Also, as this site is hosted by github, everything to re-create the site locally is available for others, simply fork the repo, and follow the steps below:</p>
+
+    <ul>
+        <li>Install <a href="http://www.nodejs.org" target="_blank">NodeJS</a></li>
+        <li>Open terminal or command prompt</li>
+        <li>navigate to directory of the forked repo (should be called <strong>gulfstream</strong>)</li>
+        <li>run <code>npm install -g bower</code></li>
+        <li>run <code>npm install -g grunt-cli</code></li>
+        <li>run <code>npm install</code></li>
+        <li>run <code>bower install</code></li>
+        <li>then finally run <code>grunt serve</code> and a browser should pop up with the app</li>
+    </ul>
+
+    <p>If you encounter any errors then I'll do my best to figure out what's going wrong, but as I only started working with NodeJS and bower about a month ago I may not be much help, apologies.</p>
+
 
     <h3>Contact</h3>
     <h5><strong>Email</strong>: t_heslop[at]hotmail.co.uk</h5>
