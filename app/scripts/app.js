@@ -46,7 +46,7 @@ angular
           })
           .state('ratings.handicappingmethod', {
               url: '/handicapping-method',
-              templateUrl: 'views/handicapping_method.html'
+              templateUrl: 'views/handicapping/handicapping_method.html'
           })
           .state('track_profiles', {
               url: '/track-profiles',
