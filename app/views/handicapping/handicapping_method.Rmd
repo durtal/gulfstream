@@ -1,0 +1,291 @@
+---
+output: html_fragment
+---
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+library(tomhes)
+library(RcappeR)
+library(dplyr)
+library(magrittr)
+
+mongo <- mongo.create()
+cursor <- mongo.find(mongo = mongo, ns = "gulf.races")
+count <- mongo.count(mongo = mongo, ns = "gulf.races")
+output <- vector(mode = "list", length = count)
+i <- 1
+while(mongo.cursor.next(cursor)) {
+    output[[i]] <- mongo.bson.to.list(mongo.cursor.value(cursor))
+    i <- i + 1
+}
+races <- gulf_races_df(races = output)
+
+races %<>% select(date_race:fintime, fs2_5f, fs2f)
+rm(count, mongo, i, output, cursor)
+onerace <- unique(races$date_race)[565]
+onerace <- filter(races, date_race == onerace)
+```
+
+### Introduction
+
+This is a detailed look at how ratings in these pages have been created, I try to acknowledge all the flaws and compromises I've had to take, followed by how these could, potentially, be reduced, leading to improvements.  I'll cover a number of important topics in varying degrees of detail, from handicapping preparation, to building an initial handicap, to finally calculating the ratings.
+
+The ratings were created using an R package I've created, I'm yet to upload it to github, but when it is uploaded it should be possible for others to reproduce ratings found in these pages.  There are a number of reasons for making ratings that are reproducible, but chief among them is transparency; I hope that it will encourage others to give feedback, spot errors, issues, bugs, etc, which could lead to improvements.  I also hope it leads to discussions about handicapping, allowing people to learn, including myself (I'm very much still learning), from other peoples knowledge and expertise.
+
+The creation of these ratings owe a number of people, and organisations, who either knowingly, or unknowingly, helped me, but they bear no responsibility for the ratings herein.
+
+During the post I will highlight issues, by a bold number in brackets, eg. (**1**), these will all be elaborated upon at the end of the post under the "Issues and Improvements" heading.
+
+### Handicapping Preparation
+
+First up is handicapping preparation, for each race, data is cleaned and checked, making sure a number of variables are present that are necessary in order for the performance of its runners to be assessed, these include:
+
+* race surface (dirt or turf)
+* race distance
+* fina; times
+* weight carried
+
+I use the surface and distance variables to calculate a lbs per second scale(**1.1**).  Final times are used to calculate the margins, in seconds, netween the winner and the rest, before multiplying the beaten seconds by the lbs per second scale, resulting in beaten margins, in lbs.  The difference in the weight the horses carried is added to the beaten lbs, to calculate a final difference at the weights (**1.2**).  An example of this preparation can be seen below, first the un-prepared race data, followed by the prepared data, including 3 new variables, _btn\_sec_, _btn\_lbs_ and _at\_wgts_.
+
+```{r echo=FALSE}
+onerace <- select(onerace, date:race, dist:surf, wgt, pos, fintime)
+onerace
+
+(preppedrace <- onerace %>% mutate(btn_sec = btn_sec(fintime),
+                   btn_lbs = lbs_per_sec(dist = dist, surf = surf[1]) * btn_sec,
+                   at_wgts = diff_at_wgts(btn_lbs = btn_lbs, wgt_carried = wgt)))
+```
+
+The above preparation is performed for each and every race that requires handicapping.
+
+### Handicapping a single race
+
+This section explains the method of race standardisation used to handicap a single race.  When handicapping a race via race standardisation, the performance of runners in different yet similar, ie. class and/or type (eg. $12k Claiming, Grade 2 Stakes), are used to assess the level of performance.  The specific method of Race Standardisation I use is one outlined by Simon Rowlands of Timeform ([article here](https://betting.betfair.com/horse-racing/bloggers/simon-rowlands/simon-rowlands-on-handicapping-060710.html)), which uses Zipf's Law.
+
+An example will follow, where a race, **race1**, will be handicapped using a second race, **race2**, that has already been handicapped, ie. the runners have ratings.
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+data(example_race)
+example_race %<>% group_by(date) %>%
+    mutate(fintime = conv_margins(btn_l = btn_l, win_time = conv_times(times = wintime)),
+           btn_sec = btn_sec(times = fintime),
+           scale = lbs_per_sec(dist = dist, surf = "turf"),
+           DatW = scale * btn_sec) %>%
+    select(date, pos, horse, dist, fintime, DatW)
+class(example_race) <- "data.frame"
+race1 <- filter(example_race, date == "01/01/01")
+
+race2 <- filter(example_race, date != "01/01/01")
+names(race2)[6] <- "rtg"
+race2$rtg <- 70 - race2$rtg
+```
+
+In short, the difference at the weights (abbreviated to DatW from now) of runners in **race1**, are added to the ratings (which reflect the DatW of its runners, but on a different scale as runners have been awarded a rating), according to finishing position.  So the DatW of the runner-up in **race1** is added to the rating of the runner-up in **race2**, this is done for each finishing position.  The result is a vector of potential ratings for the winner of **race1**.  
+
+Where Zipf's Law comes in is the weighting of these ratings, in Simons words, they are "weighted inversely according to rank: 1/1, 1/2, 1/3 and so on".  So each rating is multiplied by its corresponding Zipf factor, runner up rating is multiplied by 1/2, the ratings are then summed together and divided by the sum of the Zipf factors.  An example:
+
+**race2** has been handicapped, its winner was awarded a rating of `r subset(race2, pos == 1)$rtg`:
+```{r echo=FALSE}
+race2
+```
+
+Meanwhile **race1** hasn't been handicapped, instead we have a dataset that has DatW prepared
+```{r echo=FALSE}
+race1
+```
+
+So the `DatW` variable from **race1** is added to the `rtg` variable in **race2**, as race1 has more 3 more runners, these runners are ignored (**1.3**).  This results in a vector of potential ratings for the winner of **race1**.
+
+```{r echo=FALSE}
+(rtgs <- race1$DatW[1:5] + race2$rtg)
+zipf_factor <- 1/race2$pos
+```
+
+These are then weighted by their corresponding Zipf factors, which are: `r zipf_factor`
+
+```{r echo=FALSE}
+(rtgs <- rtgs * zipf_factor)
+```
+
+These are summed together (`r sum(rtgs)`), before being divided by the sum of weightings (`r sum(zipf_factor)`), resulting in a rating for the winner of **race1**, based on the performance of runners in its race compared to the performance of runners in a different, but similar race.
+
+```{r echo=FALSE}
+(rtg <- sum(rtgs) / sum(zipf_factor))
+```
+
+The winner of **race2** is roughly `r subset(race2, pos == 1)$rtg - rtg` lbs better than the winner of **race1**, hopefully that makes it a little clearer.  When using many, different but similar, races to handicap **race1**, a distribution of ratings is produced, from which a single rating for the winner of **race1** can be reached.
+
+### Initialising a Handicap
+
+This section looks at initialising a handicap using the method of Race Standardisation explained above.  The difference being that **no** horse has a prior rating, it is a handicap from scratch.  So where the DatW values from **race1** were added to the ratings of **race2** above, instead, DatW values from one race are added (by finishing position) to the DatW values of another race.  The result is the difference between the two races, as seen above the difference was `r subset(race2, pos == 1)$rtg - rtg`.
+
+As mentioned in above, when using many races to handicap a race a distribution of ratings builds up, from which a rating can be derived.  The possible ratings for a single winner of a race could be normally distributed, or they could be skewed left or right.  However further inspection and analysis of the distribution is infeasible during the initialisation of a handicap, when the number of races should be quite large, so the average rating of this distribution is returned, a compromise I can accept.
+
+There are `r length(unique(races$date_race))` unique races in my database that require handicapping, these are races made up of different types and classes.  The difficulty ahead of initialising the handicap is how to split and group the races.  A lot is common sense, and should be apparent simply by the name of the race, even to the lay fan, ie. a Maiden Claiming is different from a Stakes race.  The counts for each of the 9 different race types is shown below:
+
+```{r echo=FALSE}
+counts <- races %>%
+    filter(pos == 1) %>%
+    group_by(race_type) %>%
+    summarise(n = n()) %>%
+    arrange(desc(n))
+class(counts) <- "data.frame"
+counts
+```
+
+Within each of these race groups there are differences in the class of horse that compete, meaning races could, nay, should be split further.  However, how they are to be split is unclear, for example, Claiming races could be split according to the value (or purse) of the race, by extra conditions restricting runners able to enter (NW1 L, NW3 X), or by the Claiming price of horses competing.  Some of the conditions for races can be baffling to the most fervent race fan, with course clerks cooking up all sorts of combinations. (**1.4**)
+
+I ended up taking a lead from Beyer pars for Gulfstream Park, these were found in a DRF PDF preview for the 2012-13 Gulfstream Park season, and while some of the abbreviations aren't immediately recognisable, educated guesses have been made.  For example, Maiden Claiming races, were grouped according to the claiming price set for runners in the race, while Allowance Optional Claiming races were grouped by the restrictions placed on runners.  Some of the races in my database aren't covered in the Beyer pars, races such as Starter Optional Claimers ("st op clm" in the above table), or Starter Allowance ("st all" above) races.  A full list of race types and groups can be found at the bottom of the page, (**1.5**, related to **1.4**), but I will work through an example using Maiden Claimers.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+mdnclm <- filter(races, race_type == "mdn clm")
+
+mdnclmcat <- c(0, 14900, 20000, 34000, 49000, Inf)
+mdnclm$cat <- cut(mdnclm$clm_price, breaks = mdnclmcat)
+
+mdnclmwnrs <- filter(mdnclm, pos == 1)
+```
+
+There are `r length(unique(mdnclm$date_race))` unique races, that require further group, as mentioned earlier the Claiming Price set for runners is used.  The ungrouped claiming prices for Maiden Claiming races is presented first, followed by the 5 groups that will be used:
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+table(mdnclmwnrs$clm_price)
+table(mdnclmwnrs$cat)
+```
+
+With these groups created, each race is handicapped using the _N_ races in the same group.  The result is a handicap, per group, below is a plot showing the distribution of ratings assigned to the winners of the races in each group.
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.height="450px", out.width="600px"}
+mdnclm %<>% group_by(date_race) %>%
+    mutate(btn_sec = btn_sec(fintime),
+           scale = lbs_per_sec(dist = dist, surf = surf[1]),
+           btn_lbs = scale * btn_sec,
+           diff_wgts = diff_at_wgts(btn_lbs = btn_lbs, wgt_carried = wgt))
+
+hcp <- zipf_init(races = mdnclm, group_by = "cat", race_id = "date_race", btn_var = "diff_wgts")
+plot(hcp)
+```
+
+### Issues and Improvements
+
+This section, probably the most important, addresses the issues I **have** spotted and am aware of, others will certainly elude me, which is the precise reason for being as transparent as possible.  So I'll run through them, offering potential solutions where possible.
+
+**1.1**  -  The lbs per second scale I use is one outlined by Bob Wilkins in his excellent book [Bioenergetics and Racehorse Ratings](http://www.amazon.co.uk/Bioenergetics-Racehorse-Ratings-Bob-Wilkins/dp/0956424309).  However ideally I believe each runner in a race should get its own lbs per second scale based on the speed at which it ran the race.  I've tested a few lbs per second scales, and haven't been entirely happy, so for the time being I intend to adhere to the KISS principle (Keep It Simple Stupid).
+
+**1.2**  -  The age of runners in a race is not accounted for yet, this is a long standing debate in racing as to the difference in maturity between horses of different ages at different times of the year.  Admiral Rous first devised a weight for age scale in the 19th Century, since then, as I understand it, it has remained quite consistent.  I believe different organisations, such as Timeform, the Racing Post, and the BHA, use different weight for age scales, some of which are public.  I could use an existing, public, weight for age scale, but with the difference in opinion I want to hold fire for now.  
+
+Races at GUlfstream Park are typically run from December to April, with summer racing only a recent addition, this means that 2yos, at least in my database, haven't ever run against older horses.  While ~33% of races in my database sees 3yo horses take on older horses, which means this issue must be addressed.  Ideas for potential solutions, outside of using an existing scale, would be welcomed.
+
+**1.3**  -  The shortening of the field and ignoring runners because it differs in field size, sees a loss of information that is a little wasteful.   I don't believe this is a huge issue when using many races to handicap a race, however analysis (non-linear regression) of runners who did finish, and contribute either a rating or a DatW value, could help to extend the number of runners.
+
+**1.4**  -  The splitting and grouping of races to get similar races in the same group is a challenge as it will have a big impact on ratings.  I also don't want to get so specific that causes very small samples, already evidenced there is only one race classed as "St Hcp".  The shortcut I have taken is to use the experience of other horseplayers in the grouping of races, but there are potential alternatives that I may get round to exploring.
+
+One such solution is to try to get the horses to tell me, ie. the race record of a horse can highlight the class system, a horse wins it likely steps up a class, narrowly loses it might take a small step up or stay in the same or similar class, loses badly they might need to step down.  A single horse can exhibit this in its history, so >5000 horses could paint quite an accurate picture of the class system.
+
+* Which races do winners of a Maiden Claiming with a purse of $19k appear in compared to the winners of Maiden Special Weight with a purse of $43k?
+* Where do winners of $50k Claiming races appear next compared to winners of $25k Allowance Optional Claimers?
+
+These questions are simple ones, but when dealing with a large number of runners (~25,000) it has to be solved computationally.  A solution, I think, is matrix related, for example, an empty matrix is the starting point, the columns and rows correspond to different race types, as such:
+
+```{r, echo=FALSE}
+(matrix_eg <- matrix(data = NA, nrow = 4, ncol = 4, dimnames = list(c("mdn clm 19k", "mdn sp wgt 43k", "clm 50k", "all op clm 25k"),c("mdn clm 19k", "mdn sp wgt 43k", "clm 50k", "all op clm 25k"))))
+```
+
+Let's assume this matrix is for horses who have finished in the first 3, the matrix is then populated as and when a horse moves from one race type/class to another, building counts, for example, 3 horse ran in a "mdn clm 19k" race, one ran in another "mdn clm 19k", the other two competed in "all op clm 25k", etc, etc.
+
+```{r echo=FALSE}
+matrix_eg[1,1] <- 1
+matrix_eg[1,4] <- 2
+matrix_eg[2,1] <- 2
+matrix_eg[2,3] <- 1
+matrix_eg[3,3] <- 3
+matrix_eg[4,3] <- 2
+matrix_eg[4,4] <- 1
+matrix_eg
+```
+
+Thinking about problems like this is quite easy, describing them so a computer understands and can interpret is not so easy.  This problem also holds a key to another issue, what is the difference, in lbs, between a winner of a Maiden Claiming race with a purse of $19k and the winner of a Maiden Special Weight with a purse of $43k?  See also **1.6**
+
+**1.5**  -  The different race types/classes and the grouping employed.
+
+<div class="col-md-2">
+ 
+#### Mdn Clm
+
+Grouped by claiming price
+
+* ( $0 - $14900 ]
+* ( $14900 - $20000 ]
+* ( $20000 - $34000 ]
+* ( $34000 - $49000 ]
+* ( $49000 - Inf ]
+
+</div>
+<div class="col-md-2">
+ 
+#### Mdn Sp Wgt
+
+Grouped by purse
+
+* ( $0 - $40000 ]
+* ( $40000 - $50000 ]
+* ( $50000 - $55000 ]
+* ( $55000 - Inf ]
+
+</div>
+<div class="col-md-2">
+ 
+#### Clm
+
+Grouped by claiming price
+
+* ( $0 - $7500 ]
+* ( $7500 - $10000 ]
+* ( $10000 - $14900 ]
+* ( $14900 - $20000 ]
+* ( $20000 - $34000 ]
+* ( $34000 - $49000 ]
+* ( $49000 - Inf ]
+
+</div>
+<div class="col-md-2">
+ 
+#### All Op Clm
+
+Grouped by race restrictions
+
+* ( NW1 )
+* ( NW2 )
+* ( NW3 ]
+
+</div>
+<div class="col-md-2">
+ 
+#### Stk
+
+Grouped by 
+
+* ( state bred stakes )
+* ( stakes )
+* ( grade 3 )
+* ( grade 2 )
+* ( grade 1 )
+
+</div>
+<div class="col-md-2">
+
+#### St Op Clm
+
+Grouped by claiming price
+
+* ( $0 - $10000 ]
+* ( $10000 - $20000 ]
+* ( $20000 - $40000 ]
+* ( $40000 - Inf ]
+
+#### St All + St Hcp 
+
+These race types are grouped together
+
+</div>
+
+**1.6**  -  Related to the grouping of races in **1.4**, There is a section in Bob Wilkins' book ([Bioenergetics and Racehorse Ratings](http://www.amazon.co.uk/Bioenergetics-Racehorse-Ratings-Bob-Wilkins/dp/0956424309), 4.3 to be precise) that covers this
