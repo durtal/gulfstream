@@ -13,10 +13,12 @@ angular.module('gulfstreamApp')
         $scope.currentPage = 1;
         $scope.pageSize = 10;
 
-        RcappeRHorses.getHKJC(function(data) {
+        RcappeRHorses.getHorses(function(data) {
             $scope.horses = data;
         });
 
-        $scope.predicate = '-details.hk_rtg';
+        $scope.predicate = '-n_races';
+
+        // $scope.predicate = '-details.hk_rtg';
 
     });

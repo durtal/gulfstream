@@ -1,38 +1,51 @@
 <div class="container">
 	<button class="btn btn-primary" ui-sref="ratings.all">Back to Ratings</button>
 
-	<h1>{{horse.horse}} <span class="h4">(id: <a href="http://www.hkjc.com/english/racing/horse.asp?horseno={{horse._id}}" target="_blank">{{horse._id}}</a>)</span></h1>
+	<h1>{{horse.horse | uppercase }} <span class="h5">(id: <a href="http://www.hkjc.com/english/racing/horse.asp?horseno={{horse._id}}" target="_blank">{{horse._id}}</a>)</span></h1>
+	<h4>TRAINER : <span class="h5">{{ horse.trainer }}</span></h4>
+	<h4>YOB: <span class="h5">{{ horse.yob }}</span></h4>
+	<h4>Races: <span class="h5">{{ horse.n_races }}</span></h4>
 
-	<h4>TRAINER : <span class="h5">{{horse.details.trainer}}</span></h4>
-	<h4>PEDIGREE : <span class="h5">{{horse.details.pedigree.sire}} <span class="text-muted small">x</span> {{horse.details.pedigree.dam}}</span></h4>
+	<!-- <h4>TRAINER : <span class="h5">{{horse.details.trainer}}</span></h4>
+	<h4>PEDIGREE : <span class="h5">{{horse.details.pedigree.sire}} <span class="text-muted small">x</span> {{horse.details.pedigree.dam}}</span></h4> -->
 
 	<table class="table table-condensed table-hover table-responsive" style="font-align: center;">
 		<thead>
 			<tr class="rcapper" style="font-align: center;">
 				<th>Date</th>
-				<th>Track</th>
+				<th>Race</th>
 				<th>Dist</th>
-				<th>Going</th>
+				<th>Surface</th>
+				<th>Value</th>
+				<th>Race Type</th>
+				<th>CoR</th>
 				<th>Trainer</th>
-				<th>Jockey</th>
+				<th>Jockey <sup>clm</sup></th>
 				<th>Pos</th>
+				<th>Wgt</th>
 				<th>Fin Time</th>
-				<th>Fin Spd</th>
-				<th>Fin Sect</th>
+				<th>2.5f FS</th>
+				<th>2f FS</th>
+				<th>RRtg</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="race in horse.races" class="pos{{race.pos}}">
-				<td>{{ race.date | date:'dd/mm/yy'}}</td>
-				<td>{{ race.track }}</td>
-				<td>{{ race.dist }}</td>
-				<td>{{ race.going }}</td>
-				<td>{{ race.trainer }}</td>
-				<td>{{ race.jockey }}</td>
-				<td>{{ race.pos }}</td>
-				<td>{{ race.fin_time | number:2 }}</td>
-				<td>{{ race.f_spd | number:3 }}</td>
-				<td>{{ race.fin_sect | number:2 }}</td>
+			<tr ng-repeat="race in races" class="pos{{race.runners.pos}}">
+				<td>{{ race.date }}</td>
+				<td>{{ race.race }}</td>
+				<td>{{ race.details.dist }}</td>
+				<td>{{ race.details.surf }}</td>
+				<td>{{ race.details.value }}</td>
+				<td>{{ race.details.race_type }}</td>
+				<td>{{ race.conditions.cat }}</td>
+				<td>{{ race.runners.trainer }}</td>
+				<td>{{ race.runners.jockey }} <sup class="text-muted">{{ race.runners.j_clm }}</sup></td>
+				<td>{{ race.runners.pos }}</td>
+				<td>{{ race.runners.wgt }}</td>
+				<td>{{ race.runners.fintime | number:2 }}</td>
+				<td>{{ race.runners.fs2_5f | number:4 }}</td>
+				<td>{{ race.runners.fs2f | number:4 }}</td>
+				<td>{{ race.runners.RRtg | number:2}}</td>
 			</tr>
 		</tbody>
 	</table>

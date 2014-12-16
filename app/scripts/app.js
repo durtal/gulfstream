@@ -31,7 +31,8 @@ angular
           })
           .state('ratings', {
               url: '/ratings',
-              templateUrl: 'views/ratings.html',
+              template: '<div class="container"><h1> Coming Soon... </h1></div>',
+            //   templateUrl: 'views/ratings.html',
               controller: 'RatingsCtrl'
           })
           .state('ratings.all', {
@@ -40,7 +41,7 @@ angular
               controller: 'RatingsCtrl'
           })
           .state('ratings.horse', {
-              url: '/horse/{horse_id:[A-Za-z]{1}[0-9]{3}}',
+              url: '/horse/{horse_id}',
               templateUrl: 'views/horse.html',
               controller: 'HorseCtrl'
           })

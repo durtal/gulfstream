@@ -17,22 +17,20 @@
 		<table class="table table-condensed table-hover">
 			<thead>
 				<tr class="rcapper">
-					<th>ID</th>
+					<th>Go to Form</th>
 					<th>Horse</th>
 					<th>Trainer</th>
-					<th>Age</th>
-					<th>Rtg</th>
+					<th>YOB</th>
 					<th># races</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr dir-paginate="horse in horses | orderBy:predicate:reverse | filter:query | itemsPerPage:pageSize" current-page="currentPage">
-					<td><a ui-sref="ratings.horse({horse_id: '{{ horse._id }}'})">{{ horse._id }}</a></td>
+					<td><a ui-sref="ratings.horse({horse_id: '{{ horse._id }}'})">show</a></td>
 					<td>{{ horse.horse }}</td>
-					<td>{{ horse.details.trainer }}</td>
-					<td>{{ horse.details.age }}</td>
-					<td>{{ horse.details.hk_rtg }}</td>
-					<td>{{ horse.details.racerecord.starts }}</td>
+					<td>{{ horse.trainer }}</td>
+					<td>{{ horse.yob }}</td>
+					<td>{{ horse.n_races }}</td>
 				</tr>
 			</tbody>
 		</table>
