@@ -31,8 +31,7 @@ angular
           })
           .state('ratings', {
               url: '/ratings',
-              template: '<div class="container"><h1> Coming Soon... </h1></div>',
-            //   templateUrl: 'views/ratings.html',
+              templateUrl: 'views/ratings.html',
               controller: 'RatingsCtrl'
           })
           .state('ratings.all', {

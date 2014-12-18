@@ -10,7 +10,7 @@
 angular.module('gulfstreamApp')
     .controller('HorseCtrl', function($scope, RcappeRHorses, _, $stateParams) {
 
-        RcappeRHorses.getHorses(function(data) {
+        RcappeRHorses.getRatings(function(data) {
             $scope.all = data;
 
             $scope.horse = _.findWhere($scope.all, {
