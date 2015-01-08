@@ -15,7 +15,7 @@ angular.module('gulfstreamApp')
     var service = {};
 
     service.getRatings = function(callback) {
-        $http.get('data/gulfstream-ratings.json')
+        $http.get('data/horses.json')
             .success(callback);
     };
 
