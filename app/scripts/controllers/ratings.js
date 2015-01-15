@@ -13,7 +13,7 @@ angular.module('gulfstreamApp')
         $scope.currentPage = 1;
         $scope.pageSize = 10;
 
-        RcappeRHorses.getHorses(function(data) {
+        RcappeRHorses.getRatings(function(data) {
             $scope.horses = data;
         });
 

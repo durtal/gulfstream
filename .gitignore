@@ -3,7 +3,7 @@ node_modules
 .sass-cache
 bower_components
 .Rproj.user
-.RData
+**.RData
 .Rhistory
 .Rproj
 app/views/track_profiles/track_profiles.Rproj

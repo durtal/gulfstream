@@ -14,13 +14,8 @@ angular.module('gulfstreamApp')
 
     var service = {};
 
-    service.getHorses = function(callback) {
-        $http.get('data/horses5.json')
-            .success(callback);
-    };
-
-    service.getHKJC = function(callback) {
-        $http.get('data/hkjc.json')
+    service.getRatings = function(callback) {
+        $http.get('data/gulfstream-ratings.json')
             .success(callback);
     };
 

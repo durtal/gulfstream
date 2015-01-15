@@ -10,7 +10,7 @@
 angular.module('gulfstreamApp')
     .controller('HorseCtrl', function($scope, RcappeRHorses, _, $stateParams) {
 
-        RcappeRHorses.getHorses(function(data) {
+        RcappeRHorses.getRatings(function(data) {
             $scope.all = data;
 
             $scope.horse = _.findWhere($scope.all, {
@@ -20,5 +20,7 @@ angular.module('gulfstreamApp')
             console.log($stateParams.horse_id);
 
             $scope.races = $scope.horse.races;
+
+            // learn underscore to break races up
         });
     });
