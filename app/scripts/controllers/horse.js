@@ -20,5 +20,7 @@ angular.module('gulfstreamApp')
             console.log($stateParams.horse_id);
 
             $scope.races = $scope.horse.races;
+
+            // learn underscore to break races up
         });
     });
