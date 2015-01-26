@@ -9,3 +9,4 @@ bower_components
 .Rproj
 app/views/track_profiles/track_profiles.Rproj
 app/views/handicapping/handicapping.Rproj
+gh-pages.txt
