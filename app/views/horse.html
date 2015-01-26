@@ -1,15 +1,64 @@
 <div class="container">
 	<button class="btn btn-primary" ui-sref="ratings.all">Back to Ratings</button>
 
-	<h1>{{horse.horse | uppercase }} <span class="h5">(id: <a href="http://www.hkjc.com/english/racing/horse.asp?horseno={{horse._id}}" target="_blank">{{horse._id}}</a>)</span></h1>
+	<h1>{{horse.horse | uppercase }}</h1>
+	<h5 class="hidden-xs">(id: <a href="http://www.hkjc.com/english/racing/horse.asp?horseno={{horse._id}}" target="_blank">{{horse._id}}</a>)</h5>
 	<h4>TRAINER : <span class="h5">{{ horse.trainer }}</span></h4>
 	<h4>YOB: <span class="h5">{{ horse.yob }}</span></h4>
 	<h4>Races: <span class="h5">{{ horse.n_races }}</span></h4>
 
-	<!-- <h4>TRAINER : <span class="h5">{{horse.details.trainer}}</span></h4>
-	<h4>PEDIGREE : <span class="h5">{{horse.details.pedigree.sire}} <span class="text-muted small">x</span> {{horse.details.pedigree.dam}}</span></h4> -->
 
-	<table class="table table-condensed table-hover table-responsive" style="font-align: center;">
+	<div class="col-md-12 col-sm-12 col-lg-12 hidden-xs races-container">
+		<div class="visible-xs hidden-sm hidden-md hidden-lg">
+			<table class="table">
+				<thead>
+					<tr>
+						<td>Date</td>
+						<td>Class | Value</td>
+						<td rowspan="2">Pos</td>
+						<td rowspan="2">RRtg</td>
+					</tr>
+					<tr>
+						<td>Race</td>
+						<td>Dist | Surf</td>
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<div class="visible-sm visible-md visible-lg hidden-xs">
+			<table class="table">
+				<thead>
+					<tr>
+						<td class="col-sm-2 col-md-1 col-lg-1"><span class="race-date">Date</span></td>
+						<td class="col-sm-4 col-md-3 col-lg-3">Class | Value</td>
+						<td class="col-sm-2 col-md-2 col-lg-2 trainer-jockey hidden-sm">Trainer</td>
+						<td class="col-sm-1 col-md-1 col-lg-1 runner-pos" rowspan="2">Pos</td>
+						<td class="col-sm-3 col-md-3 col-lg-3 runner-horse" rowspan="2">Horse</td>
+						<td class="col-sm-1 col-md-1 col-lg-1">Time</td>
+						<td class="col-sm-1 col-md-1 col-lg-1 runner-pos" rowspan="2">RRtg</td>
+					</tr>
+					<tr>
+						<td><span class="race-no">Race #</span></td>
+						<td>Dist | Surf</td>
+						<td class="trainer-jockey hidden-sm">Jockey<sup class="text-muted">(claim)</sup></td>
+						<td>FinSpd</td>
+					</tr>
+				</thead>
+			</table>
+		</div>
+
+		<div ng-repeat="race in races">
+			<single-race-dir race="race"></single-race-dir>
+		</div>
+	</div>
+	<div class="col-xs-12 visible-xs">
+		<br>
+		<div ng-repeat="race in races">
+			<single-race-dir race="race"></single-race-dir>
+		</div>
+	</div>
+	<br>
+	<!-- <table class="table table-condensed table-hover table-responsive" style="font-align: center;">
 		<thead>
 			<tr class="rcapper" style="font-align: center;">
 				<th>Date</th>
@@ -48,5 +97,5 @@
 				<td>{{ race.runners.RRtg | number:1}}</td>
 			</tr>
 		</tbody>
-	</table>
+	</table> -->
 </div>
