@@ -133,3 +133,99 @@ table > thead > tr > th {
 .rcapper-center-text {
     text-align: center;
 }
+
+/* Race table styles, used in individual horse profiles, and singleracedir */
+
+.races-container {
+    height: 500px;
+    overflow-y: scroll;
+    border-top: 2px solid #D9220F;
+}
+
+table tbody>tr>td>span.rcapperRtg {
+    border-radius: 50%;
+    radius: 20px;
+
+    width: 40px;
+    height: 40px;
+    padding: 10px;
+
+    background: #D9220F;
+    border: 1px solid #000000;
+    color: #FCFCFC;
+    text-align: center;
+
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+table tbody>tr>td.RRtg-box {
+    vertical-align: middle;
+    width: 40px;
+}
+
+table tbody>tr>td.runner-horse {
+    vertical-align: middle;
+    font-size: 20px;
+    text-align: right;
+}
+
+table tbody>tr>td.runner-pos {
+    vertical-align: middle;
+    font-size: 20px;
+    text-align: center;
+    font-weight: bold;
+    color: #D9220F;
+}
+
+table tbody>tr>td>span.race-date, .race-no {
+    font-weight: bold;
+    font-size: 12px;
+}
+
+table tbody>tr>td>span.race-class, .race-dist {
+    font-weight: bold;
+    font-size: 13px;
+}
+
+table tbody>tr>td.trainer-jockey {
+    text-align: right;
+}
+
+
+/* table header begins */
+table thead>tr>td.runner-horse {
+vertical-align: middle;
+font-size: 20px;
+text-align: right;
+}
+
+table thead>tr>td.runner-pos {
+vertical-align: middle;
+font-size: 20px;
+text-align: center;
+font-weight: bold;
+color: #D9220F;
+}
+
+table thead>tr>td>span.race-date, .race-no {
+font-weight: bold;
+font-size: 12px;
+}
+
+table thead>tr>td>span.race-class, .race-dist {
+font-weight: bold;
+font-size: 13px;
+}
+
+table thead>tr>td.trainer-jockey {
+text-align: right;
+}
+
+table thead>tr>td {
+    background-color: #D8D8D8;
+    color: #424242;
+    font-weight: bold;
+}
+
+/* END HORSE PROFILE */
