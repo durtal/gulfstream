@@ -21,6 +21,23 @@ angular.module('gulfstreamApp')
 
             $scope.races = $scope.horse.races;
 
-            // learn underscore to break races up
+/*
+            // working underscorejs example
+            var races = _.toArray($scope.races);
+
+            // extract ratings from all races
+            var ratings = _.pluck(_.pluck(races, 'runners'), 'RRtg');
+            console.log(ratings);
+
+            // find max rating
+            var max = _.max(ratings);
+            console.log(max);
+
+            $scope.wins = _.filter(_.pluck(_.pluck(races, 'runners'), 'pos'), function(a) {
+                return a === 1;
+            }).length;
+
+
+*/
         });
     });
