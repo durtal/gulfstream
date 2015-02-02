@@ -2,7 +2,7 @@
 	<button class="btn btn-primary" ui-sref="ratings.all">Back to Ratings</button>
 
 	<h1>{{horse.horse | uppercase }}</h1>
-	<h5 class="hidden-xs">(id: <a href="http://www.hkjc.com/english/racing/horse.asp?horseno={{horse._id}}" target="_blank">{{horse._id}}</a>)</h5>
+	<h5 class="hidden-xs">(id: <strong><a href="http://durtal.github.io/gulfstream/#/ratings/horse/{{horse._id}}">{{horse._id}}</a></strong>)</h5>
 	<h4>TRAINER : <span class="h5">{{ horse.trainer }}</span></h4>
 	<h4>YOB: <span class="h5">{{ horse.yob }}</span></h4>
 	<h4>Races: <span class="h5">{{ horse.n_races }}</span></h4>
