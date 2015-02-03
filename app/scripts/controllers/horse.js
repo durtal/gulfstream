@@ -17,9 +17,7 @@ angular.module('gulfstreamApp')
                 '_id' : $stateParams.horse_id
             });
 
-            console.log($stateParams.horse_id);
-
-            $scope.races = $scope.horse.races;
+            $scope.races = _.toArray($scope.horse.races);
 
 /*
             // working underscorejs example
