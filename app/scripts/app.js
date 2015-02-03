@@ -29,6 +29,10 @@ angular
               url: '/about',
               templateUrl: 'views/about.html',
           })
+          .state('blog', {
+              url: '/blog',
+              templateUrl: 'views/blog/blog-home.html'
+          })
           .state('ratings', {
               url: '/ratings',
               templateUrl: 'views/ratings.html',
