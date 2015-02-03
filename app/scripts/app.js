@@ -12,7 +12,8 @@ angular
   .module('gulfstreamApp', [
     'ui.router',
     'ngResource',
-    'angularUtils.directives.dirPagination'
+    'angularUtils.directives.dirPagination',
+    'perfect_scrollbar'
   ])
   .config(['$stateProvider', '$urlRouterProvider',
     function($stateProvider, $urlRouterProvider) {

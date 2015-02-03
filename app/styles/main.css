@@ -225,3 +225,13 @@ table thead>tr>td {
 }
 
 /* END HORSE PROFILE */
+
+
+/* SCROLLBAR */
+.scroller {
+    height: 500px;
+    overflow-y: hidden;
+    position: relative;
+    border-top: 2px solid #D9220F;
+    border-bottom: 2px solid #D9220F;
+}

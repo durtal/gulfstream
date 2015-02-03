@@ -7,95 +7,48 @@
 	<h4>YOB: <span class="h5">{{ horse.yob }}</span></h4>
 	<h4>Races: <span class="h5">{{ horse.n_races }}</span></h4>
 
-
-	<div class="col-md-12 col-sm-12 col-lg-12 hidden-xs races-container">
-		<div class="visible-xs hidden-sm hidden-md hidden-lg">
-			<table class="table">
-				<thead>
-					<tr>
-						<td>Date</td>
-						<td>Class | Value</td>
-						<td rowspan="2">Pos</td>
-						<td rowspan="2">RRtg</td>
-					</tr>
-					<tr>
-						<td>Race</td>
-						<td>Dist | Surf</td>
-					</tr>
-				</thead>
-			</table>
+	<perfect-scrollbar class="scroller" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="visible-xs hidden-sm hidden-md hidden-lg">
+				<table class="table">
+					<thead>
+						<tr>
+							<td>Date</td>
+							<td>Class | Value</td>
+							<td rowspan="2">Pos</td>
+							<td rowspan="2">RRtg</td>
+						</tr>
+						<tr>
+							<td>Race</td>
+							<td>Dist | Surf</td>
+						</tr>
+					</thead>
+				</table>
+				<single-race-dir ng-repeat="race in races" race="race"></single-race-dir>
+			</div>
+			<div class="hidden-xs visible-sm visible-md visible-lg">
+				<table class="table">
+					<thead>
+						<tr>
+							<td class="col-sm-2 col-md-1 col-lg-1"><span class="race-date">Date</span></td>
+							<td class="col-sm-4 col-md-3 col-lg-3">Class | Value</td>
+							<td class="col-sm-2 col-md-2 col-lg-2 trainer-jockey hidden-sm">Trainer</td>
+							<td class="col-sm-1 col-md-1 col-lg-1 runner-pos" rowspan="2">Pos</td>
+							<td class="col-sm-3 col-md-3 col-lg-3 runner-horse" rowspan="2">Horse</td>
+							<td class="col-sm-1 col-md-1 col-lg-1">Time</td>
+							<td class="col-sm-1 col-md-1 col-lg-1 runner-pos" rowspan="2">RRtg</td>
+						</tr>
+						<tr>
+							<td><span class="race-no">Race #</span></td>
+							<td>Dist | Surf</td>
+							<td class="trainer-jockey hidden-sm">Jockey <sup class="text-muted">claim</sup></td>
+							<td>FinSpd</td>
+						</tr>
+					</thead>
+				</table>
+				<single-race-dir ng-repeat="race in races" race="race"></single-race-dir>
+			</div>
 		</div>
-		<div class="visible-sm visible-md visible-lg hidden-xs">
-			<table class="table">
-				<thead>
-					<tr>
-						<td class="col-sm-2 col-md-1 col-lg-1"><span class="race-date">Date</span></td>
-						<td class="col-sm-4 col-md-3 col-lg-3">Class | Value</td>
-						<td class="col-sm-2 col-md-2 col-lg-2 trainer-jockey hidden-sm">Trainer</td>
-						<td class="col-sm-1 col-md-1 col-lg-1 runner-pos" rowspan="2">Pos</td>
-						<td class="col-sm-3 col-md-3 col-lg-3 runner-horse" rowspan="2">Horse</td>
-						<td class="col-sm-1 col-md-1 col-lg-1">Time</td>
-						<td class="col-sm-1 col-md-1 col-lg-1 runner-pos" rowspan="2">RRtg</td>
-					</tr>
-					<tr>
-						<td><span class="race-no">Race #</span></td>
-						<td>Dist | Surf</td>
-						<td class="trainer-jockey hidden-sm">Jockey<sup class="text-muted">(claim)</sup></td>
-						<td>FinSpd</td>
-					</tr>
-				</thead>
-			</table>
-		</div>
-
-		<div ng-repeat="race in races">
-			<single-race-dir race="race"></single-race-dir>
-		</div>
-	</div>
-	<div class="col-xs-12 visible-xs">
-		<br>
-		<div ng-repeat="race in races">
-			<single-race-dir race="race"></single-race-dir>
-		</div>
-	</div>
-	<br>
-	<!-- <table class="table table-condensed table-hover table-responsive" style="font-align: center;">
-		<thead>
-			<tr class="rcapper" style="font-align: center;">
-				<th>Date</th>
-				<th>Race</th>
-				<th>Dist</th>
-				<th>Surface</th>
-				<th>Value</th>
-				<th>Race Type</th>
-				<th>CoR</th>
-				<th>Trainer</th>
-				<th>Jockey <sup>clm</sup></th>
-				<th>Pos</th>
-				<th>Wgt</th>
-				<th>Fin Time</th>
-				<th>2.5f FS</th>
-				<th>2f FS</th>
-				<th>RRtg</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="race in races" class="pos{{race.runners.pos}}">
-				<td>{{ race.date }}</td>
-				<td>{{ race.race }}</td>
-				<td>{{ race.details.dist }}</td>
-				<td>{{ race.details.surf }}</td>
-				<td>{{ race.details.value }}</td>
-				<td>{{ race.details.race_type }}</td>
-				<td>{{ race.conditions.cor }}</td>
-				<td>{{ race.runners.trainer }}</td>
-				<td>{{ race.runners.jockey }} <sup class="text-muted">{{ race.runners.j_clm }}</sup></td>
-				<td>{{ race.runners.pos }}</td>
-				<td>{{ race.runners.wgt }}</td>
-				<td>{{ race.runners.fintime | number:2 }}</td>
-				<td>{{ race.runners.fs2_5f | number:4 }}</td>
-				<td>{{ race.runners.fs2f | number:4 }}</td>
-				<td>{{ race.runners.RRtg | number:1}}</td>
-			</tr>
-		</tbody>
-	</table> -->
+	</perfect-scrollbar>
+	<hr>
 </div>
