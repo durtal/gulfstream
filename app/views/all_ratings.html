@@ -1,19 +1,25 @@
-<div class="container">
-	<div class="col-md-4">
-		<p></p>
+<div class="row">
+	<div class="col-sm-4">
+		<br>
 		<label for="search">Search:</label>
 		<input type="text" ng-model="query.horse" id="search" class="form-control" placeholder="filter horses">
-		<p></p>
+		<br>
 		<label for="search">Horses per Page:</label>
 		<select ng-model="pageSize" ng-options="num for num in [10, 20, 40, 100]"></select>
-		<p></p>
-		<p class="text-muted">Use the search box above to filter horses by name.  Any horse whose name contains the search parameter will be kept in the table.</p>
-		<p class="text-muted">Use the Horses per Page to limit the number of horses in the table, as there are {{horses.length}} entries it requires a lot of pagination.</p>
-		<p class="text-muted">To view an individual horse's race record at Gulfstream Park click on corresponding 'show' link to the left of the horses name.</p>
+		<br>
+		<p>
+			<sub class="text-muted">Use the search box to filter horses by name.  Any horse whose name contains the search term will be kept in the table.</sub>
+		</p>
+		<p>
+			<sub class="text-muted">Use the Horses per Page to limit the number of horses in the table, as there are {{ horses.length }} horses it requires a lot of pagination.</sub>
+		</p>
+		<p>
+			<sub class="text-muted">To view the record of an individual horse, click on the corresponding 'show' link to the left of the horses name.</sub>
+		</p>
 
 	</div>
-	<div class="col-md-8">
-		<p></p>
+	<div class="col-sm-8">
+		<br>
 		<table class="table table-condensed table-hover">
 			<thead>
 				<tr class="rcapper">
@@ -25,8 +31,10 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr dir-paginate="horse in horses | orderBy:predicate:reverse | filter:query | itemsPerPage:pageSize" current-page="currentPage">
-					<td><a ui-sref="ratings.horse({horse_id: '{{ horse._id }}'})">show</a></td>
+				<tr dir-paginate="horse in horses | orderBy: predicate: reverse | filter: query | itemsPerPage: pageSize" current-page="currentPage">
+					<td>
+						<a ui-sref="ratings.horse({ horse_id: '{{ horse._id }}'})">show</a>
+					</td>
 					<td>{{ horse.horse }}</td>
 					<td>{{ horse.trainer }}</td>
 					<td>{{ horse.yob }}</td>

@@ -1,24 +1,26 @@
-<div class="container">
-    <h1>Ratings</h1>
+<div class="row">
+    <div class="col-sm-12">
+        <h1>Ratings</h1>
 
-    <p>Ratings found here belong to horses who have raced at least 5 times at Gulfstream Park since December 2012, a total of {{ horses.length }} horses.  Horses who have raced fewer than 5 times have also been handicapped but aren't presented, they should be uploaded in time, but fear that amount of data (~7000 horses) will slow the app significantly.</p>
+        <p>Ratings found here belong to horses who have raced at least 5 times at Gulfstream Park since December 2012, a total of {{ horses.length }} horses.  Horses who have raced fewer than 5 times have also been handicapped but aren't presented, they should be uploaded in time, but fear that amount of data (~7000 horses) will slow the app significantly.</p>
 
-    <p>The ratings are based on the performance of the horse in the type/class of race the horse competed in, a full explanation can be fonud in the <a ui-sref="ratings.handicappingmethod">Handicapping Method</a> tab below.  In time I will post regular blogs that walk through the handicapping process.  The ratings <strong>are</strong> a work in progress, improvements will (hopefully) be made over time (as I continue to learn).</p>
+        <p>The ratings are based on the performance of the horse in the type/class of race the horse competed in, a full explanation can be fonud in the <a ui-sref="ratings.handicappingmethod">Handicapping Method</a> tab below.  In time I will post regular blogs that walk through the handicapping process.  The ratings <strong>are</strong> a work in progress, improvements will (hopefully) be made over time (as I continue to learn).</p>
 
-    <p>To see the ratings click on the <a ui-sref="ratings.all">Gulfstream Ratings</a> tab, which will present a small table with the available horses, which can be paginated through or filtered using the search tool.  To view a horse's form and ratings click on the corresponding Go to Form <strong>show</strong> link</p>
+        <p>To see the ratings click on the <a ui-sref="ratings.all">Gulfstream Ratings</a> tab, which will present a small table with the available horses, which can be paginated through or filtered using the search tool.  To view a horse's form and ratings click on the corresponding Go to Form <strong>show</strong> link</p>
 
-    <div class="col-md-12">
+        <div class="col-sm-12">
+            <br>
+        </div>
+
+        <ul class="nav nav-pills nav-justified">
+            <li ui-sref-active="active">
+                <a ui-sref="ratings.all">Gulfstream Ratings</a>
+            </li>
+            <li ui-sref-active="active">
+                <a ui-sref="ratings.handicappingmethod">Handicapping Method</a>
+            </li>
+        </ul>
         <br>
+        <div ui-view></div>
     </div>
-
-    <ul class="nav nav-pills nav-justified">
-        <li ui-sref-active="active">
-            <a ui-sref="ratings.all">Gulfstream Ratings</a>
-        </li>
-        <li ui-sref-active="active">
-            <a ui-sref="ratings.handicappingmethod">Handicapping Method</a>
-        </li>
-    </ul>
-    <br>
-    <div ui-view></div>
 </div>
