@@ -118,11 +118,6 @@ table > thead > tr > th {
     color: #FCFCFC;
 }
 
-.rcapper {
-    background-color: #4395A4;
-    color: #FCFCFC;
-}
-
 .btn-rcapper {
     background-color: #4395A4;
     color: #FCFCFC;
@@ -226,6 +221,7 @@ table thead>tr>td {
     background-color: #D8D8D8;
     color: #424242;
     font-weight: bold;
+    font-size: 14px;
 }
 
 /* END HORSE PROFILE */
