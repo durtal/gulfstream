@@ -2,10 +2,13 @@
 	<table class="table">
 		<tbody>
 			<tr>
-				<td>{{ race.date }}</td>
-				<td><strong>{{ race.details.race_type | uppercase }}</strong> | ${{ race.details.value }}</td>
-				<td class="runner-pos" rowspan="2">{{ race.runners.pos }}</td>
-				<td class="RRtg-box" rowspan="2"><span class="rcapperRtg">{{ race.runners.RRtg | number: 0 }}</span></td>
+				<td class="col-xs-2">{{ race.date }}</td>
+				<td class="col-xs-4"><strong>{{ race.details.race_type | uppercase }}</strong> | ${{ race.details.value }}</td>
+				<td class="col-xs-1 runner-pos" rowspan="2">{{ race.runners.pos }}</td>
+				<td class="col-xs-3 runner-horse-sm" rowspan="2">{{
+					race.runners.horse
+				}}</td>
+				<td class="col-xs-2 RRtg-box" rowspan="2"><span class="rcapperRtg">{{ race.runners.RRtg | number: 0 }}</span></td>
 			</tr>
 			<tr>
 				<td>{{ race.race }}</td>
