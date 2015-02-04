@@ -27,12 +27,12 @@ Things I have planned include:
 
 If anyone is interested in contributing, has any questions, ideas for features, visualisations, don't hesitate to get in touch via twitter or email (both listed).
 
-Also, as this site is hosted by github, everything to re-create the site locally is available for others, simply fork the repo, and follow the steps below:
+Also, as this site is hosted by github, everything to re-create the site locally is available for others, simply clone the repo, and follow the steps below:
 
 * Install [NodeJS](http://www.nodejs.org)
 * Open terminal or command prompt and navigate to the directory of the forked repo (should be called **gulfstream**)
 * run `npm install -g bower`
-* run `npm install -g grunt-clm`
+* run `npm install -g grunt-cli`
 * run `npm install`
 * run `bower install`
 * finally run `grunt serve` which should launch a browser with the app
