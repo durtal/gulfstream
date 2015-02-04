@@ -6,8 +6,10 @@ bower_components
 .Rproj.user
 **.RData
 .Rhistory
-.Rproj
+**.Rproj
 app/views/track_profiles/track_profiles.Rproj
 app/views/handicapping/handicapping.Rproj
 gh-pages.txt
 blog.Rproj
+**_cache
+app/data/write-ratings.R
