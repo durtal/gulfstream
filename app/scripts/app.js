@@ -32,7 +32,11 @@ angular
           })
           .state('blog', {
               url: '/blog',
-              templateUrl: 'views/blog/blog-home.html'
+              templateUrl: 'views/blog-home.html'
+          })
+          .state('blog.31-1-15', {  // surely a better way, possible to use stateParams to create state, that would fetch different templateUrl
+              url: '/31-1-15',
+              templateUrl: 'views/blog/3-2-15.html'
           })
           .state('ratings', {
               url: '/ratings',

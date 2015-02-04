@@ -129,6 +129,10 @@ table > thead > tr > th {
     text-align: center;
 }
 
+h3.blog-header {
+    text-align: center;
+}
+
 /* Race table styles, used in individual horse profiles, and singleracedir */
 
 .races-container {
