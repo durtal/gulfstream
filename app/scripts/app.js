@@ -13,7 +13,8 @@ angular
     'ui.router',
     'ngResource',
     'angularUtils.directives.dirPagination',
-    'perfect_scrollbar'
+    'perfect_scrollbar',
+    'ui.bootstrap'
   ])
   .config(['$stateProvider', '$urlRouterProvider',
     function($stateProvider, $urlRouterProvider) {
