@@ -348,23 +348,22 @@ module.exports = function (grunt) {
         configFile: 'test/karma.conf.js',
         singleRun: true
       }
+    },
+    // grunt build control
+    buildcontrol: {
+        options: {
+            dir: 'dist',
+            commit: true,
+            push: true
+        },
+        pages: {
+            options: {
+                remote: 'git@github.com:durtal/gulfstream.git',
+                branch: 'gh-pages'
+            }
+        }
     }
   });
-
-  // grunt build control
-  buildcontrol: {
-      options: {
-          dir: 'dist',
-          commit: true,
-          push: true
-      },
-      pages: {
-          options: {
-              remote: 'git@github.com:durtal/gulfstream.git',
-              branch: 'gh-pages'
-          }
-      }
-  }
 
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
