@@ -93,7 +93,7 @@ p {
 
 .rcapper-img-main {
     width: 90%;
-    height: 70%;
+    height: 200px;
     border: 1px solid #d8d8d8;
 }
 
@@ -119,7 +119,7 @@ table > thead > tr > th {
 }
 
 .btn-rcapper {
-    background-color: #4395A4;
+    background-color: #1D035E;
     color: #FCFCFC;
     font-weight: bold;
     width: 90%;
@@ -131,6 +131,10 @@ table > thead > tr > th {
 
 .blog-header {
     text-align: center;
+}
+
+strong {
+    color: #00871E;
 }
 
 /* Race table styles, used in individual horse profiles, and singleracedir */
