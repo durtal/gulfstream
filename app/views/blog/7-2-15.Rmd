@@ -1,0 +1,179 @@
+---
+output: html_fragment
+---
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+library(tomhes)
+library(dplyr, warn.conflicts = FALSE, quietly = TRUE)
+library(ggplot2)
+library(RcappeR)
+library(magrittr)
+library(reshape2)
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, cache=TRUE}
+## This code unfortunately can't be run by others.
+mongo <- mongo.create()
+count <- mongo.count(mongo = mongo, ns = "gulf.ratings")
+cursor <- mongo.find(mongo = mongo, ns = "gulf.ratings")
+output <- vector("list", count)
+i <- 1
+while(mongo.cursor.next(cursor)) {
+    output[[i]] <- mongo.bson.to.list(mongo.cursor.value(cursor))
+    i <- i + 1
+}
+
+df <- gulf_ratings_df(ratings = output)
+df %<>%
+    group_by(date_race) %>%
+    arrange(pos)
+
+buf <- mongo.bson.buffer.create()
+mongo.bson.buffer.append(buf = buf, name = "date", value = "07/02/15")
+query <- mongo.bson.from.buffer(buf = buf)
+count <- mongo.count(mongo = mongo, ns = "gulf.races", query = query)
+cursor <- mongo.find(mongo = mongo, ns = "gulf.races", query = query)
+sat_races <- vector("list", count)
+i <- 1
+while(mongo.cursor.next(cursor)) {
+    sat_races[[i]] <- mongo.bson.to.list(mongo.cursor.value(cursor))
+    i <- i + 1
+}
+sat_races <- gulf_races_df(races = sat_races)
+sat_races %<>% filter(race >= 12) %>%
+    select(date_race:fintime, c2f, c4f, c6f, c7f, c8f, c8_5f, c9f, fs7f, fs5f,
+           fs3f, fs2f, fs1f, fs0_5f, d2f, d4f, d6f, d7f, d8f, d8_5f, d9f, ss2f,
+           ss4f, ss6f, ss7f, ss8f, ss8_5f, ss9f)
+
+turf_hcp <- sat_races %>% filter(race == 12)
+donn_hcp <- sat_races %>% filter(race == 13)
+
+buf <- mongo.bson.buffer.create()
+mongo.bson.buffer.append(buf, name = "details.dist", value = 9)
+query <- mongo.bson.from.buffer(buf = buf)
+count <- mongo.count(mongo = mongo, ns = "gulf.races", query = query)
+cursor <- mongo.find(mongo = mongo, ns = "gulf.races", query = query)
+output <- vector("list", count)
+i <- 1
+while(mongo.cursor.next(cursor)) {
+    output[[i]] <- mongo.bson.to.list(mongo.cursor.value(cursor))
+    i <- i + 1
+}
+nine_furlongs <- gulf_races_df(races = output)
+
+
+```
+
+## Saturday 7/2/15
+
+On the 7th Feb Gulfstream Park hosted two of the biggest races of its season, the Group 1 Turf Handicap run over the 9f turf course, and the Group 1 Donn Handicap run over the 9f dirt course.  This post looks at the two races, which can be viewed below, via Gulfstream Parks youtube account.
+
+<div class="col-sm-6">
+<h4>Turf Handicap</h4>
+<iframe width="420" height="315" src="https://www.youtube.com/embed/XYHJ0aCVHEA" frameborder="0" allowfullscreen></iframe>
+</div>
+<div class="col-sm-6">
+<h4>Donn Handicap</h4>
+<iframe width="420" height="315" src="https://www.youtube.com/embed/55vDhKsUz08" frameborder="0" allowfullscreen style="float:center;"></iframe>
+</div>
+
+
+### Turf Handicap
+
+The Turf Handicap was won by **`r subset(turf_hcp, pos == 1)$horse`**, defeating **`r subset(turf_hcp, pos == 2)$horse`** in a final time of **`r subset(turf_hcp, pos == 1)$fintime`**.
+
+The winner was drawn in stall `r subset(turf_hcp, pos == 1)$gate` and unsurprisingly covered less ground than his rivals.  Over the 9 furlongs `r subset(turf_hcp, pos == 1)$horse` covered `r subset(turf_hcp, pos == 2)$d9f - subset(turf_hcp, pos == 1)$d9f`ft less than 2nd placed **`r subset(turf_hcp, pos == 2)$horse`**, `r subset(turf_hcp, pos == 3)$d9f - subset(turf_hcp, pos == 1)$d9f`ft less than 3rd placed **`r subset(turf_hcp, pos == 3)$horse`**, and `r subset(turf_hcp, pos == 4)$d9f - subset(turf_hcp, pos == 1)$d9f`ft less than 4th placed **`r subset(turf_hcp, pos == 4)$horse`**.
+
+These differences are shown in the plot below, showing when, and how much, extra ground was covered by the 3 horses that finished behind **`r subset(turf_hcp, pos == 1)$horse`**.  The 9f turf course consists of two turns, the second starts around 6f into the race, horses had gradually been travelling further/wider than the winner, but over the 2furlongs from 6f to 8f horses travelled >20ft further than **`r subset(turf_hcp, pos == 1)$horse`**.
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, out.height="340px", out.width="500px", fig.align='center'}
+turf_hcp_dists <- turf_hcp %>% select(pos, horse, matches("d[[:digit:]]"))
+turf_hcp_dists <- melt(turf_hcp_dists, id.vars = c("pos", "horse"), value.name = "distance", variable.name = "sectional")
+
+turf_hcp_dists$sectional %<>% gsub(pattern = "[[:alpha:]]", replacement = "", x = .) %>%
+    gsub(pattern = "_", replacement = ".", x = .) %>%
+    as.numeric()
+
+turf_hcp_dists$horse <- factor(turf_hcp_dists$horse, levels = unique(turf_hcp_dists$horse))
+turf_hcp_dists %<>%
+    group_by(sectional) %>%
+    mutate(min = min(distance), delta = distance - min)
+
+ggplot(subset(turf_hcp_dists, pos <= 4), aes(x = sectional, y = delta, col = horse)) +
+    geom_smooth(size = 1, alpha = .75, stat = "identity") +
+    labs(y = "Distance (ft)", x = "Sectional (furlongs)", title = "Turf Hcp: Extra Distance travelled") +
+    theme_rcapper()
+```
+
+What the Trakus distance data can't tell you, but the replay above will, is that **`r subset(turf_hcp, pos == 1)$horse`** was stuck trapped behind horses and was looking for room to run late down the back straight, round the turn, and was still looking for room entering the home straight.  With 0.5 furlongs to go, **`r subset(turf_hcp, pos == 1)$horse`** trailed the eventual second, **`r subset(turf_hcp, pos == 2)$horse`**, by `r subset(turf_hcp, pos == 1)$c8_5f - subset(turf_hcp, pos == 2)$c8_5f`, before eventually getting up to win by a nose (or `r subset(turf_hcp, pos == 2)$fintime - subset(turf_hcp, pos == 1)$fintime` seconds).  The first four were seperated by just `r subset(turf_hcp, pos == 4)$fintime - subset(turf_hcp, pos == 1)$fintime` seconds.
+
+The finish to the race was very fast, the average 2 furlong Finishing Speed for winners over the 9f turf course is **`r df %>% ungroup() %>% filter(dist ==9 , surf == "turf" , pos == 1) %>% summarise(fs2f = mean(fs2f)) %>% .$fs2f %>% round(4)`** (or `r df %>% ungroup() %>% filter(dist ==9 , surf == "turf" , pos == 1) %>% summarise(fs2f = mean(fs2f)) %>% .$fs2f %>% round(3) * 100`%), **`r subset(turf_hcp, pos == 1)$horse`** had a 2 furlong finishing speed of **`r subset(turf_hcp, pos == 1)$fs2f`** (or `r subset(turf_hcp, pos == 1)$fs2f * 100`%).  The fast finish shows the race was run quite inefficiently, with runners going slow early, meaning they were capable of finishing fast, no doubt the slow early pace also led to the close finish between the first 4.
+
+
+### Donn Handicap
+
+The Donn Handicap was won by **`r subset(donn_hcp, pos == 1)$horse`**, defeating **`r subset(donn_hcp, pos == 2)$horse`** in a final time of **`r subset(donn_hcp, pos == 1)$fintime`**.
+
+Like the Turf Handicap, the front two were seperated by a slim margin, just `r subset(donn_hcp, pos == 2)$fintime - subset(donn_hcp, pos == 1)$fintime` seconds.  The front two also had very similar trips, the winner, **`r subset(donn_hcp, pos == 1)$horse`**, travelled a total of `r subset(donn_hcp, pos == 1)$d9f`ft, compared to the second placed **`r subset(donn_hcp, pos == 2)$horse`** trip of `r subset(donn_hcp, pos == 2)$d9f`.  The front also pulled some way clear of the rest, with 3rd placed **`r subset(donn_hcp, pos == 3)$horse`** finishing `r subset(donn_hcp, pos == 3)$fintime - subset(donn_hcp, pos == 1)$fintime` seconds down on the winner.
+
+The runner up was the only horse who managed to close on the winner, after 2furlongs **`r subset(donn_hcp, pos == 2)$horse`** was **`r subset(donn_hcp, pos == 2)$c2f - subset(donn_hcp, pos == 1)$c2f`** seconds down on the eventual winner.  The plot below shows the first four finishers and the seconds by which they trailed **`r subset(donn_hcp, pos == 1)$horse`** at the various sectionals.
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, out.height="340px", out.width="500px", fig.align='center'}
+donn_hcp %>% 
+    select(pos, horse, matches("c[[:digit:]]")) %>% 
+    melt(id.vars = c("pos", "horse"), value.name = "cum_time", variable.name = "sectional") %>% 
+    filter(pos <= 4) %>% 
+    mutate(sectional = rep(c(2,4,6,7,8,8.5,9), each = 4)) %>% 
+    group_by(sectional) %>% 
+    mutate(delta = cum_time - min(cum_time)) %>%
+    ggplot(aes(x = sectional, y = delta, col = horse)) + 
+        geom_smooth(stat = "identity", size = 1) + 
+        labs(x = "Sectional (furlongs)", y = "Time (s)", 
+             title = "Donn Hcp: Seconds behind leader (first 4)") +
+        theme_rcapper()
+```
+
+
+**`r subset(donn_hcp, pos == 2)$horse`**, who won the 2014 Donn Handicap, tracked **`r subset(donn_hcp, pos == 1)$horse`** the whole way round.  **`r subset(donn_hcp, pos == 1)$horse`** led from gate to wire, helping to set a solid pace.  As a result of the solid pace, the finish was a touch slow.  The average 2 furlong Finishing Speed for winners over the 9f dirt course is **`r df %>% ungroup() %>% filter(dist == 9, surf == "dirt", pos == 1) %>% summarise(fs2f = mean(fs2f)) %>% .$fs2f %>% round(4)`** (or `r df %>% ungroup() %>% filter(dist == 9, surf == "dirt", pos == 1) %>% summarise(fs2f = mean(fs2f)) %>% .$fs2f %>% round(3) * 100`%), **`r subset(donn_hcp, pos == 1)$horse`** recorded a 2furlong Finishing Speed of **`r subset(donn_hcp, pos == 1)$fs2f`** (or `r subset(donn_hcp, pos == 1)$fs2f * 100`%).
+
+### Turf vs Dirt
+
+With both races being run over 9f but on different surfaces a comparison between the two can serve (to an extent) as an example of the effect each of surfaces has on runners.  The contrast in surfaces can be shown via Finishing Speeds for at each sectional.  The plot below shows the average finishing Speeds of the first two home in each of the races.  So it's worth bearing in mind that the Turf Handicap was slowly run early, enabling a fast finsh, while the Donn Handicap was run fast early, resulting in a slightly slower finish.  Nevertheless, the difference between the surfaces is striking, as plotted below.
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, out.height="340px", out.width="500px", fig.align='center'}
+turf_hcp_fs <- turf_hcp %>% select(pos, horse, surf, starts_with("fs"))
+turf_hcp_fs <- melt(turf_hcp_fs, id.vars = c("pos", "horse", "surf"), value.name = "fin_spd", variable.name = "sectional")
+turf_hcp_fs$race <- "Turf Handicap (turf)"
+
+donn_hcp_fs <- donn_hcp %>% select(pos, horse, surf, starts_with("fs"))
+donn_hcp_fs <- melt(donn_hcp_fs, id.vars = c("pos", "horse", "surf"), value.name = "fin_spd", variable.name = "sectional")
+donn_hcp_fs$race <- "Donn Handicap (dirt)"
+
+df_fs <- rbind(donn_hcp_fs, turf_hcp_fs)
+df_fs$sectional %<>% gsub(pattern = "[[:alpha:]]", replacement = "", x = .) %>%
+    gsub(pattern = "_", replacement = ".", x = .) %>%
+    as.numeric()
+df_fs$horse <- factor(x = df_fs$horse, levels = unique(df_fs$horse))
+
+df_fs %>% 
+    filter(pos <= 2) %>% 
+    group_by(race, sectional) %>% 
+    summarise(fs = mean(fin_spd)) %>% 
+    ggplot(aes(x = sectional, y = fs, col = race)) + 
+        geom_smooth(size = 1.3, alpha = .75) + 
+        scale_x_reverse() +
+        scale_color_manual(values = c("#B45F04", "#3ADF00")) +
+        theme_rcapper()
+```
+
+9f turf races see runners finishing their races faster than the speed they showed early, while 9f dirt races see runners finishing slower and slower the deeper into the race they go.  The density plot below shows the 2f Finishing Speeds for winners over eachh of the surfaces,
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, out.height="340px", out.width="500px", fig.align='center'}
+nine_furlongs %>%
+    filter(pos == 1) %>%
+    ggplot(aes(x = fs2f, fill = surf)) +
+        geom_density(alpha = .5) +
+        scale_fill_manual(values = c("#B45F04", "#3ADF00")) +
+        labs(x = "Finishing Speed") +
+        theme_rcapper()
+```

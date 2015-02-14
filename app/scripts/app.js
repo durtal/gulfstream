@@ -39,6 +39,10 @@ angular
               url: '/31-1-15',
               templateUrl: 'views/blog/3-2-15.html'
           })
+          .state('blog.7-2-15', {
+              url: '/7-2-15',
+              templateUrl: 'views/blog/7-2-15.html'
+          })
           .state('ratings', {
               url: '/ratings',
               templateUrl: 'views/ratings.html',
