@@ -43,6 +43,10 @@ angular
               url: '/7-2-15',
               templateUrl: 'views/blog/7-2-15.html'
           })
+          .state('blog.gulfstream-data', {
+              url: '/gulfstream-data',
+              templateUrl: 'views/blog/gulfstream-data.html'
+          })
           .state('ratings', {
               url: '/ratings',
               templateUrl: 'views/ratings.html',

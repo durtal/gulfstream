@@ -1,0 +1,97 @@
+---
+output: html_fragment
+---
+
+## Data
+
+This app contains data for horses to have raced at Gulfsteam Park since December 2012, the data can be found in the github repo for this app, find the repo [here](https://github.com/durtal/gulfstream).  The data is [JSON](http://en.wikipedia.org/wiki/JSON) and this post will walk through loading the JSON into [R](http://cran.r-project.org/), and converting it into a neat dataframe.  A subset of this data can also be found in my [RcappeR](https://github.com/durtal/RcappeR) package.
+
+### Load libraries
+
+First we'll need a couple of libraries, one to convert the JSON into a list (`jsonlite`), and the second (`plyr`) to help with turning the list to a dataframe.  We'll also need a couple of helper functions found in this [gist](https://gist.github.com/durtal/f0ca54e7aacb92130a1e), the functions are `gulf_ratings` and `gulf_ratings_helper`, the former calls the latter.
+
+```{r message=FALSE, warning=FALSE}
+library(jsonlite)
+library(plyr)
+
+# we'll use the source_gist function from devtools so
+# install.packages("devtools")
+devtools::source_gist("https://gist.github.com/durtal/f0ca54e7aacb92130a1e")
+```
+
+### Read JSON into R
+
+The `fromJSON` function from `jsonlite` is used, it will attempt to convert the data to a dataframe, but as the JSON is nested, an example of a single horse's data will follow, we need to tell `fromJSON` not to simplify to a dataframe.
+
+```{r message=FALSE, warning=FALSE, cache=TRUE}
+ratings_json <- fromJSON(txt = "https://raw.githubusercontent.com/durtal/gulfstream/master/app/data/gulfstream-ratings.json", simplifyDataFrame = FALSE)
+```
+
+We should now have a large list in our workspace, at the time of writing (`r Sys.Date()`) the list has
+**`r length(ratings_json)`**.
+
+### A single horse
+
+We can view what the JSON looks like, each horse will have the following structure.
+
+```{r, echo=FALSE}
+horse <- toJSON(ratings_json[[1]][c("_id", "yob", "horse", "horse_abr", "trainer", "n_races")], pretty = TRUE)
+cat(horse)
+```
+
+Each horses will also contain a races object, that will contain the individual races (the number of races is stored in the JSON as `n_races`, see above) they competed in, only one race is shown here.  For a full list of variables see the bottom of the post.
+
+```{r echo=FALSE}
+a_race <- toJSON(ratings_json[[1]]$races[1], pretty = TRUE)
+cat(a_race)
+```
+
+### Convert to Dataframe
+
+Thanks to the helper functions the list can be converted to a dataframe easily, due to the nested nature it can take some, `gulf_ratings` uses `plyr`'s `ldply` function, and it also includes `plyr`'s progress bar (which is not used here).
+
+```{r, cache=TRUE}
+ratings_df <- gulf_ratings(ratings = ratings_json, .progress = "none")
+```
+
+We should now have a nice dataframe, with `r length(names(ratings_df))` variables.  A look at the first few rows, shows that the dataframe is arranged by horse, and then by date (most recent races at the top):
+
+```{r}
+head(ratings_df)
+```
+
+When this post was written the app contained data for horses who have raced at Gulfstream Park at least 5 times since December 2012, this means that races in the dataset might not have all runners from that race.  Each race in the dataset can be identified using the `date_race` variable
+
+### Variables
+
+There are 29 variables in the dataset, the majority should be self explanatory, but nevertheless definitions can be found here.
+
+- **id** unique horse id, consisting of horses' name and year of birth (used as slug in app).
+- **yob** year of birth
+- **current_trainer** trainer of horse in its last race
+- **.id** id number for race in a horses race record
+- **date** date of race
+- **race** race number (on race card)
+- **date_race** serves as more accurate race id
+- **race_type** type of race: Claiming == "clm", Maiden Claiming == "mdn clm", etc
+- **dist** race distance (furlongs)
+- **surf** race surface (dirt or turf)
+- **value** race value (or purse)
+- **race_cond** any additional conditions on its runners (Non Winners 1 == "NW1")
+- **clm_price** maximum claiming price (if applicable)
+- **f_m** filly and mares only race
+- **runup** length of run-up before clock starts (in feet)
+- **going** official going
+- **cor** class of race (I use this to handicap, combination of race_type and various other conditions)
+- **trainer** trainer for the race
+- **jockey** jockey
+- **j_clm** jockey claim (in lbs)
+- **age** horse age
+- **wgt** weight carried (in lbs)
+- **gate** starting gate
+- **pos** finishing position
+- **horse** horse
+- **fintime** finishing time
+- **fs2_5f** 2.5 furlong Finishing Speed
+- **fs2f** 2 furlong Finishing Speed
+- **RRtg** my RcappeR rating for the horses performance
