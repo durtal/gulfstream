@@ -1,0 +1,136 @@
+<div id="data" class="section level2"> <h2>Data</h2> <p>This app contains data for horses to have raced at Gulfsteam Park since December 2012, the data can be found in the github repo for this app, find the repo <a href="https://github.com/durtal/gulfstream">here</a>. The data is <a href="http://en.wikipedia.org/wiki/JSON">JSON</a> and this post will walk through loading the JSON into <a href="http://cran.r-project.org/">R</a>, and converting it into a neat dataframe. A subset of this data can also be found in my <a href="https://github.com/durtal/RcappeR">RcappeR</a> package.</p> <div id="load-libraries" class="section level3"> <h3>Load libraries</h3> <p>First we’ll need a couple of libraries, one to convert the JSON into a list (<code>jsonlite</code>), and the second (<code>plyr</code>) to help with turning the list to a dataframe. We’ll also need a couple of helper functions found in this <a href="https://gist.github.com/durtal/f0ca54e7aacb92130a1e">gist</a>, the functions are <code>gulf_ratings</code> and <code>gulf_ratings_helper</code>, the former calls the latter.</p> <pre class="r"><code>library(jsonlite)
+library(plyr)
+
+# we'll use the source_gist function from devtools so
+# install.packages(&quot;devtools&quot;)
+devtools::source_gist(&quot;https://gist.github.com/durtal/f0ca54e7aacb92130a1e&quot;)</code></pre> </div> <div id="read-json-into-r" class="section level3"> <h3>Read JSON into R</h3> <p>The <code>fromJSON</code> function from <code>jsonlite</code> is used, it will attempt to convert the data to a dataframe, but as the JSON is nested, an example of a single horse’s data will follow, we need to tell <code>fromJSON</code> not to simplify to a dataframe.</p> <pre class="r"><code>ratings_json &lt;- fromJSON(txt = &quot;https://raw.githubusercontent.com/durtal/gulfstream/master/app/data/gulfstream-ratings.json&quot;, simplifyDataFrame = FALSE)</code></pre> <p>We should now have a large list in our workspace, at the time of writing (2015-02-15) the list has <strong>1893</strong>.</p> </div> <div id="a-single-horse" class="section level3"> <h3>A single horse</h3> <p>We can view what the JSON looks like, each horse will have the following structure.</p> <pre><code>## {
+##     &quot;_id&quot;: [
+##         &quot;handsome_jack_2010&quot;
+##     ],
+##     &quot;yob&quot;: [
+##         2010
+##     ],
+##     &quot;horse&quot;: [
+##         &quot;handsome jack&quot;
+##     ],
+##     &quot;horse_abr&quot;: [
+##         &quot;handsome_jack&quot;
+##     ],
+##     &quot;trainer&quot;: [
+##         &quot;wesley a ward&quot;
+##     ],
+##     &quot;n_races&quot;: [
+##         8
+##     ]
+## }</code></pre> <p>Each horses will also contain a races object, that will contain the individual races (the number of races is stored in the JSON as <code>n_races</code>, see above) they competed in, only one race is shown here. For a full list of variables see the bottom of the post.</p> <pre><code>## {
+##     &quot;100&quot;: {
+##         &quot;date&quot;: [
+##             &quot;02/10/14&quot;
+##         ],
+##         &quot;race&quot;: [
+##             5
+##         ],
+##         &quot;date_race&quot;: [
+##             &quot;02/10/14_5&quot;
+##         ],
+##         &quot;details&quot;: {
+##             &quot;race_type&quot;: [
+##                 &quot;clm&quot;
+##             ],
+##             &quot;dist&quot;: [
+##                 8.5
+##             ],
+##             &quot;surf&quot;: [
+##                 &quot;turf&quot;
+##             ],
+##             &quot;value&quot;: [
+##                 21500
+##             ]
+##         },
+##         &quot;conditions&quot;: {
+##             &quot;race_cond&quot;: [
+##                 &quot;null&quot;
+##             ],
+##             &quot;clm_price&quot;: [
+##                 30000
+##             ],
+##             &quot;f_m&quot;: [
+##                 false
+##             ],
+##             &quot;runup&quot;: [
+##                 165
+##             ],
+##             &quot;going&quot;: [
+##                 &quot;firm&quot;
+##             ],
+##             &quot;cor&quot;: [
+##                 &quot;clm - (2e+04,3.4e+04]&quot;
+##             ]
+##         },
+##         &quot;runners&quot;: {
+##             &quot;trainer&quot;: [
+##                 &quot;wesley a ward&quot;
+##             ],
+##             &quot;jockey&quot;: [
+##                 &quot;edgar s prado&quot;
+##             ],
+##             &quot;j_clm&quot;: [
+##                 0
+##             ],
+##             &quot;age&quot;: [
+##                 4
+##             ],
+##             &quot;wgt&quot;: [
+##                 121
+##             ],
+##             &quot;gate&quot;: [
+##                 3
+##             ],
+##             &quot;pos&quot;: [
+##                 1
+##             ],
+##             &quot;horse&quot;: [
+##                 &quot;handsome jack&quot;
+##             ],
+##             &quot;fintime&quot;: [
+##                 101.84
+##             ],
+##             &quot;fs2_5f&quot;: [
+##                 0.949
+##             ],
+##             &quot;fs2f&quot;: [
+##                 &quot;NA&quot;
+##             ],
+##             &quot;RRtg&quot;: [
+##                 84.9626
+##             ]
+##         }
+##     }
+## }</code></pre> </div> <div id="convert-to-dataframe" class="section level3"> <h3>Convert to Dataframe</h3> <p>Thanks to the helper functions the list can be converted to a dataframe easily, due to the nested nature it can take some, <code>gulf_ratings</code> uses <code>plyr</code>’s <code>ldply</code> function, and it also includes <code>plyr</code>’s progress bar (which is not used here).</p> <pre class="r"><code>ratings_df &lt;- gulf_ratings(ratings = ratings_json, .progress = &quot;none&quot;)</code></pre> <p>We should now have a nice dataframe, with 29 variables. A look at the first few rows, shows that the dataframe is arranged by horse, and then by date (most recent races at the top):</p> <pre class="r"><code>head(ratings_df)</code></pre> <pre><code>##                   id  yob current_trainer .id     date race  date_race
+## 1 handsome_jack_2010 2010   wesley a ward 100 02/10/14    5 02/10/14_5
+## 2 handsome_jack_2010 2010   wesley a ward 101 03/08/14    5 03/08/14_5
+## 3 handsome_jack_2010 2010   wesley a ward 102 18/07/14    8 18/07/14_8
+## 4 handsome_jack_2010 2010   wesley a ward 103 27/10/13    4 27/10/13_4
+## 5 handsome_jack_2010 2010   wesley a ward 104 28/09/13    7 28/09/13_7
+## 6 handsome_jack_2010 2010   wesley a ward 105 04/07/13    6 04/07/13_6
+##    race_type dist surf value race_cond clm_price   f_m runup going
+## 1        clm  8.5 turf 21500      null     30000 FALSE   165  firm
+## 2        clm  8.5 turf 18000      null     12500 FALSE   235  firm
+## 3 all op clm  6.0 dirt 32000     nw1 x     25000 FALSE    10  fast
+## 4        clm  6.0 dirt 21500     nw3 l     25000 FALSE    10  fast
+## 5     st all  6.0 dirt 33000      null     25000 FALSE    20  fast
+## 6 all op clm  7.0 dirt 35000     nw1 x     50000 FALSE    40  fast
+##                      cor       trainer        jockey j_clm age wgt gate
+## 1  clm - (2e+04,3.4e+04] wesley a ward edgar s prado     0   4 121    3
+## 2 clm - (1e+04,1.49e+04] wesley a ward manoel r cruz     0   4 121    2
+## 3 all op clm / all - nw1 wesley a ward manoel r cruz     0   4 120    7
+## 4  clm - (2e+04,3.4e+04] wesley a ward   dylan davis     5   3 112    6
+## 5        st all / st hcp wesley a ward  jesus m rios     0   3 117    6
+## 6 all op clm / all - nw1 wesley a ward  joao moreira     0   3 118    1
+##   pos         horse fintime fs2_5f  fs2f             RRtg
+## 1   1 handsome jack  101.84  0.949    NA 84.9625810983267
+## 2   3 handsome jack  102.64  0.958    NA 72.2717211316758
+## 3  10 handsome jack   74.36      1 0.885 23.7125893423456
+## 4   4 handsome jack   71.95      1 0.927 62.5663310983267
+## 5   6 handsome jack    73.3      1 0.899 48.1287981265755
+## 6   3 handsome jack   84.08      1 0.882 93.1265893423456</code></pre> <p>When this post was written the app contained data for horses who have raced at Gulfstream Park at least 5 times since December 2012, this means that races in the dataset might not have all runners from that race. Each race in the dataset can be identified using the <code>date_race</code> variable</p> </div> <div id="variables" class="section level3"> <h3>Variables</h3> <p>There are 29 variables in the dataset, the majority should be self explanatory, but nevertheless definitions can be found here.</p> <ul> <li><strong>id</strong> unique horse id, consisting of horses’ name and year of birth (used as slug in app).</li> <li><strong>yob</strong> year of birth</li> <li><strong>current_trainer</strong> trainer of horse in its last race</li> <li><strong>.id</strong> id number for race in a horses race record</li> <li><strong>date</strong> date of race</li> <li><strong>race</strong> race number (on race card)</li> <li><strong>date_race</strong> serves as more accurate race id</li> <li><strong>race_type</strong> type of race: Claiming == “clm”, Maiden Claiming == “mdn clm”, etc</li> <li><strong>dist</strong> race distance (furlongs)</li> <li><strong>surf</strong> race surface (dirt or turf)</li> <li><strong>value</strong> race value (or purse)</li> <li><strong>race_cond</strong> any additional conditions on its runners (Non Winners 1 == “NW1”)</li> <li><strong>clm_price</strong> maximum claiming price (if applicable)</li> <li><strong>f_m</strong> filly and mares only race</li> <li><strong>runup</strong> length of run-up before clock starts (in feet)</li> <li><strong>going</strong> official going</li> <li><strong>cor</strong> class of race (I use this to handicap, combination of race_type and various other conditions)</li> <li><strong>trainer</strong> trainer for the race</li> <li><strong>jockey</strong> jockey</li> <li><strong>j_clm</strong> jockey claim (in lbs)</li> <li><strong>age</strong> horse age</li> <li><strong>wgt</strong> weight carried (in lbs)</li> <li><strong>gate</strong> starting gate</li> <li><strong>pos</strong> finishing position</li> <li><strong>horse</strong> horse</li> <li><strong>fintime</strong> finishing time</li> <li><strong>fs2_5f</strong> 2.5 furlong Finishing Speed</li> <li><strong>fs2f</strong> 2 furlong Finishing Speed</li> <li><strong>RRtg</strong> my RcappeR rating for the horses performance</li> </ul> </div> </div>
