@@ -49,7 +49,8 @@ angular
           })
           .state('blog.zipf_hcp-visualisation', {
               url: '/zipf_hcp-visualisation',
-              templateUrl: 'views/blog/zipf_hcp-visualisation.html'
+              templateUrl: 'views/blog/zipf_hcp-visualisation.html',
+              controller: 'ZipfHcpvisCtrl'
           })
           .state('ratings', {
               url: '/ratings',
