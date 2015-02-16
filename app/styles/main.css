@@ -107,17 +107,6 @@ tr > td {
     font-size: 11.5px;
 }
 
-.pos1 {
-    background-color: #F7C0BA;
-    color: #FCFCFC;
-    font-weight: bold;
-}
-
-table > thead > tr > th {
-    text-align: center;
-    color: #FCFCFC;
-}
-
 .btn-rcapper {
     background-color: #1D035E;
     color: #FCFCFC;
@@ -137,7 +126,7 @@ strong {
     color: #00871E;
 }
 
-/* Race table styles, used in individual horse profiles, and singleracedir */
+/* Race table styles, used in individual horse profiles, and singleracedir. MAY NEED TO ADD CLASS FOR WHEN USING */
 
 .races-container {
     height: 500px;
