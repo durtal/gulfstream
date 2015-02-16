@@ -47,6 +47,10 @@ angular
               url: '/gulfstream-data',
               templateUrl: 'views/blog/gulfstream-data.html'
           })
+          .state('blog.zipf_hcp-visualisation', {
+              url: '/zipf_hcp-visualisation',
+              templateUrl: 'views/blog/zipf_hcp-visualisation.html'
+          })
           .state('ratings', {
               url: '/ratings',
               templateUrl: 'views/ratings.html',
