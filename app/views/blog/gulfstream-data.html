@@ -15,7 +15,7 @@ devtools::source_gist(&quot;https://gist.github.com/durtal/f0ca54e7aacb92130a1e&
 <h3>Read JSON into R</h3>
 <p>The <code>fromJSON</code> function from <code>jsonlite</code> is used, it will attempt to convert the data to a dataframe, but as the JSON is nested, an example of a single horse’s data will follow, we need to tell <code>fromJSON</code> not to simplify to a dataframe.</p>
 <pre class="r"><code>ratings_json &lt;- fromJSON(txt = &quot;https://raw.githubusercontent.com/durtal/gulfstream/master/app/data/gulfstream-ratings.json&quot;, simplifyDataFrame = FALSE)</code></pre>
-<p>We should now have a large list in our workspace, at the time of writing (2015-02-15) the list has <strong>1893</strong>.</p>
+<p>We should now have a large list in our workspace, at the time of writing (2015-02-16) the list has <strong>1893</strong> unique horses.</p>
 </div>
 <div id="a-single-horse" class="section level3">
 <h3>A single horse</h3>
@@ -40,7 +40,7 @@ devtools::source_gist(&quot;https://gist.github.com/durtal/f0ca54e7aacb92130a1e&
 ##         8
 ##     ]
 ## }</code></pre>
-<p>Each horses will also contain a races object, that will contain the individual races (the number of races is stored in the JSON as <code>n_races</code>, see above) they competed in, only one race is shown here. For a full list of variables see the bottom of the post.</p>
+<p>Each horse will also contain a races object, that will contain the individual races (the number of races is stored in the JSON as <code>n_races</code>, see above) they competed in, only one race is shown here. For a full list of variables see the bottom of the post.</p>
 <pre><code>## {
 ##     &quot;100&quot;: {
 ##         &quot;date&quot;: [
@@ -129,9 +129,9 @@ devtools::source_gist(&quot;https://gist.github.com/durtal/f0ca54e7aacb92130a1e&
 </div>
 <div id="convert-to-dataframe" class="section level3">
 <h3>Convert to Dataframe</h3>
-<p>Thanks to the helper functions the list can be converted to a dataframe easily, due to the nested nature it can take some, <code>gulf_ratings</code> uses <code>plyr</code>’s <code>ldply</code> function, and it also includes <code>plyr</code>’s progress bar (which is not used here).</p>
+<p>Thanks to the helper functions the list can be converted to a dataframe easily, due to the nested nature it can take some time, <code>gulf_ratings</code> uses <code>plyr</code>’s <code>ldply</code> function, and it also includes <code>plyr</code>’s progress bar as a function argument (which is not used here, but change “none” to “text” for a progress bar showing how far along the function is).</p>
 <pre class="r"><code>ratings_df &lt;- gulf_ratings(ratings = ratings_json, .progress = &quot;none&quot;)</code></pre>
-<p>We should now have a nice dataframe, with 29 variables. A look at the first few rows, shows that the dataframe is arranged by horse, and then by date (most recent races at the top):</p>
+<p>We should now have a nice dataframe, with 29 variables, a few of the variables are in character format but could/should easily be converted to numeric (I’m not entirely sure why <code>fromJSON</code> converted some but not all, one example is the variable <em>fintime</em>). A look at the first few rows, shows that the dataframe is arranged by horse, and then by date (most recent races at the top):</p>
 <pre class="r"><code>head(ratings_df)</code></pre>
 <pre><code>##                   id  yob current_trainer .id     date race  date_race
 ## 1 handsome_jack_2010 2010   wesley a ward 100 02/10/14    5 02/10/14_5
@@ -161,11 +161,78 @@ devtools::source_gist(&quot;https://gist.github.com/durtal/f0ca54e7aacb92130a1e&
 ## 4   4 handsome jack   71.95      1 0.927 62.5663310983267
 ## 5   6 handsome jack    73.3      1 0.899 48.1287981265755
 ## 6   3 handsome jack   84.08      1 0.882 93.1265893423456</code></pre>
-<p>When this post was written the app contained data for horses who have raced at Gulfstream Park at least 5 times since December 2012, this means that races in the dataset might not have all runners from that race. Each race in the dataset can be identified using the <code>date_race</code> variable</p>
+<p>When this post was written the app contained data for horses who have raced at Gulfstream Park at least 5 times since December 2012, this means that races in the dataset might not have all runners from that race. Each race in the dataset can be identified using the <code>date_race</code> variable, at the time of writing only horses who have raced 5 times or more are included, which means some races will not have every runner available.</p>
+</div>
+<div id="dplyr" class="section level3">
+<h3>dplyr</h3>
+<p>The fastest way to sort, arrange, manipulate and summarise the data is to use <code>dplyr</code>, some examples follow.</p>
+<pre class="r"><code># load dplyr
+library(dplyr)</code></pre>
+<p>I’ll show how to group the data into specific races, arrange by position and select a number of variables. What will become obvious is that a number of the positions are not present, this is because the horses in those positions have raced fewer than 5 times since December 2012, so are not yet present in the app’s data.</p>
+<pre class="r"><code>ratings_df %&gt;%
+    group_by(date_race) %&gt;%
+    arrange(pos) %&gt;%
+    select(date_race, race_type, dist, surf, pos, horse, fintime, RRtg)</code></pre>
+<pre><code>## Source: local data frame [15,199 x 8]
+## Groups: date_race
+## 
+##      date_race  race_type dist surf pos              horse fintime
+## 1  01/01/13_10 mdn sp wgt  8.0 turf   5          e b ryder   96.64
+## 2  01/01/13_10 mdn sp wgt  8.0 turf   6       wine burglar   96.83
+## 3  01/01/13_10 mdn sp wgt  8.0 turf   7           merilore   97.13
+## 4  01/01/13_10 mdn sp wgt  8.0 turf   8      auntie martha   97.13
+## 5   01/01/13_2 mdn sp wgt  6.5 dirt   3        coin broker   78.68
+## 6   01/01/13_2 mdn sp wgt  6.5 dirt   9   carson city brew   80.81
+## 7   01/01/13_3        stk  6.0 dirt   2     city of weston   71.54
+## 8   01/01/13_3        stk  6.0 dirt   5 cat five hurricane   73.27
+## 9   01/01/13_4 all op clm  7.0 dirt   4       wildcat lily   85.44
+## 10  01/01/13_4 all op clm  7.0 dirt   5      coffee clique   85.53
+## ..         ...        ...  ...  ... ...                ...     ...
+## Variables not shown: RRtg (chr)</code></pre>
+<p>We can see the number of horses present according to finishing position</p>
+<pre class="r"><code>ratings_df %&gt;%
+    group_by(pos) %&gt;%
+    summarise(n = n())</code></pre>
+<pre><code>## Source: local data frame [14 x 2]
+## 
+##    pos    n
+## 1    1 1773
+## 2    2 1836
+## 3    3 1903
+## 4    4 1826
+## 5    5 1790
+## 6    6 1656
+## 7    7 1490
+## 8    8 1134
+## 9    9  804
+## 10  10  478
+## 11  11  306
+## 12  12  153
+## 13  13   34
+## 14  14   16</code></pre>
+<p>The fact there are fewer winners than seconds shows again that the dataset isn’t complete (at the time of writing). We can view the number of horses according to the distance they raced over.</p>
+<pre class="r"><code>ratings_df %&gt;%
+    group_by(dist) %&gt;%
+    summarise(n = n())</code></pre>
+<pre><code>## Source: local data frame [12 x 2]
+## 
+##    dist    n
+## 1   5.0  905
+## 2   5.5  876
+## 3   6.0 3034
+## 4   6.5  609
+## 5   7.0 1063
+## 6   7.5  511
+## 7   8.0 3742
+## 8   8.5 4020
+## 9   9.0  359
+## 10 11.0   23
+## 11 11.5   30
+## 12 12.0   27</code></pre>
 </div>
 <div id="variables" class="section level3">
 <h3>Variables</h3>
-<p>There are 29 variables in the dataset, the majority should be self explanatory, but nevertheless definitions can be found here.</p>
+<p>There are 29 variables in the dataset, the majority should be self explanatory, but nevertheless definitions can be found here. A few of the variables could possibly use cleaning, which will be addressed in future posts.</p>
 <ul>
 <li><strong>id</strong> unique horse id, consisting of horses’ name and year of birth (used as slug in app).</li>
 <li><strong>yob</strong> year of birth</li>
