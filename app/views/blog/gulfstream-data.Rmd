@@ -28,7 +28,7 @@ ratings_json <- fromJSON(txt = "https://raw.githubusercontent.com/durtal/gulfstr
 ```
 
 We should now have a large list in our workspace, at the time of writing (`r Sys.Date()`) the list has
-**`r length(ratings_json)`**.
+**`r length(ratings_json)`** unique horses.
 
 ### A single horse
 
@@ -39,7 +39,7 @@ horse <- toJSON(ratings_json[[1]][c("_id", "yob", "horse", "horse_abr", "trainer
 cat(horse)
 ```
 
-Each horses will also contain a races object, that will contain the individual races (the number of races is stored in the JSON as `n_races`, see above) they competed in, only one race is shown here.  For a full list of variables see the bottom of the post.
+Each horse will also contain a races object, that will contain the individual races (the number of races is stored in the JSON as `n_races`, see above) they competed in, only one race is shown here.  For a full list of variables see the bottom of the post.
 
 ```{r echo=FALSE}
 a_race <- toJSON(ratings_json[[1]]$races[1], pretty = TRUE)
@@ -48,23 +48,57 @@ cat(a_race)
 
 ### Convert to Dataframe
 
-Thanks to the helper functions the list can be converted to a dataframe easily, due to the nested nature it can take some, `gulf_ratings` uses `plyr`'s `ldply` function, and it also includes `plyr`'s progress bar (which is not used here).
+Thanks to the helper functions the list can be converted to a dataframe easily, due to the nested nature it can take some time, `gulf_ratings` uses `plyr`'s `ldply` function, and it also includes `plyr`'s progress bar as a function argument (which is not used here, but change "none" to "text" for a progress bar showing how far along the function is).
 
 ```{r, cache=TRUE}
 ratings_df <- gulf_ratings(ratings = ratings_json, .progress = "none")
 ```
 
-We should now have a nice dataframe, with `r length(names(ratings_df))` variables.  A look at the first few rows, shows that the dataframe is arranged by horse, and then by date (most recent races at the top):
+We should now have a nice dataframe, with `r length(names(ratings_df))` variables, a few of the variables are in character format but could/should easily be converted to numeric (I'm not entirely sure why `fromJSON` converted some but not all, one example is the variable _fintime_).  A look at the first few rows, shows that the dataframe is arranged by horse, and then by date (most recent races at the top):
 
 ```{r}
 head(ratings_df)
 ```
 
-When this post was written the app contained data for horses who have raced at Gulfstream Park at least 5 times since December 2012, this means that races in the dataset might not have all runners from that race.  Each race in the dataset can be identified using the `date_race` variable
+When this post was written the app contained data for horses who have raced at Gulfstream Park at least 5 times since December 2012, this means that races in the dataset might not have all runners from that race.  Each race in the dataset can be identified using the `date_race` variable, at the time of writing only horses who have raced 5 times or more are included, which means some races will not have every runner available.
+
+### dplyr
+
+The fastest way to sort, arrange, manipulate and summarise the data is to use `dplyr`, some examples follow.
+
+```{r warning=FALSE, message=FALSE}
+# load dplyr
+library(dplyr)
+```
+
+I'll show how to group the data into specific races, arrange by position and select a number of variables.  What will become obvious is that a number of the positions are not present, this is because the horses in those positions have raced fewer than 5 times since December 2012, so are not yet present in the app's data.
+
+```{r}
+ratings_df %>%
+    group_by(date_race) %>%
+    arrange(pos) %>%
+    select(date_race, race_type, dist, surf, pos, horse, fintime, RRtg)
+```
+
+We can see the number of horses present according to finishing position
+
+```{r}
+ratings_df %>%
+    group_by(pos) %>%
+    summarise(n = n())
+```
+
+The fact there are fewer winners than seconds shows again that the dataset isn't complete (at the time of writing).  We can view the number of horses according to the distance they raced over.
+
+```{r}
+ratings_df %>%
+    group_by(dist) %>%
+    summarise(n = n())
+```
 
 ### Variables
 
-There are 29 variables in the dataset, the majority should be self explanatory, but nevertheless definitions can be found here.
+There are 29 variables in the dataset, the majority should be self explanatory, but nevertheless definitions can be found here.  A few of the variables could possibly use cleaning, which will be addressed in future posts.
 
 - **id** unique horse id, consisting of horses' name and year of birth (used as slug in app).
 - **yob** year of birth
