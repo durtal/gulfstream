@@ -9,9 +9,9 @@
 		<div class="col-sm-8">
 			<p>For simplicity sake I'll walk through the same example found in Simon's piece, readers should still read that piece as it addresses some important issues and touches on some applications for race standardisation.</p>
 
-			<p>In the example there are three, fictional, past races, where runners' performances have been assessed and awarded ratings, these can be seen in the table to the right, under the heading <strong>Past Ratings</strong>.  The table contains ratings for the first 5 runners, these ratings are used to handicap a new race.</p>
+			<p>In the example there are three, fictional, past races, where runners' performances have been assessed and ratings calculated, these can be seen in the table <strong>Past Ratings</strong>.  The table contains ratings for the first 5 runners, these ratings are used to handicap a new race.</p>
 
-			<p>The new race, that requires handicapping, needs to be prepared, Simon doesn't touch on this in the article, but we will quickly cover it here.  Essentially the preparation requires the winners performance to be assessed against the runners it has just beaten.  This means establishing, typically in lbs, the margin of superiority between itself and runners up.  Timeform call this 'difference at the weights', which takes into account, going, distance, margins, weight carried, among a few other important factors.</p>
+			<p>The new race, that requires handicapping, needs to be prepared, Simon doesn't touch on this in the article, but we will quickly cover it here.  Essentially the preparation requires the winners performance to be assessed against the runners it has just beaten.  This means establishing, typically in lbs, the margin of superiority between itself and its beaten foes.  Timeform call this 'difference at the weights', which takes into account, going, distance, margins, weight carried, among other important factors.</p>
 		</div>
 		<div class="col-sm-4">
 			<h4>Past Ratings</h4>
@@ -39,11 +39,11 @@
 			</table>
 		</div>
 		<div class="col-sm-12">
-			<p><strong>RcappeR</strong> provides functionality to produce something similar to difference at the weights, but it is not as complex or as extensive in the number of factors it can take into account.  An example of this preparation can be seen in a number of blog posts on this site, <a href="http://durtal.github.io/gulfstream/#/blog/31-1-15">see here</a>, or in the <a href="http://durtal.github.io/RcappeR/data_prep.html">Data Preparation</a> vignette included in the package.  It results in something similar to that shown in <strong>New Race</strong>, and can be read as follows, the winner is rated 5lbs > 2nd, 10lbs > 3rd, 15lbs > 4th and 20lbs > 5th.</p>
+			<p><strong>RcappeR</strong> provides functionality to produce something similar to difference at the weights, but it is not as complex or as extensive in the number of factors it can take into account.  An example of this preparation can be seen in a number of blog posts on this site, <a href="http://durtal.github.io/gulfstream/#/blog/31-1-15">see here</a> under the data preparation heading, or in the <a href="http://durtal.github.io/RcappeR/data_prep.html">Data Preparation</a> vignette included in the package.  It results in something similar to that shown in <strong>New Race</strong>, and can be read as follows, the winners performance in this race is 5lbs better 2nd, 10lbs > 3rd, 15lbs > 4th and 20lbs > 5th.  Looking at the year 2009 in the Past Ratings table, the winner was rated 100, 2lbs better than the second (rated 98), 5lbs better than the 3rd, etc.</p>
 
-			<p>The margins, from the new race, between the winner and its beaten rivals are added, according to finishing position, to the ratings from past races, resulting in a vector of ratings for the winner.  For example, using the ratings from 2011, the winner of the new race would be rated 102 by the winner, rated 95 by the second placed horse from 2011 (90 + 5), 90 by the third placed horse (80 + 10), 90 (75 + 15) by the fourth placed horse, and 93 by the fifth placed horse (73 + 20).  These new ratings can be seen in the table <strong>Winners Rating by Position</strong>.</p>
+			<p>The margins, from the new race, between the winner and its beaten rivals are added, according to finishing position, to the ratings from past races, resulting in a vector of ratings for the winner.  For example, using the ratings from 2009, the winner of the new race would be rated 100 by the winner (100 + 0), rated 103 by the second placed horse from 2011 (98 + 5), 105 by the third placed horse (95 + 10), 105 (90 + 15) by the fourth placed horse, and 96 by the fifth placed horse (76 + 20).  These new ratings can be seen in the table <strong>Winners Rating by Position</strong>.</p>
 
-			<p>These ratings are then weighted inversely according to rank, taking 2011, the rating of 102, using the winner, would be multiplied by 1; the rating of 95, using the 2nd horse, multiplied by 1/2; the rating of 90 multiplied by 1/3; 90 multiplied by 1/4; 93 multiplied by 1/5.  This results in the table <strong>New Weighted Ratings</strong>.</p>
+			<p>These ratings are then weighted inversely according to rank, using 2009, the rating of 103, using the winner, would be multiplied by 1; the rating of 103, using the 2nd horse, multiplied by 1/2; the rating of 105 multiplied by 1/3; 105 multiplied by 1/4; 96 multiplied by 1/5.  This results in the table <strong>New Weighted Ratings</strong>.</p>
 		</div>
 		<div class="col-sm-4">
 			<h4>New Race</h4>
@@ -60,12 +60,12 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td>{{ race.year }}</td>
-						<td>{{ race.p1 }}</td>
-						<td>{{ race.p2 }}</td>
-						<td>{{ race.p3 }}</td>
-						<td>{{ race.p4 }}</td>
-						<td>{{ race.p5 }}</td>
+						<td>{{ unratedRace.year }}</td>
+						<td>{{ unratedRace.p1 }}</td>
+						<td>{{ unratedRace.p2 }}</td>
+						<td>{{ unratedRace.p3 }}</td>
+						<td>{{ unratedRace.p4 }}</td>
+						<td>{{ unratedRace.p5 }}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -86,11 +86,11 @@
 				<tbody>
 					<tr ng-repeat="pastrace in ExampleRaces">
 						<td>{{ pastrace.year }}</td>
-						<td>{{ pastrace.p1 + race.p1 }}</td>
-						<td>{{ pastrace.p2 + race.p2 }}</td>
-						<td>{{ pastrace.p3 + race.p3 }}</td>
-						<td>{{ pastrace.p4 + race.p4 }}</td>
-						<td>{{ pastrace.p5 + race.p5 }}</td>
+						<td>{{ pastrace.p1 + unratedRace.p1 }}</td>
+						<td>{{ pastrace.p2 + unratedRace.p2 }}</td>
+						<td>{{ pastrace.p3 + unratedRace.p3 }}</td>
+						<td>{{ pastrace.p4 + unratedRace.p4 }}</td>
+						<td>{{ pastrace.p5 + unratedRace.p5 }}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -114,7 +114,7 @@
 						<td>{{ pastrace.p1 * 1 | number: 1 }}</td>
 						<td>{{ pastrace.p2 * 1/2 | number: 1 }}</td>
 						<td>{{ pastrace.p3 * 1/3 | number: 1 }}</td>
-						<td>{{ pastrace.p4 * 1/2 | number: 1 }}</td>
+						<td>{{ pastrace.p4 * 1/4 | number: 1 }}</td>
 						<td>{{ pastrace.p5 * 1/5 | number: 1 }}</td>
 					</tr>
 				</tbody>
@@ -165,10 +165,32 @@
 				</tr>
 			</tbody>
 		</table>
-		<p>The calculation above is what the <code>zipf_race</code> function performs for RcappeR.  It takes two dataframes of two different races, one of which has previously been rated/assessed.  It uses the difference at the weights from one race, applies it to a second race for which ratings exist, returning a single value.</p>
+		<p>The calculation above is what the <code>zipf_race</code> function performs for RcappeR.  It takes two dataframes of two unique races, one of which contains a difference at the weights variable (ie. margins between horses in lbs), the other contains ratings for its runners.  It uses the difference at the weights from the first race, applies it to a second race for which ratings exist, returning a single value, the rating for the winner of the first race.</p>
+
+		<pre class="r"><code>zipf_race(race = unrated_race, btn_var = "difference_at_the_weights", race_2 = rated_race, rating = "rating_variable")</code></pre>
 
 	<h2><code>zipf_hcp</code></h2>
-	<p><code>zipf_hcp</code> uses <code>zipf_race</code>, and instead of a one to one assessment, there is a one to many assesment.  So <code>zipf_race</code> would be called for one race, for example the 2009 race above, while <code>zipf_hcp</code> could be used on a dataframe containing all 3 races, 2009 thru 2011, races are iterated through, each one returning a single rating for the winner of a new race.  These ratings then build up a distribution of possible ratings.  To read more about <code>zipf_hcp</code> there is a designated vignette included in the package, find it <a href="http://durtal.github.io/RcappeR/handicap_with_zipf_hcp.html">here</a>.</p>
+	<p><code>zipf_hcp</code> uses <code>zipf_race</code>, and instead of a one to one assessment, there is a one to many assessment.  So <code>zipf_race</code> would be used on the unrated race and just the 2009 race above, while <code>zipf_hcp</code> could be used on a dataframe containing all 3 races, 2009 thru 2011.  Rated races are iterated through, each one returning a single rating for the winner of the unrated race.  These ratings then build up a distribution of possible ratings.  To read more about <code>zipf_hcp</code> there is a designated vignette included in the package, find it <a href="http://durtal.github.io/RcappeR/handicap_with_zipf_hcp.html">here</a>.  The following is an attempt to visualise the process.</p>
+
+	<div class="col-sm-3">
+		<h5><strong>1st</strong> {{ singleRace.p1 }}</h5>
+		<h5><strong>2nd</strong> {{ singleRace.p2 }}</h5>
+		<input type="range" ng-model="singleRace.p2" min=-5 max=10>
+		<h5><strong>3rd</strong> {{ singleRace.p3 }}</h5>
+		<input type="range" ng-model="singleRace.p3" min=0 max=15>
+		<h5><strong>4th</strong> {{ singleRace.p4 }}</h5>
+		<input type="range" ng-model="singleRace.p4" min=5 max=20>
+		<h5><strong>5th</strong> {{ singleRace.p5 }}</h5>
+		<input type="range" ng-model="singleRace.p5" min=10 max=25>
+	</div>
+	<div class="col-sm-6">
+		<!-- <d3-histogram-dir data="dummyWinningRatings"></d3-histogram-dir> -->
+		<div id="test-histogram">
+		</div>
+	</div>
+
+
+
 
 
 </div>
