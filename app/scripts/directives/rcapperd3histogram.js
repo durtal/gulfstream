@@ -7,7 +7,7 @@
  * # rcapperD3Histogram
  */
 angular.module('gulfstreamApp')
-  .directive('rcapperD3Histogram', function (d3) {
+  .directive('rcapperD3Histogram', function () {
 
     function link(scope, element, attr) {
 
@@ -66,7 +66,7 @@ angular.module('gulfstreamApp')
                 .append('g')
                 .attr('class', 'bar')
                 .attr('transform', function(d) {
-                    return 'translate(' + x2(Math.round(d.x)) + ',' + y(d.y) + ')';
+                    return 'translate(' + x2(d.x) + ',' + y(d.y) + ')';
                 })
                 .style('fill', attr.fill);
 

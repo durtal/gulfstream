@@ -8,7 +8,7 @@
  * Controller of the gulfstreamApp
  */
 angular.module('gulfstreamApp')
-    .controller('ZipfHcpvisCtrl', function ($scope, _, $http, d3) {
+    .controller('ZipfHcpvisCtrl', function ($scope, _, $http) {
 
         $scope.ExampleRaces = [
             {
