@@ -238,3 +238,9 @@ table thead>tr>td {
     border-top: 2px solid #D9220F;
     border-bottom: 2px solid #D9220F;
 }
+
+/* rcapper-d3-histogram styles */
+.x-axis {
+    stroke: #000000;
+    fill: none;
+}

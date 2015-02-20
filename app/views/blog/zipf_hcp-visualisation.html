@@ -1,4 +1,4 @@
-<div class="col-sm-12">
+
 	<h2>Intro</h2>
 	<p>This post walks through the method of race standardisation used in creating the ratings found in this app, and is included in my <a href="https://github.com/durtal/RcappeR" target="_blank">RcappeR</a> package as a family of three functions, <code>zipf_race</code>, <code>zipf_hcp</code>, and <code>zipf_init</code>.  It was first explained by Simon Rowlands, of <a href="https://www.timeform.com/racing/">Timeform</a>, find his article <a href="https://betting.betfair.com/horse-racing/bloggers/simon-rowlands/simon-rowlands-on-handicapping-060710.html" target="_blank">here</a>, there is an summary explanation in this post, as well as a look at the specific functions included in <strong>RcappeR</strong>, also included is an interactive visualisation, using <a href="https://angularjs.org/">AngularJS</a> and <a href="http://d3js.org/">D3</a>, which shows what two of these functions do.</p>
 
@@ -41,7 +41,7 @@
 		<div class="col-sm-12">
 			<p><strong>RcappeR</strong> provides functionality to produce something similar to difference at the weights, but it is not as complex or as extensive in the number of factors it can take into account.  An example of this preparation can be seen in a number of blog posts on this site, <a href="http://durtal.github.io/gulfstream/#/blog/31-1-15">see here</a> under the data preparation heading, or in the <a href="http://durtal.github.io/RcappeR/data_prep.html">Data Preparation</a> vignette included in the package.  It results in something similar to that shown in <strong>New Race</strong>, and can be read as follows, the winners performance in this race is 5lbs better 2nd, 10lbs > 3rd, 15lbs > 4th and 20lbs > 5th.  Looking at the year 2009 in the Past Ratings table, the winner was rated 100, 2lbs better than the second (rated 98), 5lbs better than the 3rd, etc.</p>
 
-			<p>The margins, from the new race, between the winner and its beaten rivals are added, according to finishing position, to the ratings from past races, resulting in a vector of ratings for the winner.  For example, using the ratings from 2009, the winner of the new race would be rated 100 by the winner (100 + 0), rated 103 by the second placed horse from 2011 (98 + 5), 105 by the third placed horse (95 + 10), 105 (90 + 15) by the fourth placed horse, and 96 by the fifth placed horse (76 + 20).  These new ratings can be seen in the table <strong>Winners Rating by Position</strong>.</p>
+			<p>The margins, from the new race, between the winner and its beaten rivals are added, according to finishing position, to the ratings from past races, resulting in a vector of ratings for the winner.  For example, using the ratings from 2009, the winner of the new race would be rated 100 by the winner (100 + 0), rated 103 by the second placed horse from 2009 (98 + 5), 105 by the third placed horse (95 + 10), 105 (90 + 15) by the fourth placed horse, and 96 by the fifth placed horse (76 + 20).  These new ratings can be seen in the table <strong>Winners Rating by Position</strong>.</p>
 
 			<p>These ratings are then weighted inversely according to rank, using 2009, the rating of 103, using the winner, would be multiplied by 1; the rating of 103, using the 2nd horse, multiplied by 1/2; the rating of 105 multiplied by 1/3; 105 multiplied by 1/4; 96 multiplied by 1/5.  This results in the table <strong>New Weighted Ratings</strong>.</p>
 		</div>
@@ -165,32 +165,96 @@
 				</tr>
 			</tbody>
 		</table>
-		<p>The calculation above is what the <code>zipf_race</code> function performs for RcappeR.  It takes two dataframes of two unique races, one of which contains a difference at the weights variable (ie. margins between horses in lbs), the other contains ratings for its runners.  It uses the difference at the weights from the first race, applies it to a second race for which ratings exist, returning a single value, the rating for the winner of the first race.</p>
+		<div class="row">
+			<div class="col-sm-12">
+				<p>Below are 4 sliders, resembling the difference at the weights of a runners in a single race, they can be moved and adjusted.  These values are then assessed as above, using the 2009 race, to produce a rating.  Playing with the sliders hopefully makes the process a little clearer.  If a winner beats its rivals by large values, it results in a larger rating, if a winner beats its rivals narrowly, then the rating is lower.</p>
+
+			</div>
+			<div class="col-sm-2">
+				<h3>1st - {{ unratedRace2.p1 }}lbs</h3>
+				<sub class="text-muted">Winners are always 0.</sub>
+			</div>
+			<div class="col-sm-2">
+				<h3>2nd: {{ unratedRace2.p2 }}lbs</h3>
+				<input type="range" ng-model="unratedRace2.p2" min=-5 max=10>
+			</div>
+			<div class="col-sm-2">
+				<h3>3rd: {{ unratedRace2.p3 }}lbs</h3>
+				<input type="range" ng-model="unratedRace2.p3" min=0 max=15>
+			</div>
+			<div class="col-sm-2">
+				<h3>4th: {{ unratedRace2.p4 }}lbs</h3>
+				<input type="range" ng-model="unratedRace2.p4" min=5 max=20>
+			</div>
+			<div class="col-sm-2">
+				<h3>5th: {{ unratedRace2.p5 }}lbs</h3>
+				<input type="range" ng-model="unratedRace2.p5" min=10 max=25>
+			</div>
+			<div class="col-sm-2">
+				<h1><strong>{{ unratedRaceRating | number: 2 }}</strong></h1>
+			</div>
+		</div>
+		<br>
+		<br>
+		<p>The calculation above is what the <code>zipf_race</code> function performs for <a href="https://github.com/durtal/RcappeR" target="_blank">RcappeR</a>.  It takes two dataframes of two unique races, one of which contains a difference at the weights variable (ie. margins between horses in lbs), the other contains ratings for its runners.  It uses the difference at the weights from the first race, applies it to a second race for which ratings exist, returning a single value, the rating for the winner of the first race.</p>
 
 		<pre class="r"><code>zipf_race(race = unrated_race, btn_var = "difference_at_the_weights", race_2 = rated_race, rating = "rating_variable")</code></pre>
-
+<hr>
 	<h2><code>zipf_hcp</code></h2>
-	<p><code>zipf_hcp</code> uses <code>zipf_race</code>, and instead of a one to one assessment, there is a one to many assessment.  So <code>zipf_race</code> would be used on the unrated race and just the 2009 race above, while <code>zipf_hcp</code> could be used on a dataframe containing all 3 races, 2009 thru 2011.  Rated races are iterated through, each one returning a single rating for the winner of the unrated race.  These ratings then build up a distribution of possible ratings.  To read more about <code>zipf_hcp</code> there is a designated vignette included in the package, find it <a href="http://durtal.github.io/RcappeR/handicap_with_zipf_hcp.html">here</a>.  The following is an attempt to visualise the process.</p>
+<div class="row">
+	<div class="col-sm-6">
+		<p><code>zipf_hcp</code> uses <code>zipf_race</code>, and instead of a one to one assessment, there are many one to one assessments.  So <code>zipf_race</code> would be used on the unrated race and just the 2009 race above, while <code>zipf_hcp</code> could be used on a dataframe containing all 3 races, 2009 thru 2011.  Rated races are iterated through, each one returning a single rating for the winner of the unrated race.  These ratings then build up a distribution of possible ratings.  To read more about <code>zipf_hcp</code> there is a designated vignette included in the package, find it <a href="http://durtal.github.io/RcappeR/handicap_with_zipf_hcp.html">here</a>.  The following is an attempt to visualise the process.</p>
 
-	<div class="col-sm-3">
-		<h5><strong>1st</strong> {{ singleRace.p1 }}</h5>
-		<h5><strong>2nd</strong> {{ singleRace.p2 }}</h5>
-		<input type="range" ng-model="singleRace.p2" min=-5 max=10>
-		<h5><strong>3rd</strong> {{ singleRace.p3 }}</h5>
-		<input type="range" ng-model="singleRace.p3" min=0 max=15>
-		<h5><strong>4th</strong> {{ singleRace.p4 }}</h5>
-		<input type="range" ng-model="singleRace.p4" min=5 max=20>
-		<h5><strong>5th</strong> {{ singleRace.p5 }}</h5>
-		<input type="range" ng-model="singleRace.p5" min=10 max=25>
+		<p>The plot to the right shows the ratings for winners of 200 fictional races.  Their ratings were created in R, using the <code>rnorm</code> function, the distribution has a mean of 100 and standard deviation of 2.5.  A similar process was carried out to calculate ratings for horses finishing 2nd thru 5th, with decreasing means, and ever so slightly increasing standard deviations.  (Ratings do not typically follow a normal distribution, due to them being a function of beaten margins which are in turn a function of final times, which are skewed, but it should be okay as an example.)</p>
+
+		<p>These 200 races will be used to calculate the rating of an, as yet, unrated race.  This unrated race can be seen below as the 4 sliders.  They are set at the same levels as the 4 sliders above, so the winner was 5lbs > 2nd, 10lbs > 3rd, 15lbs > 4th and 20lbs > 5th.  However now, these difference at the weights values will be used with the 200 fictional races (the data for those races can be found <a href="https://github.com/durtal/gulfstream/blob/master/app/data/dummy-ratings.json"></a>).  Each race in the dataset returns a single rating for the winner of the race, which builds up the distribution below, and returns the mean rating of the distribution.</p>
 	</div>
 	<div class="col-sm-6">
-		<!-- <d3-histogram-dir data="dummyWinningRatings"></d3-histogram-dir> -->
-		<div id="test-histogram">
-		</div>
+		<h5 class="rcapper-center-text"><strong>Distribution of Winning Ratings from 200 fictional races</strong></h5>
+		<rcapper-d3-histogram data="dummyWinningRatings" fill="#3D1995" opacity="0.7"></rcapper-d3-histogram>
+		<!-- <div id="test-histogram">
+		</div> -->
 	</div>
-
-
-
-
-
 </div>
+<div class="row">
+	<div class="col-sm-2">
+		<h3>1st: {{ unratedRace3.p1 }}lbs</h3>
+		<sub class="text-muted">Winners are always 0.</sub>
+	</div>
+	<div class="col-sm-2">
+		<h3>2nd: {{ unratedRace3.p2 }}lbs</h3>
+		<input type="range" ng-model="unratedRace3.p2" min=-5 max=10>
+	</div>
+	<div class="col-sm-2">
+		<h3>3rd: {{ unratedRace3.p3 }}lbs</h3>
+		<input type="range" ng-model="unratedRace3.p3" min=0 max=15>
+	</div>
+	<div class="col-sm-2">
+		<h3>4th: {{ unratedRace3.p4 }}lbs</h3>
+		<input type="range" ng-model="unratedRace3.p4" min=5 max=20>
+	</div>
+	<div class="col-sm-2">
+		<h3>5th: {{ unratedRace3.p5 }}lbs</h3>
+		<input type="range" ng-model="unratedRace3.p5" min=10 max=25>
+	</div>
+	<div class="col-sm-2">
+		<h1><strong>{{ avgRtg | number: 2 }}</strong></h1>
+	</div>
+</div>
+<div class="row">
+	<br>
+	<div class="col-sm-6">
+		<br>
+		<p>As each of the sliders are moved to the right, increasing the winners superiority over its rivals, the distribution moves to the right and the average rating increases.  On the other hand, as each of the sliders are moved to the left, the distribution moves to the left, and the average rating decreases.  This is essentially what the <code>zipf_hcp</code> function in <strong>RcappeR</strong> does, it takes a dataset of 200 races, uses the ratings of runners in those races and the margins of a new race to calculate a rating for the winner of the new race.</p>
+		<pre class="r"><code>zipf_hcp(race = unrated_race,
+	past_races = past_200_races,
+	race_id = "race_id",
+	btn_var = "difference_at_the_weights",
+	rating = "rating_variable")</code></pre>
+	</div>
+	<div class="col-sm-6">
+		<br>
+		<rcapper-d3-histogram data="zipfHcpRatings" fill="#D9220F" opacity="1"></rcapper-d3-histogram>
+	</div>
+</div>
+<br>
