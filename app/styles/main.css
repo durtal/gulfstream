@@ -119,7 +119,7 @@ tr > td {
 }
 
 .blog-header {
-    text-align: center;
+    text-align: left;
 }
 
 strong {
@@ -289,4 +289,11 @@ input[type=range]::-moz-range-thumb {
 }
 input[type=range]:focus::-moz-range-track {
     background: #CCCCCC;
+}
+
+.blogdetails {
+    color: #A4A4A4;
+    font-style: italic;
+    font-size: 11px;
+    text-align: justify
 }
