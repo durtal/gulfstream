@@ -40,7 +40,7 @@ angular
               templateUrl: 'views/blog/3-2-15.html'
           })
           .state('blog.7-2-15', {
-              url: '/7-2-15',
+              url: '/2015-DonnHcp-&-TurfHcp',
               templateUrl: 'views/blog/7-2-15.html'
           })
           .state('blog.gulfstream-data', {
@@ -51,6 +51,10 @@ angular
               url: '/zipf_hcp-visualisation',
               templateUrl: 'views/blog/zipf_hcp-visualisation.html',
               controller: 'ZipfHcpvisCtrl'
+          })
+          .state('blog.21-2-15', {
+              url: '/2015-FountainOfYouth',
+              templateUrl: 'views/blog/21-2-15.html'
           })
           .state('ratings', {
               url: '/ratings',

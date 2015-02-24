@@ -1,0 +1,132 @@
+---
+output: html_fragment
+---
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, loadlibraries}
+library(tomhes)
+library(dplyr, warn.conflicts = FALSE, quietly = TRUE)
+library(ggplot2)
+library(RcappeR)
+library(magrittr)
+library(reshape2)
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, cache=TRUE, getdata}
+## This code unfortunately can't be run by others.
+mongo <- mongo.create()
+count <- mongo.count(mongo = mongo, ns = "gulf.ratings")
+cursor <- mongo.find(mongo = mongo, ns = "gulf.ratings")
+output <- vector("list", count)
+i <- 1
+while(mongo.cursor.next(cursor)) {
+    output[[i]] <- mongo.bson.to.list(mongo.cursor.value(cursor))
+    i <- i + 1
+}
+
+df <- gulf_ratings_df(ratings = output)
+df %<>%
+    group_by(date_race) %>%
+    arrange(pos) %>%
+    ungroup()
+
+cursor <- mongo.find(mongo, ns = "gulf.races")
+count <- mongo.count(mongo, "gulf.races")
+races <- vector("list", count)
+i <- 1
+while(mongo.cursor.next(cursor)) {
+    races[[i]] <- mongo.bson.to.list(mongo.cursor.value(cursor))
+    i <- i + 1
+}
+races <- gulf_races_df(races = races)
+
+sat_races <- races %>%
+    filter(date == "21/02/15")
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+foy <- sat_races %>%
+    filter(race == 11) %>%
+    select(date_race, date, race, race_type, dist, surf, value, race_cond,
+           clm_price, f_m, runup, going, trainer, jockey, j_clm, age, wgt, gate,
+           pos, horse, fintime,
+           c2f, c4f, c6f, c7f, c7_5f, c8f, c8_5f,
+           fs6f, fs4f, fs2f, fs1_5f, fs1f, fs0_5f,
+           d2f, d4f, d6f, d7f, d7_5f, d8f, d8_5f,
+           ss2f, ss4f, ss6f, ss7f, ss7_5f, ss8f, ss8_5f)
+```
+
+## Saturday 21/2/15
+
+The Fountain of Youth was run on Saturday, one of the biggest races for 3 year olds hoping to go onto bigger and better things as the year rolls on.  This renewal was 'won' by **upstart**, but he was adjudged to have interferred with the runner up, **itsaknockout**, and placings were reversed.
+
+The favourite going into the race was **upstart**, but it was his main rival in the betting, **frosted**, who led for much of the way and travelled strongly in doing so.  **Frosted** didn't set blistering fractions, running the opening 1/4 in **`r subset(foy, horse=="frosted")$c2f`** and the next quarter in **`r subset(foy, horse=="frosted")$c4f - subset(foy, horse=="frosted")$c2f`** (opening 1/2 mile in `r subset(foy, horse=="frosted")$c4f`).  The average winners (not race leaders) of stakes races run the opening 1/4 in **`r races %>% filter(dist == foy$dist[1], surf == foy$surf[1], pos == 1, race_type == foy$race_type[1]) %>% summarise(c2f = mean(c2f)) %>% .[["c2f"]] %>% round(2)`**, and second 1/4 in **`r races %>% filter(dist == foy$dist[1], surf == foy$surf[1], pos == 1, race_type == foy$race_type[1]) %>% summarise(c4f = mean(c4f)) %>% .[["c4f"]] %>% round(2) - races %>% filter(dist == foy$dist[1], surf == foy$surf[1], pos == 1, race_type == foy$race_type[1]) %>% summarise(c2f = mean(c2f)) %>% .[["c2f"]] %>% round(2)`** (opening 1/2 mile in `r races %>% filter(dist == foy$dist[1], surf == foy$surf[1], pos == 1, race_type == foy$race_type[1]) %>% summarise(c4f = mean(c4f)) %>% .[["c4f"]] %>% round(2)`)
+
+Turning for home, **frosted** was still on the bridle, and had his rivals struggling and stretched, his primary rival, **upstart**, was under heavy pressure and had been forced to make an aggressive move round the second turn.  Meaning **upstart** had to travel 3 wide, and cover a lot more ground than his rivals.  **upstart** covered **`r subset(foy, horse=="upstart")$d8_5f - subset(foy, horse=="itsaknockout")$d8_5f`**ft more than **itsaknockout**, **`r subset(foy, horse=="upstart")$d8_5f - subset(foy, horse=="frammento")$d8_5f`**ft more than **frammento**, and **`r subset(foy, horse=="upstart")$d8_5f - subset(foy, horse=="frosted")$d8_5f`**ft more than **frosted**.
+
+This extra ground can be seen in the plot below, which shows the sectional speeds of the first four in the Fountain of Youth.  It also shows (in black) the average sectional speeds of Stakes winners over the same course and distance.  To be clear, these are sectional speeds, so the speed from the start to the 2 furlong pole, from 2 to 4, 4 to 6, 6 to 7, and from 7 to the finish in 0.5furlong sectionals.
+
+<div class="row">
+<div class="col-sm-7">
+```{r echo=FALSE, warning=FALSE, message=FALSE, out.height="340px", out.width="550px", fig.align='center'}
+tmp <- races %>%
+    filter(dist == foy$dist[1], surf == foy$surf[1], pos == 1, race_type == foy$race_type[1]) %>%
+    select(horse, ss2f, ss4f, ss6f, ss7f, ss7_5f, ss8f, ss8_5f)
+
+tmpspeeds <- melt(tmp, id.vars = "horse", value.name = "speed", variable.name = "sectional")
+tmpspeeds$sectional %<>% gsub(pattern = "ss", replacement = "", x = .) %>%
+    gsub(pattern = "_", replacement = ".", x = .) %>%
+    gsub(pattern = "f", replacement = "", x = .) %>%
+    as.numeric()
+
+tmpspeeds %<>%
+    group_by(sectional) %>%
+    summarise(speed = mean(speed, na.rm = TRUE))
+
+foyspeeds <- foy %>%
+    filter(pos <= 4) %>%
+    select(horse, starts_with("ss"))
+foyspeeds <- melt(foyspeeds, id.vars = "horse", value.name = "speed", variable.name = "sectional")
+foyspeeds$sectional %<>% gsub(pattern = "ss", replacement = "", x = .) %>%
+    gsub(pattern = "_", replacement = ".", x = .) %>%
+    gsub(pattern = "f", replacement = "", x = .) %>%
+    as.numeric()
+
+tmpspeeds$horse <- "Avg Wnr"
+tmpspeeds <- rbind.fill(tmpspeeds, foyspeeds)
+tmpspeeds$horse <- factor(x = tmpspeeds$horse, levels = c("upstart", "itsaknockout", "frammento", "frosted", "Avg Wnr"))
+ggplot(tmpspeeds, aes(x = sectional, y = speed, col = horse)) + 
+    geom_line(group = 1, size = 1, alpha = .75) + 
+    labs(x = "Sectional", y = "Speed (feet per sec)", title = "Sectional Speeds") +
+    scale_color_manual(values = c("#D9220F", "#3D1995", "#0BA42D", "#D9BB0F", "#000000")) +
+    theme_rcapper()
+```
+</div>
+<div class="col-sm-5">
+<iframe width="420" height="315" src="https://www.youtube.com/embed/B8RtfmABUhQ" frameborder="0" allowfullscreen></iframe>
+</div>
+</div>
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+stk <- races %>%
+    filter(dist == foy$dist[1], surf == foy$surf[1], race_type == foy$race_type[1])
+model <- lm(ss8_5f ~ ss8f, data = stk)
+
+pred_spd <- predict(model, newdata = data.frame(ss8f = subset(foy, horse == "itsaknockout")$ss8f))
+pred_sect <- (subset(foy, horse == "itsaknockout")$d8_5f - subset(foy, horse == "itsaknockout")$d8f ) / pred_spd
+
+pred_fintime <- subset(foy, horse == "itsaknockout")$c8f + pred_sect
+```
+
+The differences in the plot above between an average Stakes winner, and the pace set by **frosted** is marginal over the first 6furlongs, from that point, **all** runners appear to fall in a hole.  With the exception of **frammento** who made some very cheap gains late on due to his slow slow slow early fractions.  I find it a little odd how all the horses struggled at the finish, this wasn't the only dirt race on the card that posted a very slow finish, so I wonder if the finishing straight was prepared differently.
+
+### The Interference
+
+Also of note in the plot, is the final sectional speeds of **upstart** and the horse he interfered with, **itsaknockout**.  Watching the replay it appears as though the interference took place inside the final half furlong, they were separated by **`r subset(foy, pos == 2)$c8f - subset(foy, pos == 1)$c8f`** after 8furlongs (so interference may have occured slightly before), and it looks, from the plot, that it certainly cost **itsaknockout** a fair bit of speed.  
+
+A simple model using linear regression can be used to predict the speed **itsaknockout** may have recorded without the interference.  The model uses sectional speed recorded by stakes winners over the 0.5 furlongs from 7.5 to 8 to predict sectional speed over the final 0.5 furlong, and has an r^2^ of **`r round(summary(model)$r.squared, 3)`**.  In the race **itsaknockout** recorded a speed of **`r subset(foy, horse == "itsaknockout")$ss8_5f`** (feet per second), whereas he could have been expected to record a speed of **`r round(pred_spd, 2)`** using the model, this speed would lead to a final time of **`r round(pred_fintime, 2)`**, which is still slightly slower than eventual winner **upstart** who won in a time of **`r subset(foy, pos == 1)$c8_5f`**.  Based on this very simple model, **upstart** and his connections can possibly call themselves unlucky, although as mentioned, the interference possibly started slightly before the final 0.5furlong.
+
+
+
+
+
+
