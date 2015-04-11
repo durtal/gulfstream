@@ -61,27 +61,32 @@ fieldsize$field <- factor(fieldsize$field, levels = fieldsize$field)
 
 A few quick and dirty summary plots highlighting the different race types and field sizes.  **`r toupper(paste(racetypes$race_type[which.max(racetypes$n)]))`** races are the most common over the `r dist` furlong course, with **`r racetypes$n[which.max(racetypes$n)]`** races.  The average field size for `r dist` furlong races is **`r round(sum(fieldsize$n) / sum(fieldsize$count), 2)`**.
 
-```{r echo=FALSE, warning=FALSE, message=FALSE, fig.show='hold', out.height="300px", out.width="400px"}
+<div class="row">
+<div class="col-sm-6">
+```{r echo=FALSE, warning=FALSE, message=FALSE, out.height="300px", out.width="500px", fig.align='center'}
 ggplot(racetypes, aes(x = race_type, y = n)) +
-    geom_bar(fill = fill, stat = "identity") +
+    geom_bar(fill = "#3D1995", stat = "identity") +
     RcappeR::theme_rcapper() +
-    labs(x = "Race Type", y = "Count", title = "Counts per Race Type (8f dirt)") +
+    labs(x = "Race Type", y = "Count", title = "Counts per Race Type (8f Dirt)") +
     theme(axis.text.x=element_text(angle=45, vjust=1, hjust=1, size = rel(1)))
-
+```
+</div>
+<div class="col-sm-6">
+```{r echo=FALSE, warning=FALSE, message=FALSE, out.height="300px", out.width="500px", fig.align='center'}
 ggplot(fieldsize, aes(x = field, y = count)) +
-    geom_bar(fill = fill, stat = "identity") +
+    geom_bar(fill = "#3D1995", stat = "identity") +
     RcappeR::theme_rcapper() +
-    labs(x = "No. of Runners", y = "Count", title = "Field Size (8f dirt)")
+    labs(x = "No. of Runners", y = "Count", title = "Field Size (8f Dirt)")
 
 rm(racetypes, fieldsize)
 ```
+</div>
+</div>
 
 ### Draw
 
-The `r dist` furlong course is run round two turns, the first turn starts soon after horses jump from the starting gates, and continues for roughly 2 furlongs, the second turn ends roughly 2f from the finish line.  Counting winners is the typical way to assess any draw bias, but winners ignore a large number of runners, and if there was any such bias, it should be seen across all runners, so percentage of runners beaten is to be used (gates must have a minimum of 5 runs):
-
 ```{r echo=FALSE, fig.align="center", out.height="350px", out.width="500px"}
-tmp <- dirt %>%
+pctbtn <- dirt %>%
     group_by(gate) %>%
     mutate(rnrs = n()) %>%
     ungroup() %>%
@@ -93,35 +98,38 @@ tmp <- dirt %>%
     summarise(pct_btn = mean(rnrs_btn, na.rm = TRUE),
               mean_pos = mean(pos, na.rm = T))
 
-tmp$gate <- factor(tmp$gate, levels=tmp$gate)
-ggplot(data = tmp, aes(x = gate, y = pct_btn)) +
-    geom_bar(fill = fill, stat = "identity") +
-    RcappeR::theme_rcapper() +
-    labs(x = "Gate", y = "Pct Beaten", title = "Percentage of Rivals Beaten (8f dirt)")
+pctbtn$gate <- factor(pctbtn$gate, levels=pctbtn$gate)
 
-morethan55 <- tmp$gate[which(tmp$pct_btn >= .55)]
-```
+morethan55 <- pctbtn$gate[which(pctbtn$pct_btn >= .55)]
 
-A fair draw would expect to see each draw beat 50% of their rivals`r if(length(morethan55) > 0) { paste(", runners draw in", if(length(morethan55) >= 2) { paste("gates") } else { paste("gate") }) } else { paste(".") }` `r if(length(morethan55) > 0) { paste(morethan55, collapse = ", ") }` `r if(length(morethan55) > 0) { paste(" beat more than 55% of their rivals.") }`
-
-
-```{r echo=FALSE}
-tmp <- dirt %>%
+drawdist <- dirt %>%
     group_by(gate) %>%
     summarise(n = n(),
               mean_dist = mean(d8f, na.rm = TRUE))
 
-tmp <- filter(tmp, n >= 5)
+drawdist <- filter(drawdist, n >= 5)
 
-lowgate <- tmp$gate[which.min(tmp$mean_dist)]
-lowdist <- round(subset(tmp, gate == lowgate)$mean_dist, 2)
-highgate <- tmp$gate[which.max(tmp$mean_dist)]
-highdist <- round(subset(tmp, gate == highgate)$mean_dist, 2)
+lowgate <- drawdist$gate[which.min(drawdist$mean_dist)]
+lowdist <- round(subset(drawdist, gate == lowgate)$mean_dist, 2)
+highgate <- drawdist$gate[which.max(drawdist$mean_dist)]
+highdist <- round(subset(drawdist, gate == highgate)$mean_dist, 2)
 ```
 
-The draw will likely have an impact on the distance horses travel, especially as the first turn is such a short distance from the start.  Horses drawn wide (high) will likely be forced wide.  `r if(tmp$gate[which.min(tmp$mean_dist)] == 1) { paste("Unsurprisingly, horses") } else { paste("Horses") }` drawn in gate **`r lowgate`** travel the least distance, with an average trip of **`r lowdist`** feet, while horses draw in gate **`r highgate`** travel an average distance of **`r highdist`**, a difference of **`r highdist - lowdist`** feet (gates must have a minimum of 5 runs used).  The plot below shows boxplots of distance raced by horses in each starting gate.
+The `r dist` furlong course is run round two turns, the first turn starts soon after horses jump from the starting gates, and continues for roughly 2 furlongs, the second turn ends roughly 2f from the finish line.  Counting winners is the typical way to assess any draw bias, but winners ignore a large number of runners, and if there was any such bias, it should be seen across all runners, so percentage of runners beaten is to be used (gates must have a minimum of 5 runs).  A fair draw would expect to see each draw beat 50% of their rivals`r if(length(morethan55) > 0) { paste(", runners draw in", if(length(morethan55) >= 2) { paste("gates") } else { paste("gate") }) } else { paste(".") }` `r if(length(morethan55) > 0) { paste(morethan55, collapse = ", ") }` `r if(length(morethan55) > 0) { paste(" beat more than 55% of their rivals.") }`
 
-```{r, fig.align="center", out.height="350px", out.width="500px", echo=FALSE, warning=FALSE, message=FALSE}
+The draw will likely have an impact on the distance horses travel, especially as the first turn is such a short distance from the start.  Horses drawn wide (high) will likely be forced wide.  `r if(drawdist$gate[which.min(drawdist$mean_dist)] == 1) { paste("Unsurprisingly, horses") } else { paste("Horses") }` drawn in gate **`r lowgate`** travel the least distance, with an average trip of **`r lowdist`** feet, while horses draw in gate **`r highgate`** travel an average distance of **`r highdist`**, a difference of **`r highdist - lowdist`** feet (gates must have a minimum of 5 runs used).  The plot below shows boxplots of distance raced by horses in each starting gate.
+
+<div class="row">
+<div class="col-sm-6">
+```{r echo=FALSE, warning=FALSE, message=FALSE, out.height="300px", out.width="500px", fig.align='center'}
+ggplot(data = pctbtn, aes(x = gate, y = pct_btn)) +
+    geom_bar(fill = "#0BA42D", stat = "identity") +
+    RcappeR::theme_rcapper() +
+    labs(x = "Gate", y = "", title = "Percentage of Rivals Beaten (8f Dirt)")
+```
+</div>
+<div class="col-sm-6">
+```{r echo=FALSE, warning=FALSE, message=FALSE, out.height="300px", out.width="500px", fig.align='center'}
 tmp <- dirt %>%
     group_by(gate) %>%
     mutate(runs = n()) %>%
@@ -129,35 +137,46 @@ tmp <- dirt %>%
     filter(runs >= 5)
 
 ggplot(tmp, aes(x = factor(gate), y = d8f)) +
-    geom_boxplot(fill = fill) +
+    geom_boxplot(fill = "#0BA42D") +
     RcappeR::theme_rcapper() +
-    labs(x = "Gate", y = "Distance (ft)", title = "Distance Raced from each Starting Gate (8f dirt)")
+    labs(x = "Gate", y = "Distance (ft)", title = "Distance Raced from each Starting Gate (8f Dirt)")
 
 rm(tmp, lowdist, lowgate, highdist, highgate)
 ```
+</div>
+</div>
 
 ### Race Shape
 
-Race shape on dirt is quite consistent even across a variety of distances, as the surface rarely allows horses who started slowly to finish faster (you will see the difference in affect looking at 8f turf race shape).  The plot below shows the sectional speeds of winners, to be clear these aren't cumulative speeds, but the speed from one sectional to the next (taking into account the distance travelled - Trakus data - for each horse), so from the start to 2f, from 2f to 3f, etc.  Winners are slowing at the finish, but as significantly as seen in dirt sprints, but still slowing.
-
-```{r, echo=FALSE, warning=FALSE, message=FALSE, out.height="350px", out.width="500px", fig.align='center'}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 sspds <- select(wnrs, pos, ss2f:ss8f)
 y <- melt(sspds, id.vars = "pos")
 y$variable <- gsub(pattern = "ss", replacement = "", x = y$variable)
 y$variable <- gsub(pattern = "_", replacement = ".", x = y$variable)
 y$variable <- factor(x = y$variable, levels = c("2f", "4f", "5f", "6f", "7f", "7.5f", "8f"))
 
-ggplot(subset(y, pos ==1), aes(x = variable, y = value)) + 
-    geom_boxplot() + 
-    geom_jitter(position = position_jitter(width = .4), color=fill, alpha=.1) + 
-    RcappeR::theme_rcapper() +
-    labs(x = "Sectional", y = "Speed (ft per sec)", title="Sectional Speeds of Winners (8f dirt)")
-
 wnrs_ind <- which.max(wnrs$ss4f)
 all_ind <- which.max(dirt$ss4f)
 ```
 
+<div class="row">
+<div class="col-sm-6">
+
+Race shape on dirt is quite consistent even across a variety of distances, as the surface rarely allows horses who started slowly to finish faster (you will see the difference in affect looking at 8f turf race shape).  The plot below shows the sectional speeds of winners, to be clear these aren't cumulative speeds, but the speed from one sectional to the next (taking into account the distance travelled - Trakus data - for each horse), so from the start to 2f, from 2f to 3f, etc.  Winners are slowing at the finish, but as significantly as seen in dirt sprints, but still slowing.
+
 The fastest opening half mile by a horse who went on to win was by **`r toupper(wnrs$horse[wnrs_ind])`** on `r wnrs$date[wnrs_ind]` in race `r wnrs$race[wnrs_ind]`, recording a speed of **`r wnrs$ss4f[wnrs_ind]`** feet per second.  `r if(wnrs$horse[wnrs_ind] != dirt$horse[all_ind]) { paste("There were horses who ran faster, ", toupper(dirt$horse[all_ind]), " ran the opening 4f in a speed of ", dirt$ss4f[all_ind], " ft per second.  ", if(wnrs$date_race[wnrs_ind] == dirt$date_race[all_ind]) { paste("Both horses were competing in the same ", toupper(dirt$race_type[all_ind]), " race", if(dirt$runup[all_ind] >= 50) { paste(", potentially benefitting from a runup of ", dirt$runup[all_ind], " feet.", sep = "") } else { paste0(".") }, sep = "") }, sep = "") } else if(dirt$date_race[all_ind] != wnrs$date_race[wnrs_ind]) { paste("The same horse, ", toupper(wnrs$horse[wnrs_ind]), ", recorded the fastest opening 4f in victory and in defeat, running at", dirt$ss2f[all_ind], "ft per sec when finishing ", dirt$pos[all_ind], " in race ", dirt$race[all_ind], " on ", dirt$date[all_ind], ".", sep = "") } else { paste("This opening quarter was the fastest speed by any horse, in victory or defeat.") }`
+
+</div>
+<div class="col-sm-6">
+```{r, echo=FALSE, warning=FALSE, message=FALSE, out.height="300px", out.width="500px", fig.align='center'}
+ggplot(subset(y, pos ==1), aes(x = variable, y = value)) +
+    geom_boxplot() +
+    geom_jitter(position = position_jitter(width = .4), color=fill, alpha=.25) +
+    RcappeR::theme_rcapper() +
+    labs(x = "Sectional", y = "Speed (ft per sec)", title="Sectional Speeds of Winners (8f Dirt)")
+```
+</div>
+</div>
 
 ### Pace
 
@@ -189,35 +208,48 @@ ldr2f <- round(mean(subset(dirt, p4f == 1)$c4f, na.rm = TRUE), 2)
 
 The plots below show the distribution of 4f Finishing Speeds for winners compared to "The Rest", and the opening 4f sectionals for winners compared to "The Rest".  The distributions are similar, especially the opening 4f where winners don't really differentiate themselves to "The Rest" as we saw in dirt sprints.  Winners, on average, run the opening 4f in **`r win2f`**, compared to "The Rest", who run the opening 2f in **`r rest2f`**, a difference of **`r win_rest_diff`** seconds.  For reference, the horses leading their race after 2f run the opening 2f in an average time of **`r ldr2f`**.  It is the ability to carry that early speed to the finish that sees winners separate themselves from "The Rest".
 
-```{r fig.show='hold', echo=FALSE, warning=FALSE, message=FALSE, out.height="300px", out.width="450px", fig.align='default'}
-ggplot(tmp, aes(x = fs4f, y = ..density.. / 100, fill = Winner)) +
+<div class="row">
+<div class="col-sm-6">
+```{r echo=FALSE, warning=FALSE, message=FALSE, out.height="300px", out.width="450px", fig.align='center'}
+ggplot(tmp, aes(x = fs4f, y = ..density.., fill = Winner)) +
     geom_density(alpha = .5) +
     scale_fill_manual(values = c("Winners" = fill, "The Rest" = "#d8d8d8")) +
     RcappeR::theme_rcapper() +
-    labs(x = "Finishing Speed", y = "", title = "4f Finishing Speed density plot (8f dirt)")
-
-ggplot(tmp, aes(x = c4f, y = ..density.. / 100, fill = Winner)) +
-    geom_density(alpha = .5) +
-    scale_fill_manual(values = c("Winners" = fill, "The Rest" = "#d8d8d8")) +
-    RcappeR::theme_rcapper() +
-    labs(x = "Sectional (sec)", y = "", title = "Opening 4f Sectional density plot (8f dirt)")
+    labs(x = "Finishing Speed", y = "", title = "4f Finishing Speed density plot (8f Dirt)")
 ```
-
-Plotting the opening 4f sectional against the closing 4f Finishing Speeds the difference becomes a little more clear.  Unlike dirt sprints where Winners were seen to be running faster early, over `r dist` furlong races Winners can make up ground they may have lost early on tiring rivals more easily.
-
-```{r echo=FALSE, warning=FALSE, message=FALSE, out.height="400px", out.width="550px", fig.align='center'}
-ggplot(tmp, aes(x = c4f, y = fs4f, col = Winner)) + 
-    geom_point(alpha = .5) + 
-    scale_color_manual(values = c("Winners" = fill, "The Rest" = "#d8d8d8")) + 
+</div>
+<div class="col-sm-6">
+```{r echo=FALSE, warning=FALSE, message=FALSE, out.height="300px", out.width="450px", fig.align='center'}
+ggplot(tmp, aes(x = c4f, y = ..density.., fill = Winner)) +
+    geom_density(alpha = .5) +
+    scale_fill_manual(values = c("Winners" = fill, "The Rest" = "#d8d8d8")) +
     RcappeR::theme_rcapper() +
-    labs(x = "Sectional (sec)", y = "Finishing Speed", title = "Opening 4f vs 4f Finishing Speed (8f dirt)")
+    labs(x = "Sectional (sec)", y = "", title = "Opening 4f Sectional density plot (8f Dirt)")
+```
+</div>
+</div>
 
+```{r echo=FALSE, warning=FALSE, message=FALSE}
 fastestfs <- which.max(wnrs$fs4f)
 fastestop <- which.min(wnrs$c4f)
-
 ```
+<div class="row">
+<div class="col-sm-6">
+Plotting the opening 4f sectional against the closing 4f Finishing Speeds the difference becomes a little more clear.  Unlike dirt sprints where Winners were seen to be running faster early, over `r dist` furlong races Winners can make up ground they may have lost early on tiring rivals more easily.
 
 The winner with the highest 4f Finishing Speed was **`r toupper(wnrs$horse[fastestfs])`** when winning a **`r wnrs$race_type[fastestfs]`** (race `r wnrs$race[fastestfs]` on `r wnrs$date[fastestfs]`), after an opening 4f of **`r wnrs$c4f[fastestfs]`** `r toupper(wnrs$horse[fastestfs])` recorded a Finishing Speed of **`r wnrs$fs4f[fastestfs]`**.  The winner with the fastest opening half mile was **`r toupper(wnrs$horse[fastestop])`** when winning a **`r wnrs$race_type[fastestop]`** (race `r wnrs$race[fastestop]` on `r wnrs$date[fastestop]`), recording a time of **`r wnrs$c4f[fastestop]`** over the opening half mile and a 4f Finishing Speed of **`r wnrs$fs4f[fastestop]`**.
+
+</div>
+<div class="col-sm-6">
+```{r echo=FALSE, warning=FALSE, message=FALSE, out.height="400px", out.width="550px", fig.align='center'}
+ggplot(tmp, aes(x = c4f, y = fs4f, col = Winner)) +
+    geom_point(alpha = .5) +
+    scale_color_manual(values = c("Winners" = fill, "The Rest" = "#d8d8d8")) +
+    RcappeR::theme_rcapper() +
+    labs(x = "Sectional (sec)", y = "Finishing Speed", title = "Opening 4f vs 4f Finishing Speed (8f Dirt)")
+```
+</div>
+</div>
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 rm(dirt)
@@ -251,27 +283,32 @@ fieldsize$field <- factor(fieldsize$field, levels = fieldsize$field)
 
 A few quick and dirty summary plots highlighting the different race types and field sizes.  **`r toupper(paste(racetypes$race_type[which.max(racetypes$n)]))`** races are the most common over the `r dist` furlong course, with **`r racetypes$n[which.max(racetypes$n)]`** races.  The average field size for `r dist` furlong races is **`r round(sum(fieldsize$n) / sum(fieldsize$count), 2)`**.
 
-```{r echo=FALSE, warning=FALSE, message=FALSE, fig.show='hold', out.height="300px", out.width="400px"}
+<div class="row">
+<div class="col-sm-6">
+```{r echo=FALSE, warning=FALSE, message=FALSE, out.height="300px", out.width="500px", fig.align='center'}
 ggplot(racetypes, aes(x = race_type, y = n)) +
-    geom_bar(fill = fill, stat = "identity") +
+    geom_bar(fill = "#3D1995", stat = "identity") +
     RcappeR::theme_rcapper() +
-    labs(x = "Race Type", y = "Count", title = "Counts per Race Type (8f turf)") +
+    labs(x = "Race Type", y = "Count", title = "Counts per Race Type (8f Turf)") +
     theme(axis.text.x=element_text(angle=45, vjust=1, hjust=1, size = rel(1)))
-
+```
+</div>
+<div class="col-sm-6">
+```{r echo=FALSE, warning=FALSE, message=FALSE, out.height="300px", out.width="500px", fig.align='center'}
 ggplot(fieldsize, aes(x = field, y = count)) +
-    geom_bar(fill = fill, stat = "identity") +
+    geom_bar(fill = "#3D1995", stat = "identity") +
     RcappeR::theme_rcapper() +
-    labs(x = "No. of Runners", y = "Count", title = "Field Size (8f turf)")
+    labs(x = "No. of Runners", y = "Count", title = "Field Size (8f Turf)")
 
 rm(racetypes, fieldsize)
 ```
+</div>
+</div>
 
 ### Draw
 
-The `r dist` furlong course is run round two turns, the first turn starts soon after horses jump from the starting gates, and continues for roughly 2 furlongs, the second turn ends roughly 2f from the finish line.  Counting winners is the typical way to assess any draw bias, but winners ignore a large number of runners, and if there was any such bias, it should be seen across all runners, so percentage of runners beaten is to be used (gates must have a minimum of 5 runs):
-
-```{r echo=FALSE, fig.align="center", out.height="350px", out.width="500px"}
-tmp <- turf %>%
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+pctbtn <- turf %>%
     group_by(gate) %>%
     mutate(rnrs = n()) %>%
     ungroup() %>%
@@ -283,35 +320,38 @@ tmp <- turf %>%
     summarise(pct_btn = mean(rnrs_btn, na.rm = TRUE),
               mean_pos = mean(pos, na.rm = T))
 
-tmp$gate <- factor(tmp$gate, levels=tmp$gate)
-ggplot(data = tmp, aes(x = gate, y = pct_btn)) +
-    geom_bar(fill = fill, stat = "identity") +
-    RcappeR::theme_rcapper() +
-    labs(x = "Gate", y = "Pct Beaten", title = "Percentage of Rivals Beaten (8f turf)")
+pctbtn$gate <- factor(pctbtn$gate, levels=pctbtn$gate)
 
-morethan55 <- tmp$gate[which(tmp$pct_btn >= .55)]
-```
+morethan55 <- pctbtn$gate[which(pctbtn$pct_btn >= .55)]
 
-A fair draw would expect to see each draw beat 50% of their rivals`r if(length(morethan55) > 0) { paste(", runners draw in", if(length(morethan55) >= 2) { paste("gates") } else { paste("gate") }) } else { paste(".") }` `r if(length(morethan55) > 0) { paste(morethan55, collapse = ", ") }` `r if(length(morethan55) > 0) { paste(" beat more than 55% of their rivals.") }`
-
-
-```{r echo=FALSE}
-tmp <- turf %>%
+drawdist <- turf %>%
     group_by(gate) %>%
     summarise(n = n(),
               mean_dist = mean(d8f, na.rm = TRUE))
 
-tmp <- filter(tmp, n >= 5)
+drawdist <- filter(drawdist, n >= 5)
 
-lowgate <- tmp$gate[which.min(tmp$mean_dist)]
-lowdist <- round(subset(tmp, gate == lowgate)$mean_dist, 2)
-highgate <- tmp$gate[which.max(tmp$mean_dist)]
-highdist <- round(subset(tmp, gate == highgate)$mean_dist, 2)
+lowgate <- drawdist$gate[which.min(drawdist$mean_dist)]
+lowdist <- round(subset(drawdist, gate == lowgate)$mean_dist, 2)
+highgate <- drawdist$gate[which.max(drawdist$mean_dist)]
+highdist <- round(subset(drawdist, gate == highgate)$mean_dist, 2)
 ```
 
-The draw will likely have an impact on the distance horses travel, especially as the first turn is such a short distance from the start.  Horses drawn wide (high) will likely be forced wide.  `r if(tmp$gate[which.min(tmp$mean_dist)] == 1) { paste("Unsurprisingly, horses") } else { paste("Horses") }` drawn in gate **`r lowgate`** travel the least distance, with an average trip of **`r lowdist`** feet, while horses draw in gate **`r highgate`** travel an average distance of **`r highdist`**, a difference of **`r highdist - lowdist`** feet (gates must have a minimum of 5 runs used).  The plot below shows boxplots of distance raced by horses in each starting gate.
+The `r dist` furlong course is run round two turns, the first turn starts soon after horses jump from the starting gates, and continues for roughly 2 furlongs, the second turn ends roughly 2f from the finish line.  Counting winners is the typical way to assess any draw bias, but winners ignore a large number of runners, and if there was any such bias, it should be seen across all runners, so percentage of runners beaten is to be used (gates must have a minimum of 5 runs).  A fair draw would expect to see each draw beat 50% of their rivals`r if(length(morethan55) > 0) { paste(", runners draw in", if(length(morethan55) >= 2) { paste("gates") } else { paste("gate") }) } else { paste(".") }` `r if(length(morethan55) > 0) { paste(morethan55, collapse = ", ") }` `r if(length(morethan55) > 0) { paste(" beat more than 55% of their rivals.") }`
 
-```{r, fig.align="center", out.height="350px", out.width="500px", echo=FALSE, warning=FALSE, message=FALSE}
+The draw will likely have an impact on the distance horses travel, especially as the first turn is such a short distance from the start.  Horses drawn wide (high) will likely be forced wide.  `r if(drawdist$gate[which.min(drawdist$mean_dist)] == 1) { paste("Unsurprisingly, horses") } else { paste("Horses") }` drawn in gate **`r lowgate`** travel the least distance, with an average trip of **`r lowdist`** feet, while horses draw in gate **`r highgate`** travel an average distance of **`r highdist`**, a difference of **`r highdist - lowdist`** feet (gates must have a minimum of 5 runs used).  The plot below shows boxplots of distance raced by horses in each starting gate.
+
+<div class="row">
+<div class="col-sm-6">
+```{r echo=FALSE, warning=FALSE, message=FALSE, out.height="300px", out.width="500px", fig.align='center'}
+ggplot(data = pctbtn, aes(x = gate, y = pct_btn)) +
+    geom_bar(fill = "#0BA42D", stat = "identity") +
+    RcappeR::theme_rcapper() +
+    labs(x = "Gate", y = "", title = "Percentage of Rivals Beaten (8f Turf)")
+```
+</div>
+<div class="col-sm-6">
+```{r echo=FALSE, warning=FALSE, message=FALSE, out.height="300px", out.width="500px", fig.align='center'}
 tmp <- turf %>%
     group_by(gate) %>%
     mutate(runs = n()) %>%
@@ -319,35 +359,45 @@ tmp <- turf %>%
     filter(runs >= 5)
 
 ggplot(tmp, aes(x = factor(gate), y = d8f)) +
-    geom_boxplot(fill = fill) +
+    geom_boxplot(fill = "#0BA42D") +
     RcappeR::theme_rcapper() +
-    labs(x = "Gate", y = "Distance (ft)", title = "Distance Raced from each Starting Gate (8f turf)")
+    labs(x = "Gate", y = "Distance (ft)", title = "Distance Raced from each Starting Gate (8f Turf)")
 
 rm(tmp, lowdist, lowgate, highdist, highgate)
 ```
+</div>
+</div>
 
 ### Race Shape
 
-Race shape on turf courses isn't quite as predictable as on dirt courses, as the surface allows horses who started slowly to finish faster (you will see the difference in profiles for 8f and 8.5f races on dirt and turf).  The plot below shows the sectional speeds of winners, to be clear these aren't cumulative speeds, but the speed from one sectional to the next (taking into account the distance travelled - Trakus data - for each horse), so from the start to 2f, from 2f to 3f, etc.  Winners are still typically running slower over the final 0.5f but the fall off isn't as sharp as seen on dirt, and the middle part of the race from 2f to ~6.5f sees runners showing consistent speed.
-
-```{r, echo=FALSE, warning=FALSE, message=FALSE, out.height="350px", out.width="500px", fig.align='center'}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 sspds <- select(wnrs, pos, ss2f:ss8f)
 y <- melt(sspds, id.vars = "pos")
 y$variable <- gsub(pattern = "ss", replacement = "", x = y$variable)
 y$variable <- gsub(pattern = "_", replacement = ".", x = y$variable)
 y$variable <- factor(x = y$variable, levels = c("2f", "4f", "5f", "6f", "7f", "7.5f", "8f"))
 
-ggplot(subset(y, pos ==1), aes(x = variable, y = value)) + 
-    geom_boxplot() + 
-    geom_jitter(position = position_jitter(width = .4), color=fill, alpha=.1) + 
-    RcappeR::theme_rcapper() +
-    labs(x = "Sectional", y = "Speed (ft per sec)", title="Sectional Speeds of Winners (8f turf)")
-
 wnrs_ind <- which.max(wnrs$ss4f)
 all_ind <- which.max(turf$ss4f)
 ```
+<div class="row">
+<div class="col-sm-6">
+
+Race shape on turf courses isn't quite as predictable as on dirt courses, as the surface allows horses who started slowly to finish faster (you will see the difference in profiles for 8f and 8.5f races on dirt and turf).  The plot below shows the sectional speeds of winners, to be clear these aren't cumulative speeds, but the speed from one sectional to the next (taking into account the distance travelled - Trakus data - for each horse), so from the start to 2f, from 2f to 3f, etc.  Winners are still typically running slower over the final 0.5f but the fall off isn't as sharp as seen on dirt, and the middle part of the race from 2f to ~6.5f sees runners showing consistent speed.
 
 The fastest opening half mile by a horse who went on to win was by **`r toupper(wnrs$horse[wnrs_ind])`** on `r wnrs$date[wnrs_ind]` in race `r wnrs$race[wnrs_ind]`, recording a speed of **`r wnrs$ss4f[wnrs_ind]`** feet per second.  `r if(wnrs$horse[wnrs_ind] != turf$horse[all_ind]) { paste("There were horses who ran faster, ", toupper(turf$horse[all_ind]), " ran the opening 4f in a speed of ", turf$ss4f[all_ind], " ft per second.  ", if(wnrs$date_race[wnrs_ind] == turf$date_race[all_ind]) { paste("Both horses were competing in the same ", toupper(turf$race_type[all_ind]), " race", if(turf$runup[all_ind] >= 50) { paste(", potentially benefitting from a runup of ", turf$runup[all_ind], " feet.", sep = "") } else { paste0(".") }, sep = "") }, sep = "") } else if(turf$date_race[all_ind] != wnrs$date_race[wnrs_ind]) { paste("The same horse, ", toupper(wnrs$horse[wnrs_ind]), ", recorded the fastest opening 2f in victory and in defeat, running at", turf$ss4f[all_ind], "ft per sec when finishing ", turf$pos[all_ind], " in race ", turf$race[all_ind], " on ", turf$date[all_ind], ".", sep = "") } else { paste("This opening half mile was the fastest speed by any horse, in victory or defeat.") }`
+
+</div>
+<div class="col-sm-6">
+```{r, echo=FALSE, warning=FALSE, message=FALSE, out.height="300px", out.width="500px", fig.align='center'}
+ggplot(subset(y, pos ==1), aes(x = variable, y = value)) +
+    geom_boxplot() +
+    geom_jitter(position = position_jitter(width = .4), color=fill, alpha=.25) +
+    RcappeR::theme_rcapper() +
+    labs(x = "Sectional", y = "Speed (ft per sec)", title="Sectional Speeds of Winners (8f Turf)")
+```
+</div>
+</div>
 
 ### Pace
 
@@ -379,37 +429,51 @@ ldr2f <- round(mean(subset(turf, p4f == 1)$c4f, na.rm = TRUE), 2)
 
 The plots below show the distribution of 4f Finishing Speeds for winners compared to "The Rest", and the opening 4f sectionals for winners compared to "The Rest".  The distributions for the opening 4f are very similar, Winners, on average, run the opening 4f in **`r win2f`**, compared to "The Rest", who run the opening 4f in **`r rest2f`**, a difference of **`r win_rest_diff`** seconds.  For reference, the horses leading their race after 4f run the opening 4f in an average time of **`r ldr2f`**.  The 4f Finishing Speeds are quite different, with "The Rest" having a much fatter distribution.  `r if(tmp2$fs4f[tmp2$Winner == "Winners"] >= 1) { paste("Winners average 4f Finishing Speed is above 1.000, meaning their final 4f is faster than their opening 4f, ie. they can just as easily win their races late.")}`
 
-```{r fig.show='hold', echo=FALSE, warning=FALSE, message=FALSE, out.height="300px", out.width="450px", fig.align='default'}
-ggplot(tmp, aes(x = fs4f, y = ..density.. / 100, fill = Winner)) +
+<div class="row">
+<div class="col-sm-6">
+```{r echo=FALSE, warning=FALSE, message=FALSE, out.height="300px", out.width="450px", fig.align='center'}
+ggplot(tmp, aes(x = fs4f, y = ..density.., fill = Winner)) +
     geom_density(alpha = .5) +
     scale_fill_manual(values = c("Winners" = fill, "The Rest" = "#d8d8d8")) +
     RcappeR::theme_rcapper() +
-    labs(x = "Finishing Speed", y = "", title = "4f Finishing Speed density plot (8f turf)")
+    labs(x = "Finishing Speed", y = "", title = "4f Finishing Speed density plot (8f Turf)")
 
-ggplot(tmp, aes(x = c4f, y = ..density.. / 100, fill = Winner)) +
-    geom_density(alpha = .5) +
-    scale_fill_manual(values = c("Winners" = fill, "The Rest" = "#d8d8d8")) +
-    RcappeR::theme_rcapper() +
-    labs(x = "Sectional (sec)", y = "", title = "Opening 4f Sectional density plot (8f turf)")
 ```
-
-Plotting the opening 4f sectional against the closing 4f Finishing Speeds the difference becomes a little more clear.  Runners aren't necessarily punished if they start slowly as in sprint, or dirt, races, the kinder surface means horses are capable of finishing much faster and making up ground on horses who started faster.
-
-```{r echo=FALSE, warning=FALSE, message=FALSE, out.height="400px", out.width="550px", fig.align='center'}
-ggplot(tmp, aes(x = c4f, y = fs4f, col = Winner)) + 
-    geom_point(alpha = .5) + 
-    scale_color_manual(values = c("Winners" = fill, "The Rest" = "#d8d8d8")) + 
+</div>
+<div class="col-sm-6">
+```{r echo=FALSE, warning=FALSE, message=FALSE, out.height="300px", out.width="450px", fig.align='center'}
+ggplot(tmp, aes(x = c4f, y = ..density.., fill = Winner)) +
+    geom_density(alpha = .5) +
+    scale_fill_manual(values = c("Winners" = fill, "The Rest" = "#d8d8d8")) +
     RcappeR::theme_rcapper() +
-    labs(x = "Sectional (sec)", y = "Finishing Speed", title = "Opening 4f vs 4f Finishing Speed (8f turf)")
+    labs(x = "Sectional (sec)", y = "", title = "Opening 4f Sectional density plot (8f Turf)")
+```
+</div>
+</div>
 
+```{r echo=FALSE, warning=FALSE, message=FALSE}
 fastestfs <- which.max(wnrs$fs4f)
 fastestop <- which.min(wnrs$c4f)
-
 ```
+<div class="row">
+<div class="col-sm-6">
+Plotting the opening 4f sectional against the closing 4f Finishing Speeds the difference becomes a little more clear.  Runners aren't necessarily punished if they start slowly as in sprint, or dirt, races, the kinder surface means horses are capable of finishing much faster and making up ground on horses who started faster.
 
 The winner with the highest 4f Finishing Speed was **`r toupper(wnrs$horse[fastestfs])`** when winning a **`r wnrs$race_type[fastestfs]`** (race `r wnrs$race[fastestfs]` on `r wnrs$date[fastestfs]`), after an opening 4f of **`r wnrs$c4f[fastestfs]`** `r toupper(wnrs$horse[fastestfs])` recorded a Finishing Speed of **`r wnrs$fs4f[fastestfs]`**.  The winner with the fastest opening half mile was **`r toupper(wnrs$horse[fastestop])`** when winning a **`r wnrs$race_type[fastestop]`** (race `r wnrs$race[fastestop]` on `r wnrs$date[fastestop]`), recording a time of **`r wnrs$c4f[fastestop]`** over the opening half mile and a 4f Finishing Speed of **`r wnrs$fs4f[fastestop]`**.
 
+</div>
+<div class="col-sm-6">
+```{r echo=FALSE, warning=FALSE, message=FALSE, out.height="400px", out.width="550px", fig.align='center'}
+ggplot(tmp, aes(x = c4f, y = fs4f, col = Winner)) +
+    geom_point(alpha = .5) +
+    scale_color_manual(values = c("Winners" = fill, "The Rest" = "#d8d8d8")) +
+    RcappeR::theme_rcapper() +
+    labs(x = "Sectional (sec)", y = "Finishing Speed", title = "Opening 4f vs 4f Finishing Speed (8f Turf)")
+```
+</div>
+</div>
+
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-mongo.destroy(mongo)
+y <- mongo.destroy(mongo)
 rm(list=ls())
 ```

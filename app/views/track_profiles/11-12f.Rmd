@@ -95,6 +95,6 @@ This is the track profile for all `r dist` furlong turf races at Gulfstream Park
 A full profile for `r dist` furlong races will be up shortly.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-mongo.destroy(mongo)
+y <- mongo.destroy(mongo)
 rm(list=ls())
 ```
