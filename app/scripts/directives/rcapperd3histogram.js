@@ -73,10 +73,15 @@ angular.module('gulfstreamApp')
             bar.append('rect') // watch
                 .attr('x', 1)
                 .attr('width', x(hist[0].dx))
+                .attr('height', height - margin.botttom)
+                .transition()
+                .delay(function(d, i) {
+                  return i * 100;
+                })
+                .duration(200)
                 .attr('height', function(d) {
                     return height - y(d.y);
-                })
-                .style('opacity', attr.opacity);
+                });
 
             svg.append('g') // watch
                 .attr('class', 'x-axis')
