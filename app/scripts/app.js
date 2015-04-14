@@ -69,7 +69,18 @@ angular
           .state('ratings.horse', {
               url: '/horse/{horse_id}',
               templateUrl: 'views/horse.html',
-              controller: 'HorseCtrl'
+              controller: 'HorseCtrl',
+              resolve: {
+                  horse: function($http, $stateParams, _) {
+                    return $http.get('data/gulfstream-ratings.json')
+                        .then(function(data) {
+                            var d = _.findWhere(data.data, {
+                                '_id': $stateParams.horse_id
+                            });
+                            return d;
+                        });
+                  }
+              }
           })
           .state('ratings.handicappingmethod', {
               url: '/handicapping-method',
