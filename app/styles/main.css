@@ -128,13 +128,24 @@ strong {
 
 /* Race table styles, used in individual horse profiles, and singleracedir. MAY NEED TO ADD CLASS FOR WHEN USING */
 
+.table-races {
+  border: 1px solid #1D035E;
+}
+
 .races-container {
     height: 500px;
     overflow-y: scroll;
-    border-top: 2px solid #D9220F;
+    border-top: 2px solid #1D035E;
 }
 
-table tbody>tr>td>span.rcapperRtg {
+table tbody>tr>td.runner-Rtg {
+    vertical-align: middle;
+    font-size: 24px;
+    text-align: center;
+    font-weight: bold;
+    color: #D9220F;
+}
+/*table tbody>tr>td>span.rcapperRtg {
     border-radius: 50%;
     radius: 20px;
 
@@ -149,12 +160,17 @@ table tbody>tr>td>span.rcapperRtg {
 
     font-size: 1.5em;
     font-weight: bold;
-}
+}*/
 
-table tbody>tr>td.RRtg-box {
-    vertical-align: middle;
-    width: 40px;
-}
+/*table tbody>tr>td.RRtg-box {
+    width:50px;
+    height:50px;
+    margin-top:5px;
+    border-radius:50%;
+    line-height:50px;
+    text-align:center;
+    background:#D9220F;
+}*/
 
 table tbody>tr>td.runner-horse {
     vertical-align: middle;
@@ -193,31 +209,30 @@ table tbody>tr>td.trainer-jockey {
 
 /* table header begins */
 table thead>tr>td.runner-horse {
-vertical-align: middle;
-font-size: 20px;
-text-align: right;
+    vertical-align: middle;
+    font-size: 20px;
+    text-align: right;
 }
 
 table thead>tr>td.runner-pos {
-vertical-align: middle;
-font-size: 20px;
-text-align: center;
-font-weight: bold;
-color: #D9220F;
+    vertical-align: middle;
+    font-size: 20px;
+    text-align: center;
+    font-weight: bold;
 }
 
 table thead>tr>td>span.race-date, .race-no {
-font-weight: bold;
-font-size: 12px;
+    font-weight: bold;
+    font-size: 12px;
 }
 
 table thead>tr>td>span.race-class, .race-dist {
-font-weight: bold;
-font-size: 13px;
+    font-weight: bold;
+    font-size: 13px;
 }
 
 table thead>tr>td.trainer-jockey {
-text-align: right;
+    text-align: right;
 }
 
 table thead>tr>td {
@@ -235,8 +250,8 @@ table thead>tr>td {
     height: 500px;
     overflow-y: hidden;
     position: relative;
-    border-top: 2px solid #D9220F;
-    border-bottom: 2px solid #D9220F;
+    border-top: 2px solid #1D035E;
+    border-bottom: 2px solid #1D035E;
 }
 
 /* rcapper-d3-histogram styles */
