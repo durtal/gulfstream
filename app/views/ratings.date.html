@@ -1,2 +1,10 @@
 <h2>{{ date }}</h2>
-<h4 ng-repeat="wnr in pos1">{{ wnr.RRtg | number: 0 }}</h4>
+<p>There are ratings for runners in <strong>{{ races.length }}</strong> races</p>
+<div class="col-sm-1">
+    <div class="btn-group-vertical">
+        <a href="" class="btn btn-info" ng-repeat="race in races">{{ race.race }}</a>
+    </div>
+</div>
+<div class="col-sm-11">
+    <div ui-view></div>
+</div>

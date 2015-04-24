@@ -14,6 +14,7 @@ angular.module('gulfstreamApp')
         $scope.date = $stateParams.raceDate;
         $scope.races = races;
         console.log(races);
+        $scope.predicate = 'race';
 
         var rnrs = _.pluck(races, 'runners');
         console.log(rnrs);
@@ -25,4 +26,11 @@ angular.module('gulfstreamApp')
             'pos': 1
         });
         console.log($scope.pos1);
+
+        var chain = _(races).chain()
+            .pluck('runners')
+            .flatten()
+            .where({ 'pos': 1 })
+            .value();
+        console.log(chain);
     });
