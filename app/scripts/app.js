@@ -82,6 +82,22 @@ angular
                   }
               }
           })
+          .state('ratings.date', {
+              url: '/date/{raceDate}',
+              templateUrl: 'views/ratings.date.html',
+              controller: 'DateCtrl',
+              resolve: {
+                  races: function($http, $stateParams, _) {
+                      return $http.get('data/gulfstream-races.json')
+                          .then(function(data) {
+                              var d = _.where(data.data, {
+                                  'date': $stateParams.raceDate
+                              });
+                              return d;
+                          });
+                  }
+              }
+          })
           .state('ratings.handicappingmethod', {
               url: '/handicapping-method',
               templateUrl: 'views/handicapping/handicapping_method.html'

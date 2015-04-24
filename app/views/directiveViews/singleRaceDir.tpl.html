@@ -22,7 +22,7 @@
 	<table class="table table-races">
 		<tbody>
 			<tr>
-				<td class="col-sm-2 col-md-1 col-lg-1"><span class="race-date">{{ race.date }}</span></td>
+				<td class="col-sm-2 col-md-1 col-lg-1"><span class="race-date"><a ui-sref="ratings.date({ 'raceDate': '{{ race.date }}' })">{{ race.date }}</a></span></td>
 				<td class="col-sm-4 col-md-3 col-lg-3"><span class="race-class">{{ race.details.race_type | uppercase }}</span> | <span class="race-class">{{ race.details.value | currency: undefined : 0 }}</span></td>
 				<td class="col-sm-2 col-md-2 col-lg-2 trainer-jockey hidden-sm"><strong>T: </strong><span>{{ race.runners.trainer }}</span></td>
 				<td class="col-sm-1 col-md-1 col-lg-1 runner-pos" rowspan="2">
