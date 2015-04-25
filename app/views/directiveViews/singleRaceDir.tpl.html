@@ -34,7 +34,9 @@
 			</tr>
 			<tr>
 				<td>
-					<span class="race-no">Race #{{ race.race }}</span>
+					<span class="race-no">
+						<a ui-sref="ratings.date.race({ 'raceDate': '{{ race.date }}', 'raceId': '{{ race.race }}' })">Race #{{ race.race }}</a>
+					</span>
 				</td>
 				<td>
 					<span class="race-dist">{{ race.details.dist }}f</span>

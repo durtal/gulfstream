@@ -2,8 +2,11 @@
 <p>There are ratings for runners in <strong>{{ races.length }}</strong> races</p>
 <div class="col-sm-1">
     <div class="btn-group-vertical">
-        <a href="" class="btn btn-info" ng-repeat="race in races">{{ race.race }}</a>
+        <a ui-sref="ratings.date.race({ raceId: '{{race.race}}' })" class="btn btn-info" ng-repeat="race in races">{{ race.race }}</a>
     </div>
+</div>
+<div class="col-sm-11">
+    <rcapper-d3-histogram data="ratings" fill="#D9220F"></rcapper-d3-histogram>
 </div>
 <div class="col-sm-11">
     <div ui-view></div>

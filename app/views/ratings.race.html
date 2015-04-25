@@ -1,0 +1,20 @@
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <td class="runner-pos">Wgt</td>
+            <td class="runner-pos">Pos</td>
+            <td class="runner-horse">Horse</td>
+            <td class="runner-horse">FinTime</td>
+            <td class="runner-pos">RRtg</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="runner in race.runners">
+            <td class="runner-pos">{{ runner.wgt }}</td>
+            <td class="runner-pos">{{ runner.pos }}</td>
+            <td class="runner-horse">{{ runner.horse }}</td>
+            <td class="runner-horse">{{ runner.fintime | number: 2 }}</td>
+            <td class="runner-pos">{{ runner.RRtg | number: 0 }}</td>
+        </tr>
+    </tbody>
+</table>
