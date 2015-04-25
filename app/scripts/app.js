@@ -98,6 +98,11 @@ angular
                   }
               }
           })
+          .state('ratings.date.race', {
+              url: '/race/{raceId}',
+              templateUrl: 'views/ratings.race.html',
+              controller: 'RaceCtrl'
+          })
           .state('ratings.handicappingmethod', {
               url: '/handicapping-method',
               templateUrl: 'views/handicapping/handicapping_method.html'

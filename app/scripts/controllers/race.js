@@ -8,10 +8,13 @@
  * Controller of the gulfstreamApp
  */
 angular.module('gulfstreamApp')
-  .controller('RaceCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-  });
+    .controller('RaceCtrl', function ($scope, $stateParams, _) {
+
+        console.log($scope.races);
+        console.log($stateParams);
+
+        $scope.race = _.findWhere($scope.races, {
+            'date_race': $stateParams.raceDate + '_' + $stateParams.raceId
+        });
+
+    });
