@@ -15,7 +15,6 @@ angular.module('gulfstreamApp')
         $scope.races = _.sortBy(races, 'race');
 
         $scope.raceId = _.pluck($scope.races, 'race');
-        console.log($scope.raceId);
         // console.log(races);
         // $scope.predicate = 'race';
         //
@@ -30,12 +29,11 @@ angular.module('gulfstreamApp')
         // });
         // console.log($scope.pos1);
 
-        var chain = _(races).chain()
+        $scope.winners = _($scope.races).chain()
             .pluck('runners')
             .flatten()
             .where({ 'pos': 1 })
             .value();
-        console.log(chain);
 
         $scope.ratings = _(races).chain()
             .pluck('runners')
