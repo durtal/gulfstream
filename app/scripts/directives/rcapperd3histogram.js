@@ -33,7 +33,16 @@ angular.module('gulfstreamApp')
             var xmin = Math.floor(d3.min(data)), // watch
                 xmax = Math.ceil(d3.max(data));
 
-            var bins = xmax - xmin; // watch
+            if(attr.min && attr.max) {
+                xmin = parseInt(attr.min);
+                xmax = parseInt(attr.max);
+            }
+
+            var bins = (xmax - xmin); // watch
+            
+            if(attr.bw) {
+                bins = bins / attr.bw
+            }
 
             var x = d3.scale.linear() // watch
                 .domain([0, bins])
@@ -44,6 +53,7 @@ angular.module('gulfstreamApp')
                 .range([0, width]);
 
             var hist = d3.layout.histogram() // watch
+                .frequency(false)
                 .bins(bins)(data);
                 console.log(hist);
 
@@ -56,6 +66,10 @@ angular.module('gulfstreamApp')
             var xAxis = d3.svg.axis() // watch
                 .scale(x2)
                 .orient('bottom');
+
+            var yAxis = d3.svg.axis()
+                .scale(y)
+                .orient('left');
 
             svg.append('g')
                 .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
@@ -87,6 +101,10 @@ angular.module('gulfstreamApp')
                 .attr('class', 'x-axis')
                 .attr('transform', 'translate(0,' + height + ')')
                 .call(xAxis);
+
+            svg.append('g')
+                .attr('class', 'x-axis')
+                .call(yAxis);
 
         }, true);
 
