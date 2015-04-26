@@ -1,20 +1,42 @@
-<table class="table table-condensed">
-    <thead>
-        <tr>
-            <td class="runner-pos">Wgt</td>
-            <td class="runner-pos">Pos</td>
-            <td class="runner-horse">Horse</td>
-            <td class="runner-horse">FinTime</td>
-            <td class="runner-pos">RRtg</td>
-        </tr>
-    </thead>
-    <tbody>
-        <tr ng-repeat="runner in race.runners">
-            <td class="runner-pos">{{ runner.wgt }}</td>
-            <td class="runner-pos">{{ runner.pos }}</td>
-            <td class="runner-horse">{{ runner.horse }}</td>
-            <td class="runner-horse">{{ runner.fintime | number: 2 }}</td>
-            <td class="runner-pos">{{ runner.RRtg | number: 0 }}</td>
-        </tr>
-    </tbody>
-</table>
+<br>
+<div class="col-sm-3">
+    <h3>Race #{{ race.race }}</h3>
+    <h4><span class="text-muted">Distance:</span> {{ race.details.dist }}f</h4>
+    <h4><span class="text-muted">Surface:</span> {{ race.details.surf }} <small class="text-muted">({{ race.conditions.going }})</small></h4>
+    <h4><span class="text-muted">RaceType:</span> {{ race.details.race_type }} <small class="text-muted">({{ race.conditions.race_cond }})</small></h4>
+    <h5>[{{ race.conditions.cor }}]</h5>
+    <h4><span class="text-muted">Purse:</span> {{ race.details.value | currency: '$' }}</h4>
+
+    <hr>
+
+    <p class="text-muted">The text [{{ race.conditions.cor }}] below the RaceType corresponds to a variable named <code>cor</code>, (for 'Category Of Race'), this variable was used in the initialisation of handicap ratings (see <a ui-sref="ratings.handicappingmethod">here</a>), and races with the same <code>cor</code> value will be used to handicap one another.</p>
+
+</div>
+<div class="col-sm-9">
+    <table class="table table-condensed table-hover rcapper-race">
+        <thead>
+            <tr>
+                <td class="trainer">Trainer</td>
+                <td class="jockey">Jockey <sup class="text-muted">claim</sup></td>
+                <td>Wgt</td>
+                <td>Pos</td>
+                <td class="horse">Horse</td>
+                <td>FinTime</td>
+                <td>FinSpd</td>
+                <td>RRtg</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="runner in race.runners">
+                <td class="trainer">{{ runner.trainer }}</td>
+                <td class="jockey">{{ runner.jockey }} <sup class="text-muted">{{ runner.j_clm }}</sup></td>
+                <td>{{ runner.wgt }}</td>
+                <td class="pos">{{ runner.pos }}</td>
+                <td class="horse p{{runner.pos}}">{{ runner.horse }}</td>
+                <td class="fintime">{{ runner.fintime | number: 2 }}</td>
+                <td class="fintime">{{ runner.fs2f | number: 4 }}{{ runner.fs2_5f | number: 4 }}</td>
+                <td class="RRtg">{{ runner.RRtg | number: 0 }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

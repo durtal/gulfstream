@@ -312,3 +312,56 @@ input[type=range]:focus::-moz-range-track {
     font-size: 11px;
     text-align: justify
 }
+
+/* table styles to display winners on particular day */
+table.rcapper-winners>thead>tr>td {
+    font-size: 14px;
+}
+table.rcapper-winners>thead>tr>td.jockey, .trainer {
+    text-align: left;
+}
+table.rcapper-winners>thead>tr>td.horse {
+    text-align: right;
+}
+table.rcapper-winners>tbody>tr>td {
+    font-size: 13px;
+}
+table.rcapper-winners>tbody>tr>td.jockey, .trainer {
+    text-align: left;
+}
+table.rcapper-winners>tbody>tr>td.horse {
+    font-size: 14px;
+    text-align: right;
+    font-weight: bold;
+    color: #00871E;
+}
+
+/* table styles to display a race result */
+table.rcapper-race>thead>tr>td {
+    font-size: 14px;
+}
+table.rcapper-race>thead>tr>td.jockey, .trainer {
+    text-align: left;
+}
+table.rcapper-race>thead>tr>td.horse {
+    text-align: right;
+}
+table.rcapper-race>tbody>tr>td {
+    font-size: 13px;
+}
+table.rcapper-race>tbody>tr>td.jockey, td.trainer {
+    text-align: left;
+}
+table.rcapper-race>tbody>tr>td.horse {
+    text-align: right;
+    font-size: 14px;
+}
+table.rcapper-race>tbody>tr>td.RRtg, .pos {
+    color: #D9220F;
+    font-weight: bold;
+    font-size: 15px;
+}
+table.rcapper-race>tbody>tr>td.p1 {
+    color: #00871E;
+    font-weight: bold;
+}
