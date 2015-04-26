@@ -33,7 +33,7 @@
 			<tbody>
 				<tr dir-paginate="horse in horses | orderBy: predicate: reverse | filter: query | itemsPerPage: pageSize" current-page="currentPage">
 					<td>
-						<a ui-sref="ratings.horse({ horse_id: '{{ horse._id }}'})">show</a>
+						<a ui-sref="ratings.horse({ horseId: '{{ horse._id }}'})">show</a>
 					</td>
 					<td>{{ horse.horse }}</td>
 					<td>{{ horse.trainer }}</td>
