@@ -67,7 +67,7 @@ angular
               controller: 'RatingsCtrl'
           })
           .state('ratings.horse', {
-              url: '/horse/{horse_id}',
+              url: '/horse/{horseId}',
               templateUrl: 'views/horse.html',
               controller: 'HorseCtrl',
               resolve: {
@@ -75,7 +75,7 @@ angular
                     return $http.get('data/gulfstream-ratings.json')
                         .then(function(data) {
                             var d = _.findWhere(data.data, {
-                                '_id': $stateParams.horse_id
+                                '_id': $stateParams.horseId
                             });
                             return d;
                         });
