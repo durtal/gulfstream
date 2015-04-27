@@ -10,7 +10,7 @@ angular.module('gulfstreamApp')
   .directive('rcapperD3Histogram', function () {
 
     function link(scope, element, attr) {
-
+        
         // svg dimensions
         var margin = {
                 top: 10,
@@ -39,7 +39,7 @@ angular.module('gulfstreamApp')
             }
 
             var bins = (xmax - xmin); // watch
-            
+
             if(attr.bw) {
                 bins = bins / attr.bw
             }

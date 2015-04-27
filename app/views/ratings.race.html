@@ -31,7 +31,7 @@
                 <td class="trainer">{{ runner.trainer }}</td>
                 <td class="jockey">{{ runner.jockey }} <sup class="text-muted">{{ runner.j_clm }}</sup></td>
                 <td>{{ runner.wgt }}</td>
-                <td class="pos">{{ runner.pos }}</td>
+                <td class="pos p{{runner.pos}}">{{ runner.pos }}</td>
                 <td class="horse p{{runner.pos}}">{{ runner.horse }}</td>
                 <td class="fintime">{{ runner.fintime | number: 2 }}</td>
                 <td class="fintime">{{ runner.fs2f | number: 4 }}{{ runner.fs2_5f | number: 4 }}</td>
