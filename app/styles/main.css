@@ -315,7 +315,7 @@ input[type=range]:focus::-moz-range-track {
 
 /* table styles to display winners on particular day */
 table.rcapper-winners>thead>tr>td {
-    font-size: 14px;
+    font-size: 13px;
 }
 table.rcapper-winners>thead>tr>td.jockey, .trainer {
     text-align: left;
@@ -324,13 +324,13 @@ table.rcapper-winners>thead>tr>td.horse {
     text-align: right;
 }
 table.rcapper-winners>tbody>tr>td {
-    font-size: 13px;
+    font-size: 11px;
 }
 table.rcapper-winners>tbody>tr>td.jockey, .trainer {
     text-align: left;
 }
 table.rcapper-winners>tbody>tr>td.horse {
-    font-size: 14px;
+    font-size: 13px;
     text-align: right;
     font-weight: bold;
     color: #00871E;
@@ -338,7 +338,7 @@ table.rcapper-winners>tbody>tr>td.horse {
 
 /* table styles to display a race result */
 table.rcapper-race>thead>tr>td {
-    font-size: 14px;
+    font-size: 13px;
 }
 table.rcapper-race>thead>tr>td.jockey, .trainer {
     text-align: left;
@@ -347,7 +347,7 @@ table.rcapper-race>thead>tr>td.horse {
     text-align: right;
 }
 table.rcapper-race>tbody>tr>td {
-    font-size: 13px;
+    font-size: 12px;
 }
 table.rcapper-race>tbody>tr>td.jockey, td.trainer {
     text-align: left;
@@ -362,6 +362,31 @@ table.rcapper-race>tbody>tr>td.RRtg, .pos {
     font-size: 15px;
 }
 table.rcapper-race>tbody>tr>td.p1 {
+    color: #00871E;
+    font-weight: bold;
+}
+/* xs views */
+div.visible-xs>table.rcapper-winners>thead>tr>td,
+div.visible-xs>table.rcapper-race>thead>tr>td {
+    font-size: 12px;
+}
+div.visible-xs>table.rcapper-winners>tbody>tr>td,
+div.visible-xs>table.rcapper-race>tbody>tr>td {
+    font-size: 11px;
+    vertical-align: middle;
+}
+div.visible-xs>table.rcapper-winners>tbody>tr>td.horse,
+div.visible-xs>table.rcapper-race>tbody>tr>td.horse {
+    text-align: right;
+    font-size: 13px;
+}
+div.visible-xs>table.rcapper-winners>tbody>tr>td.RRtg,
+div.visible-xs>table.rcapper-race>tbody>tr>td.RRtg {
+    color: #D9220F;
+    font-weight: bold;
+    font-size: 14px;
+}
+div.visible-xs>table.rcapper-race>tbody>tr>td.p1 {
     color: #00871E;
     font-weight: bold;
 }
