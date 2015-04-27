@@ -7,38 +7,28 @@
 		<label for="search">Horses per Page:</label>
 		<select ng-model="pageSize" ng-options="num for num in [10, 20, 40, 100]"></select>
 		<br>
-		<p>
-			<sub class="text-muted">Use the search box to filter horses by name.  Any horse whose name contains the search term will be kept in the table.</sub>
-		</p>
-		<p>
-			<sub class="text-muted">Use the Horses per Page to limit the number of horses in the table, as there are {{ horses.length }} horses it requires a lot of pagination.</sub>
-		</p>
-		<p>
-			<sub class="text-muted">To view the record of an individual horse, click on the corresponding 'show' link to the left of the horses name.</sub>
-		</p>
+		<p class="text-muted">Use the search box to filter horses by name.  Any horse whose name contains the search term will be kept in the table.</p>
+		<p class="text-muted">Use the Horses per Page to limit the number of horses in the table, as there are {{ horses.length }} horses it requires a lot of pagination.</p>
+		<p class="text-muted">To view the record of an individual horse, click on the <span class="glyphicon glyphicon-plus-sign"></span> to the right of the horses name.</p>
 
 	</div>
 	<div class="col-sm-8">
 		<br>
-		<table class="table">
+		<table class="table table-condensed table-hover rcapper-race">
 			<thead>
 				<tr>
-					<td>Go to Form</td>
-					<td>Horse</td>
-					<td>Trainer</td>
-					<td>YOB</td>
-					<td># races</td>
+					<td class="horse">Horse</td>
+					<td class="horse"># races</td>
+					<td class="horse">Latest Trainer</td>
+					<td class="horse">YOB</td>
 				</tr>
 			</thead>
 			<tbody>
 				<tr dir-paginate="horse in horses | orderBy: predicate: reverse | filter: query | itemsPerPage: pageSize" current-page="currentPage">
-					<td>
-						<a ui-sref="ratings.horse({ horseId: '{{ horse._id }}'})">show</a>
-					</td>
-					<td>{{ horse.horse }}</td>
-					<td>{{ horse.trainer }}</td>
-					<td>{{ horse.yob }}</td>
-					<td>{{ horse.n_races }}</td>
+					<td class="horse">{{ horse.horse }} <a ui-sref="ratings.horse({ horseId: '{{ horse._id }}' })"><span class="glyphicon glyphicon-plus-sign"></span></a></td>
+					<td class="horse">{{ horse.n_races }}</td>
+					<td class="horse">{{ horse.trainer }}</td>
+					<td class="horse">{{ horse.yob }}</td>
 				</tr>
 			</tbody>
 		</table>
