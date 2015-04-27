@@ -1,49 +1,90 @@
 <div class="visible-xs hidden-sm hidden-md hidden-lg">
-	<table class="table">
+	<table class="table table-condensed rcapper-horse-race-xs">
 		<tbody>
 			<tr>
-				<td class="col-xs-2">{{ race.date }}</td>
-				<td class="col-xs-4"><strong>{{ race.details.race_type | uppercase }}</strong> | ${{ race.details.value }}</td>
-				<td class="col-xs-1 runner-pos" rowspan="2">{{ race.runners.pos }}</td>
-				<td class="col-xs-3 runner-horse-sm" rowspan="2">{{
-					race.runners.horse
-				}}</td>
-				<td class="col-xs-2 RRtg-box" rowspan="2"><span class="rcapperRtg">{{ race.runners.RRtg | number: 0 }}</span></td>
+				<td class="col-xs-2">
+					<a ui-sref="ratings.date({ raceDate: '{{ race.date }}' })">{{ race.date }}</a>
+				</td>
+				<td class="col-xs-4">{{ race.details.race_type }}</td>
+				<td class="col-xs-1 pos p{{ race.runners.pos }}" rowspan="2">{{ race.runners.pos }}</td>
+				<td class="col-xs-3 horse p{{ race.runners.pos }}" rowspan="2">{{ race.runners.horse }}</td>
+				<td class="col-xs-2 RRtg" rowspan="2">{{ race.runners.RRtg | number: 0 }}</td>
 			</tr>
 			<tr>
-				<td>{{ race.race }}</td>
-				<td>{{ race.details.dist}}f | {{ race.details.surf }}</td>
+				<td>
+					<a ui-sref="ratings.date.race({ raceDate: '{{ race.date }}', raceId: '{{ race.race }}' })">{{ race.race }}</a>
+				</td>
+				<td>{{ race.details.dist }}f <span class="text-muted">({{ race.details.surf }}::{{ race.conditions.going }})</span></td>
 			</tr>
 		</tbody>
 	</table>
 </div>
-
-<div class="visible-md visible-lg visible-sm hidden-xs">
-	<table class="table table-races">
+<div class="hidden-xs visible-sm hidden-md hidden-lg">
+	<table class="table table-condensed rcapper-horse-race-sm">
 		<tbody>
 			<tr>
-				<td class="col-sm-2 col-md-1 col-lg-1"><span class="race-date"><a ui-sref="ratings.date({ 'raceDate': '{{ race.date }}' })">{{ race.date }}</a></span></td>
-				<td class="col-sm-4 col-md-3 col-lg-3"><span class="race-class">{{ race.details.race_type | uppercase }}</span> | <span class="race-class">{{ race.details.value | currency: undefined : 0 }}</span></td>
-				<td class="col-sm-2 col-md-2 col-lg-2 trainer-jockey hidden-sm"><strong>T: </strong><span>{{ race.runners.trainer }}</span></td>
-				<td class="col-sm-1 col-md-1 col-lg-1 runner-pos" rowspan="2">
-					{{ race.runners.pos }}
+				<td class="col-sm-2">
+					<a ui-sref="ratings.date({ raceDate: '{{ race.date }}' })">{{ race.date }}</a>
 				</td>
-				<td class="col-sm-3 col-md-3 col-lg-3 runner-horse" rowspan="2">{{ race.runners.horse }}</td>
-				<td class="col-sm-1 col-md-1 col-lg-1">{{ race.runners.fintime }}</td>
-				<td class="col-sm-1 col-md-1 col-lg-1 runner-Rtg" rowspan="2">{{ race.runners.RRtg | number: 0 }}</td>
+				<td class="col-sm-3">{{ race.details.race_type }} <span class="text-muted">({{ race.details.value | currency: $ : 0 }})</span></td>
+				<td class="col-sm-1 pos p{{ race.runners.pos }}" rowspan="2">{{ race.runners.pos }}</td>
+				<td class="col-sm-4 horse p{{ race.runners.pos }}" rowspan="2">{{ race.runners.horse }}</td>
+				<td class="col-sm-1 fintime">{{ race.runners.fintime | number: 2 }}</td>
+				<td class="col-sm-1 RRtg" rowspan="2">{{ race.runners.RRtg | number: 0 }}</td>
 			</tr>
 			<tr>
 				<td>
-					<span class="race-no">
-						<a ui-sref="ratings.date.race({ 'raceDate': '{{ race.date }}', 'raceId': '{{ race.race }}' })">Race #{{ race.race }}</a>
-					</span>
+					<a ui-sref="ratings.date.race({ raceDate: '{{ race.date }}', raceId: '{{ race.race }}'})">{{ race.race }}</a>
 				</td>
+				<td>{{ race.details.dist }}f <span class="text-muted">({{ race.details.surf }}::{{ race.conditions.going }})</span></td>
+				<td>{{ race.runners.fs2f | number: 3 }}{{ race.runners.fs2_5f | number: 3 }}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div class="hidden-xs hidden-sm visible-md hidden-lg">
+	<table class="table table-condensed rcapper-horse-race-md">
+		<tbody>
+			<tr>
+				<td class="col-md-2">
+					<a ui-sref="ratings.date({ raceDate: '{{ race.date }}' })">{{ race.date }}</a>
+				</td>
+				<td class="col-md-3">{{ race.details.race_type }} <span class="text-muted">({{ race.details.value | currency: $ : 0 }})</span></td>
+				<td class="col-md-1 pos p{{ race.runners.pos }}" rowspan="2">{{ race.runners.pos }}</td>
+				<td class="col-md-4 horse p{{ race.runners.pos }}" rowspan="2">{{ race.runners.horse }}</td>
+				<td class="col-md-1 fintime">{{ race.runners.fintime | number: 2 }}</td>
+				<td class="col-md-1 RRtg" rowspan="2">{{ race.runners.RRtg | number: 0 }}</td>
+			</tr>
+			<tr>
 				<td>
-					<span class="race-dist">{{ race.details.dist }}f</span>
-					| <span class="race-dist">{{ race.details.surf }}</span>
+					<a ui-sref="ratings.date.race({ raceDate: '{{ race.date }}', raceId: '{{ race.race }}'})">{{ race.race }}</a>
 				</td>
-				<td class="trainer-jockey hidden-sm"><strong>J: </strong>{{ race.runners.jockey}} <sup class="text-muted">{{ race.runners.j_clm }}</sup></td>
-
+				<td>{{ race.details.dist }}f <span class="text-muted">({{ race.details.surf }}::{{ race.conditions.going }})</span></td>
+				<td>{{ race.runners.fs2f | number: 3 }}{{ race.runners.fs2_5f | number: 3 }}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div class="hidden-xs hidden-sm hidden-md visible-lg">
+	<table class="table table-condensed rcapper-horse-race-lg">
+		<tbody>
+			<tr>
+				<td class="col-lg-1">
+					<a ui-sref="ratings.date({ raceDate: '{{ race.date }}' })">{{ race.date }}</a>
+				</td>
+				<td class="col-lg-2">{{ race.details.race_type }} <span class="text-muted">({{ race.details.value | currency: $ : 0 }})</span></td>
+				<td class="col-lg-3">{{ race.runners.trainer }}</td>
+				<td class="col-lg-1 pos p{{ race.runners.pos }}" rowspan="2">{{ race.runners.pos }}</td>
+				<td class="col-lg-3 horse p{{ race.runners.pos }}" rowspan="2">{{ race.runners.horse }}</td>
+				<td class="col-lg-1 fintime">{{ race.runners.fintime | number: 2 }}</td>
+				<td class="col-lg-1 RRtg" rowspan="2">{{ race.runners.RRtg | number: 0 }}</td>
+			</tr>
+			<tr>
+				<td>
+					<a ui-sref="ratings.date.race({ raceDate: '{{ race.date }}', raceId: '{{ race.race }}'})">{{ race.race }}</a>
+				</td>
+				<td>{{ race.details.dist }}f <span class="text-muted">({{ race.details.surf }}::{{ race.conditions.going }})</span></td>
+				<td>{{ race.runners.jockey }} <sup class="text-muted">{{ race.runners.j_clm }}</sup></td>
 				<td>{{ race.runners.fs2f | number: 3 }}{{ race.runners.fs2_5f | number: 3 }}</td>
 			</tr>
 		</tbody>
