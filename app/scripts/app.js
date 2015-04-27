@@ -56,6 +56,10 @@ angular
               url: '/2015-FountainOfYouth',
               templateUrl: 'views/blog/21-2-15.html'
           })
+          .state('blog.update-27-4-15', {
+              url: '/Update-27-04-15',
+              templateUrl: 'views/blog/update-27-4-15.html'
+          })
           .state('ratings', {
               url: '/ratings',
               templateUrl: 'views/ratings.html',
