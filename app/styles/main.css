@@ -126,124 +126,12 @@ strong {
     color: #00871E;
 }
 
-/* Race table styles, used in individual horse profiles, and singleracedir. MAY NEED TO ADD CLASS FOR WHEN USING */
-
-.table-races {
-  border: 1px solid #1D035E;
-}
-
-.races-container {
-    height: 500px;
-    overflow-y: scroll;
-    border-top: 2px solid #1D035E;
-}
-
-table tbody>tr>td.runner-Rtg {
-    vertical-align: middle;
-    font-size: 24px;
-    text-align: center;
-    font-weight: bold;
-    color: #D9220F;
-}
-/*table tbody>tr>td>span.rcapperRtg {
-    border-radius: 50%;
-    radius: 20px;
-
-    width: 40px;
-    height: 40px;
-    padding: 10px;
-
-    background: #D9220F;
-    border: 1px solid #000000;
-    color: #FCFCFC;
-    text-align: center;
-
-    font-size: 1.5em;
-    font-weight: bold;
-}*/
-
-/*table tbody>tr>td.RRtg-box {
-    width:50px;
-    height:50px;
-    margin-top:5px;
-    border-radius:50%;
-    line-height:50px;
-    text-align:center;
-    background:#D9220F;
-}*/
-
-table tbody>tr>td.runner-horse {
-    vertical-align: middle;
-    font-size: 20px;
-    text-align: right;
-}
-
-table tbody>tr>td.runner-horse-sm {
-    vertical-align: middle;
-    font-size: 14px;
-    text-align: right;
-}
-
-table tbody>tr>td.runner-pos {
-    vertical-align: middle;
-    font-size: 20px;
-    text-align: center;
-    font-weight: bold;
-    color: #D9220F;
-}
-
-table tbody>tr>td>span.race-date, .race-no {
-    font-weight: bold;
-    font-size: 12px;
-}
-
-table tbody>tr>td>span.race-class, .race-dist {
-    font-weight: bold;
-    font-size: 13px;
-}
-
-table tbody>tr>td.trainer-jockey {
-    text-align: right;
-}
-
-
-/* table header begins */
-table thead>tr>td.runner-horse {
-    vertical-align: middle;
-    font-size: 20px;
-    text-align: right;
-}
-
-table thead>tr>td.runner-pos {
-    vertical-align: middle;
-    font-size: 20px;
-    text-align: center;
-    font-weight: bold;
-}
-
-table thead>tr>td>span.race-date, .race-no {
-    font-weight: bold;
-    font-size: 12px;
-}
-
-table thead>tr>td>span.race-class, .race-dist {
-    font-weight: bold;
-    font-size: 13px;
-}
-
-table thead>tr>td.trainer-jockey {
-    text-align: right;
-}
-
 table thead>tr>td {
     background-color: #D8D8D8;
     color: #424242;
     font-weight: bold;
     font-size: 14px;
 }
-
-/* END HORSE PROFILE */
-
 
 /* SCROLLBAR */
 .scroller {
@@ -315,6 +203,7 @@ input[type=range]:focus::-moz-range-track {
 
 /* table styles to display winners on particular day */
 table.rcapper-winners>thead>tr>td {
+    vertical-align: middle;
     font-size: 13px;
 }
 table.rcapper-winners>thead>tr>td.jockey, .trainer {
@@ -334,6 +223,11 @@ table.rcapper-winners>tbody>tr>td.horse {
     text-align: right;
     font-weight: bold;
     color: #00871E;
+}
+table.rcapper-winners>tbody>tr>td.RRtg {
+    font-size: 13px;
+    font-weight: bold;
+    color: #D9220F;
 }
 
 /* table styles to display a race result */
@@ -356,7 +250,7 @@ table.rcapper-race>tbody>tr>td.horse {
     text-align: right;
     font-size: 14px;
 }
-table.rcapper-race>tbody>tr>td.RRtg, .pos {
+table.rcapper-race>tbody>tr>td.RRtg {
     color: #D9220F;
     font-weight: bold;
     font-size: 15px;
@@ -388,5 +282,125 @@ div.visible-xs>table.rcapper-race>tbody>tr>td.RRtg {
 }
 div.visible-xs>table.rcapper-race>tbody>tr>td.p1 {
     color: #00871E;
+    font-weight: bold;
+}
+
+/* table for races viewed on horses page in xs devices */
+table.rcapper-horse-race-xs {
+    border: 1px solid #1D035E;
+}
+table.rcapper-horse-race-xs>thead>tr>td,
+table.rcapper-horse-race-xs>tbody>tr>td {
+    font-size: 10px;
+    vertical-align: middle;
+    text-align: center;
+}
+table.rcapper-horse-race-xs>thead>tr>td.horse,
+table.rcapper-horse-race-xs>tbody>tr>td.horse {
+    text-align: right;
+    font-size: 14px;
+}
+table.rcapper-horse-race-xs>thead>tr>td.pos,
+table.rcapper-horse-race-xs>tbody>tr>td.pos {
+    text-align: left;
+    font-size: 13px;
+}
+table.rcapper-horse-race-xs>tbody>tr>td.p1 {
+    color: #00871E;
+    font-weight: bold;
+}
+table.rcapper-horse-race-xs>tbody>tr>td.RRtg {
+    color: #D9220F;
+    font-size: 14px;
+    font-weight: bold;
+}
+/* table for races viewed on horses page in sm devices */
+table.rcapper-horse-race-sm {
+    border: 1px solid #1D035E;
+}
+table.rcapper-horse-race-sm>thead>tr>td,
+table.rcapper-horse-race-sm>tbody>tr>td {
+    font-size: 12px;
+    vertical-align: middle;
+    text-align: center;
+}
+table.rcapper-horse-race-sm>thead>tr>td.horse,
+table.rcapper-horse-race-sm>tbody>tr>td.horse {
+    text-align: right;
+    font-size: 14px;
+}
+
+table.rcapper-horse-race-sm>thead>tr>td.pos,
+table.rcapper-horse-race-sm>tbody>tr>td.pos {
+    text-align: left;
+    font-size: 14px;
+}
+table.rcapper-horse-race-sm>tbody>tr>td.p1 {
+    color: #00871E;
+    font-weight: bold;
+}
+table.rcapper-horse-race-sm>tbody>tr>td.RRtg {
+    color: #D9220F;
+    font-size: 16px;
+    font-weight: bold;
+}
+/* table for races viewed on horses page in md devices */
+table.rcapper-horse-race-md {
+    border: 1px solid #1D035E;
+}
+table.rcapper-horse-race-md>thead>tr>td,
+table.rcapper-horse-race-md>tbody>tr>td {
+    font-size: 14px;
+    vertical-align: middle;
+    text-align: center;
+}
+table.rcapper-horse-race-md>thead>tr>td.horse,
+table.rcapper-horse-race-md>tbody>tr>td.horse {
+    text-align: right;
+    font-size: 16px;
+}
+
+table.rcapper-horse-race-md>thead>tr>td.pos,
+table.rcapper-horse-race-md>tbody>tr>td.pos {
+    text-align: left;
+    font-size: 16px;
+}
+table.rcapper-horse-race-md>tbody>tr>td.p1 {
+    color: #00871E;
+    font-weight: bold;
+}
+table.rcapper-horse-race-md>tbody>tr>td.RRtg {
+    color: #D9220F;
+    font-size: 18px;
+    font-weight: bold;
+}
+/* table for races viewed on horses page in lg devices */
+table.rcapper-horse-race-lg {
+    border: 1px solid #1D035E;
+}
+table.rcapper-horse-race-lg>thead>tr>td,
+table.rcapper-horse-race-lg>tbody>tr>td {
+    font-size: 15px;
+    vertical-align: middle;
+    text-align: center;
+}
+table.rcapper-horse-race-lg>thead>tr>td.horse,
+table.rcapper-horse-race-lg>tbody>tr>td.horse {
+    text-align: right;
+    font-size: 17px;
+}
+
+table.rcapper-horse-race-lg>thead>tr>td.pos,
+table.rcapper-horse-race-lg>tbody>tr>td.pos {
+    text-align: left;
+    font-size: 17px;
+}
+table.rcapper-horse-race-lg>tbody>tr>td.p1 {
+    color: #00871E;
+    font-weight: bold;
+}
+table.rcapper-horse-race-lg>tbody>tr>td.RRtg {
+    color: #D9220F;
+    font-size: 18px;
     font-weight: bold;
 }
