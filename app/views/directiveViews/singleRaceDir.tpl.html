@@ -73,7 +73,7 @@
 					<a ui-sref="ratings.date({ raceDate: '{{ race.date }}' })">{{ race.date }}</a>
 				</td>
 				<td class="col-lg-2">{{ race.details.race_type }} <span class="text-muted">({{ race.details.value | currency: $ : 0 }})</span></td>
-				<td class="col-lg-3">{{ race.runners.trainer }}</td>
+				<td class="col-lg-3 trainer">{{ race.runners.trainer }}</td>
 				<td class="col-lg-1 pos p{{ race.runners.pos }}" rowspan="2">{{ race.runners.pos }}</td>
 				<td class="col-lg-3 horse p{{ race.runners.pos }}" rowspan="2">{{ race.runners.horse }}</td>
 				<td class="col-lg-1 fintime">{{ race.runners.fintime | number: 2 }}</td>
@@ -84,7 +84,7 @@
 					<a ui-sref="ratings.date.race({ raceDate: '{{ race.date }}', raceId: '{{ race.race }}'})">{{ race.race }}</a>
 				</td>
 				<td>{{ race.details.dist }}f <span class="text-muted">({{ race.details.surf }}::{{ race.conditions.going }})</span></td>
-				<td>{{ race.runners.jockey }} <sup class="text-muted">{{ race.runners.j_clm }}</sup></td>
+				<td class="jockey">{{ race.runners.jockey }} <sup class="text-muted">{{ race.runners.j_clm }}</sup></td>
 				<td>{{ race.runners.fs2f | number: 3 }}{{ race.runners.fs2_5f | number: 3 }}</td>
 			</tr>
 		</tbody>

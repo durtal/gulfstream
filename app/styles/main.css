@@ -380,20 +380,20 @@ table.rcapper-horse-race-lg {
 }
 table.rcapper-horse-race-lg>thead>tr>td,
 table.rcapper-horse-race-lg>tbody>tr>td {
-    font-size: 15px;
+    font-size: 13px;
     vertical-align: middle;
     text-align: center;
 }
 table.rcapper-horse-race-lg>thead>tr>td.horse,
 table.rcapper-horse-race-lg>tbody>tr>td.horse {
     text-align: right;
-    font-size: 17px;
+    font-size: 20px;
 }
 
 table.rcapper-horse-race-lg>thead>tr>td.pos,
 table.rcapper-horse-race-lg>tbody>tr>td.pos {
     text-align: left;
-    font-size: 17px;
+    font-size: 20px;
 }
 table.rcapper-horse-race-lg>tbody>tr>td.p1 {
     color: #00871E;
@@ -403,4 +403,16 @@ table.rcapper-horse-race-lg>tbody>tr>td.RRtg {
     color: #D9220F;
     font-size: 18px;
     font-weight: bold;
+}
+table.rcapper-horse-race-lg>thead>tr>td.trainer,
+table.rcapper-horse-race-lg>thead>tr>td.jockey,
+table.rcapper-horse-race-lg>tbody>tr>td.trainer,
+table.rcapper-horse-race-lg>tbody>tr>td.jockey {
+    text-align: right;
+}
+table.rcapper-horse-race-lg>tbody>tr>td>span.text-muted {
+    text-align: right;
+}
+table.rcapper-horse-race-lg>tbody>tr>td.span.value {
+    color: #ff0000;
 }
