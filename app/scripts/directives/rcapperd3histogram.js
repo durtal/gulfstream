@@ -11,69 +11,95 @@ angular.module('gulfstreamApp')
 
     function link(scope, element, attr) {
 
-        // svg dimensions
+        // svg dimensions, use parentElement width
         var margin = {
                 top: 10,
                 right: 10,
                 bottom: 30,
                 left: 40
             },
-            width = 550 - margin.left - margin.right,
-            height = 340 - margin.top - margin.bottom;
+            parentWidth = element[0].parentElement.offsetWidth,
+            width = parentWidth - margin.left - margin.right,
+            parentHeight = parentWidth / 5 * 3,
+            height = parentHeight - margin.top - margin.bottom;
 
+        // create svg element
         var svg = d3.select(element[0])
-            .append('svg')
-            .attr('width', width + margin.left + margin.right)
-            .attr('height', height + margin.top + margin.bottom);
-
+            .append('svg');
+        // watch for window resizing
+        window.onresize = function(d) {
+            scope.$apply();
+        };
+        // watch for data changing, redraw plot
         scope.$watch('data', function(data) {
+            scope.render(data);
+        }, true);
+        // watch for parentElement changing size
+        scope.$watch(function() {
+            return element[0].parentElement.offsetWidth;
+        }, function(data) {
 
+            parentWidth = data,
+            width = parentWidth - margin.left - margin.right,
+            parentHeight = parentWidth / 5 * 3,
+            height = parentHeight - margin.top - margin.bottom;
+
+            svg.attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom);
+
+            scope.render(scope.data);
+        });
+
+        scope.render = function(data) {
+            // remove old plot
             svg.selectAll('*').remove();
-
-            var xmin = Math.floor(d3.min(data)), // watch
+            // set attributes of plotting area
+            svg.attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom);
+            // calculate min and max of data
+            var xmin = Math.floor(d3.min(data)),
                 xmax = Math.ceil(d3.max(data));
-
+            // if element contains attr's use them
             if(attr.min && attr.max) {
                 xmin = parseInt(attr.min);
                 xmax = parseInt(attr.max);
             }
-
-            var bins = (xmax - xmin); // watch
-
+            // calculate the number of bins
+            var bins = (xmax - xmin);
+            // use attr's if provided
             if(attr.bw) {
-                bins = bins / attr.bw
+                bins = bins / attr.bw;
             }
-
-            var x = d3.scale.linear() // watch
+            // create x scale function
+            var x = d3.scale.linear()
                 .domain([0, bins])
                 .range([0, width]);
-
-            var x2 = d3.scale.linear() // watch
+            // create x-axis scale function
+            var x2 = d3.scale.linear()
                 .domain([xmin, xmax])
                 .range([0, width]);
-
-            var hist = d3.layout.histogram() // watch
+            // create histogram layout
+            var hist = d3.layout.histogram()
                 .frequency(false)
                 .bins(bins)(data);
-                console.log(hist);
-
+            // create y scale function
             var y = d3.scale.linear() // watch
                 .domain([0, d3.max(hist, function(d) {
                     return d.y;
                 })])
                 .range([height, 0]);
-
-            var xAxis = d3.svg.axis() // watch
+            // create x-axis function
+            var xAxis = d3.svg.axis()
                 .scale(x2)
                 .orient('bottom');
-
+            // create y-axis function
             var yAxis = d3.svg.axis()
                 .scale(y)
                 .orient('left');
-
+            // create chart element inside svg
             var chart = svg.append('g')
                 .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
+            // add bars using hist data
             var bar = chart.selectAll('.bar') // watch
                 .data(hist)
                 .enter()
@@ -83,9 +109,8 @@ angular.module('gulfstreamApp')
                     return 'translate(' + x2(d.x) + ',' + y(d.y) + ')';
                 })
                 .style('fill', attr.fill);
-
+            // apend rect's to bars
             bar.append('rect') // watch
-                .attr('x', 1)
                 .attr('class', 'bar')
                 .attr('width', x(hist[0].dx))
                 .attr('height', height - margin.botttom)
@@ -93,26 +118,23 @@ angular.module('gulfstreamApp')
                 .delay(function(d, i) {
                   return i * 100;
                 })
-                .duration(200)
+                .duration(1000)
                 .attr('height', function(d) {
                     return height - y(d.y);
                 });
-
+            // add the x-axis
             chart.append('g') // watch
                 .attr('class', 'x axis')
                 .attr('transform', 'translate(0,' + height + ')')
                 .call(xAxis);
-
+            // add the y-axis
             chart.append('g')
                 .attr('class', 'y axis')
                 .call(yAxis);
-
-        }, true);
-
+        }
 
     }
     return {
-    //   template: '<div></div>',
       restrict: 'E',
       scope: {
           data: '='
