@@ -10,13 +10,13 @@ angular.module('gulfstreamApp')
   .directive('rcapperD3Histogram', function () {
 
     function link(scope, element, attr) {
-        
+
         // svg dimensions
         var margin = {
                 top: 10,
                 right: 10,
-                bottom: 40,
-                left: 10
+                bottom: 30,
+                left: 40
             },
             width = 550 - margin.left - margin.right,
             height = 340 - margin.top - margin.bottom;
@@ -71,10 +71,10 @@ angular.module('gulfstreamApp')
                 .scale(y)
                 .orient('left');
 
-            svg.append('g')
+            var chart = svg.append('g')
                 .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-            var bar = svg.selectAll('.bar') // watch
+            var bar = chart.selectAll('.bar') // watch
                 .data(hist)
                 .enter()
                 .append('g')
@@ -86,6 +86,7 @@ angular.module('gulfstreamApp')
 
             bar.append('rect') // watch
                 .attr('x', 1)
+                .attr('class', 'bar')
                 .attr('width', x(hist[0].dx))
                 .attr('height', height - margin.botttom)
                 .transition()
@@ -97,13 +98,13 @@ angular.module('gulfstreamApp')
                     return height - y(d.y);
                 });
 
-            svg.append('g') // watch
-                .attr('class', 'x-axis')
+            chart.append('g') // watch
+                .attr('class', 'x axis')
                 .attr('transform', 'translate(0,' + height + ')')
                 .call(xAxis);
 
-            svg.append('g')
-                .attr('class', 'x-axis')
+            chart.append('g')
+                .attr('class', 'y axis')
                 .call(yAxis);
 
         }, true);

@@ -143,9 +143,14 @@ table thead>tr>td {
 }
 
 /* rcapper-d3-histogram styles */
-.x-axis {
-    stroke: #000000;
+.axis {
+    stroke: #424242;
     fill: none;
+    shape-rendering: crispEdges;
+}
+.axis text {
+    font-family: sans-serif;
+    font-size: 12px;
 }
 
 /* SLIDER STYLES */
