@@ -27,7 +27,7 @@ angular.module('gulfstreamApp')
         var svg = d3.select(element[0])
             .append('svg');
         // watch for window resizing
-        window.onresize = function(d) {
+        window.onresize = function() {
             scope.$apply();
         };
         // watch for data changing, redraw plot
@@ -131,7 +131,7 @@ angular.module('gulfstreamApp')
             chart.append('g')
                 .attr('class', 'y axis')
                 .call(yAxis);
-        }
+        };
 
     }
     return {
