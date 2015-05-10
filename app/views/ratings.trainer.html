@@ -1,0 +1,9 @@
+<h1>{{ trainer.trainer }}</h1>
+<div class="row">
+    <div class="col-sm-6">
+        <cal-heatmap config="'{{ config }}'"></cal-heatmap>
+    </div>
+    <div class="col-sm-6">
+        <rcapper-d3-histogram data="runners" fill="#3D1995" min=0 max=130></rcapper-d3-histogram>
+    </div>
+</div>

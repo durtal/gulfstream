@@ -107,6 +107,22 @@ angular
               templateUrl: 'views/ratings.race.html',
               controller: 'RaceCtrl'
           })
+          .state('ratings.trainer', {
+              url: '/trainer/{trainer}',
+              templateUrl: 'views/ratings.trainer.html',
+              controller: 'TrainerCtrl',
+              resolve: {
+                  trainer: function($http, $stateParams, _) {
+                      return $http.get('data/gulfstream-trainers.json')
+                          .then(function(data) {
+                              var d = _.findWhere(data.data, {
+                                  'trainer': $stateParams.trainer
+                              });
+                              return d;
+                          });
+                  }
+              }
+          })
           .state('ratings.handicappingmethod', {
               url: '/handicapping-method',
               templateUrl: 'views/handicapping/handicapping_method.html'

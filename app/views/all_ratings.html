@@ -27,7 +27,7 @@
 				<tr dir-paginate="horse in horses | orderBy: predicate: reverse | filter: query | itemsPerPage: pageSize" current-page="currentPage">
 					<td class="horse">{{ horse.horse }} <a ui-sref="ratings.horse({ horseId: '{{ horse._id }}' })"><span class="glyphicon glyphicon-plus-sign"></span></a></td>
 					<td class="horse">{{ horse.n_races }}</td>
-					<td class="horse">{{ horse.trainer }}</td>
+					<td class="horse">{{ horse.trainer }} <a ui-sref="ratings.trainer({ trainer: '{{ horse.trainer_id }}' })"><span class="glyphicon glyphicon-plus-sign"></span></a></td>
 					<td class="horse">{{ horse.yob }}</td>
 				</tr>
 			</tbody>

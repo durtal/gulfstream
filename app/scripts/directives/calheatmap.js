@@ -24,7 +24,7 @@ angular.module('gulfstreamApp')
                     min: '#D8D8D8',
                     max: '#D9220F',
                     empty: '#D8D8D8',
-                    base: '#FFFFFF'
+                    base: '#424242'
                 }
             };
             angular.extend(defaults, config);
