@@ -116,7 +116,7 @@ angular
                       return $http.get('data/gulfstream-trainers.json')
                           .then(function(data) {
                               var d = _.findWhere(data.data, {
-                                  'trainer': $stateParams.trainer
+                                  'trainer_id': $stateParams.trainer
                               });
                               return d;
                           });
