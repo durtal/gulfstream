@@ -7,3 +7,176 @@
         <rcapper-d3-histogram data="runners" fill="#3D1995" min=0 max=130></rcapper-d3-histogram>
     </div>
 </div>
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="visible-xs hidden-sm hidden-md hidden-lg">
+            <table class="table table-condensed rcapper-horse-race-xs">
+                <thead>
+                    <tr>
+                        <td class="col-xs-2">Date</td>
+                        <td class="col-xs-4">RaceType</td>
+                        <td class="col-xs-1 pos" rowspan="2">Pos</td>
+                        <td class="col-xs-3 horse" rowspan="2">Horse</td>
+                        <td class="col-xs-2" rowspan="2">RRtg</td>
+                    </tr>
+                    <tr>
+                        <td>Race</td>
+                        <td>Dist (Surf)</td>
+                    </tr>
+                </thead>
+            </table>
+            <perfect-scrollbar class="scroller" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20">
+                <table class="table table-condensed rcapper-horse-race-xs">
+                    <tbody ng-repeat="runner in trainer.runners">
+                        <tr>
+                            <td class="col-xs-2">
+                                <a ui-sref="ratings.date({ raceDate: '{{ race.date }}' })">{{ runner.date }}</a>
+                            </td>
+                            <td class="col-xs-4">{{ runner.race_type }}</td>
+                            <td class="col-xs-1 pos p{{ runner.pos }}" rowspan="2">{{ runner.pos }}</td>
+                            <td class="col-xs-3 horse p{{ runner.pos }}" rowspan="2">{{ runner.horse }}</td>
+                            <td class="col-xs-2 RRtg" rowspan="2">{{ runner.RRtg | number: 0 }}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a ui-sref="ratings.date.race({ raceDate: '{{ runner.date }}', raceId: '{{ runner.race }}' })">{{ runner.race }}</a>
+                            </td>
+                            <td>{{ runner.dist }}f <span class="text-muted">({{ runner.surf }})</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </perfect-scrollbar>
+        </div>
+        <div class="hidden-xs visible-sm hidden-md hidden-lg">
+            <table class="table table-condensed rcapper-horse-race-sm">
+                <thead>
+                    <tr>
+                        <td class="col-sm-2">Date</td>
+                        <td class="col-sm-3">RaceType <span class="text-muted">(Purse)</span></td>
+                        <td class="col-sm-1 pos" rowspan="2">Pos</td>
+                        <td class="col-sm-4 horse" rowspan="2">Horse</td>
+                        <td class="col-sm-1 fintime">FinTime</td>
+                        <td class="col-sm-1 RRtg" rowspan="2">RRtg</td>
+                    </tr>
+                    <tr>
+                        <td>Race</td>
+                        <td>Dist <span class="text-muted">(Surf)</span></td>
+                        <td>FinSpd</td>
+                    </tr>
+                </thead>
+            </table>
+            <perfect-scrollbar class="scroller" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20">
+                <table class="table table-condensed rcapper-horse-race-sm">
+                    <tbody ng-repeat="runner in trainer.runners">
+                        <tr>
+                            <td class="col-sm-2">
+                                <a ui-sref="ratings.date({ raceDate: '{{ runner.date }}' })">{{ runner.date }}</a>
+                            </td>
+                            <td class="col-sm-3">{{ runner.race_type }} <span class="text-muted">({{ runner.value | currency: $ : 0 }})</span></td>
+                            <td class="col-sm-1 pos p{{ runner.pos }}" rowspan="2">{{ runner.pos }}</td>
+                            <td class="col-sm-4 horse p{{ runner.pos }}" rowspan="2">{{ runner.horse }}</td>
+                            <td class="col-sm-1 fintime">{{ runner.fintime | number: 2 }}</td>
+                            <td class="col-sm-1 RRtg" rowspan="2">{{ runner.RRtg | number: 0 }}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a ui-sref="ratings.date.race({ raceDate: '{{ runner.date }}', raceId: '{{ runner.race }}' })">{{ runner.race }}</a>
+                            </td>
+                            <td>{{ runner.dist }}f <span class="text-muted">({{ runner.surf }})</span></td>
+                            <td>{{ runner.fs2f | number: 3 }}{{ runner.fs2_5f | number: 3 }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </perfect-scrollbar>
+        </div>
+        <div class="hidden-xs hidden-sm visible-md hidden-lg">
+            <table class="table table-condensed rcapper-horse-race-md">
+                <thead>
+                    <tr>
+                        <td class="col-md-2">Date</td>
+                        <td class="col-md-3">RaceType <span class="text-muted">(Purse)</span></td>
+                        <td class="col-md-1 pos" rowspan="2">Pos</td>
+                        <td class="col-md-4 horse" rowspan="2">Horse</td>
+                        <td class="col-md-1 fintime">FinTime</td>
+                        <td class="col-md-1 RRtg" rowspan="2">RRtg</td>
+                    </tr>
+                    <tr>
+                        <td>Race</td>
+                        <td>Dist <span class="text-muted">(Surf::Going)</span></td>
+                        <td>FinSpd</td>
+                    </tr>
+                </thead>
+            </table>
+            <perfect-scrollbar class="scroller" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20">
+                <table class="table table-condensed rcapper-horse-race-md">
+                    <tbody ng-repeat="runner in trainer.runners">
+                        <tr>
+                            <td class="col-md-2">
+                                <a ui-sref="ratings.date({ raceDate: '{{ runner.date }}' })">{{ runner.date }}</a>
+                            </td>
+                            <td class="col-md-3">{{ runner.race_type }} <span class="text-muted">({{ runner.value | currency: $: 0 }})</span></td>
+                            <td class="col-md-1 pos p{{ runner.pos }}" rowspan="2">{{ runner.pos }}</td>
+                            <td class="col-md-4 horse p{{ runner.pos }}" rowspan="2">{{ runner.horse }}</td>
+                            <td class="col-md-1 fintime">{{ runner.fintime | number: 2 }}</td>
+                            <td class="col-md-1 RRtg" rowspan="2">{{ runner.RRtg | number: 0 }}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a ui-sref="ratings.date.race({ raceDate: '{{ runner.date }}', raceId: '{{ runner.race }}' })">{{ runner.race }}</a>
+                            </td>
+                            <td>{{ runner.dist }}f <span class="text-muted">({{ runner.surf }})</span></td>
+                            <td>{{ runner.fs2f | number: 3 }}{{ runner.fs2_5f | number: 3 }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </perfect-scrollbar>
+        </div>
+        <div class="hidden-xs hidden-sm hidden-md visible-lg">
+            <table class="table table-condensed rcapper-horse-race-lg">
+                <thead>
+                    <tr>
+                        <td class="col-lg-1">Date</td>
+                        <td class="col-lg-2">RaceType <span class="text-muted">(Purse)</span></td>
+                        <td class="col-lg-3 trainer">Trainer</td>
+                        <td class="col-lg-1 pos" rowspan="2">Pos</td>
+                        <td class="col-lg-3 horse" rowspan="2">Horse</td>
+                        <td class="col-lg-1 fintime">FinTime</td>
+                        <td class="col-lg-1 RRtg" rowspan="2">RRtg</td>
+                    </tr>
+                    <tr>
+                        <td>Race</td>
+                        <td>Dist <span class="text-muted">(Surf)</span></td>
+                        <td class="jockey">Jockey <sup class="text-muted">(clm)</sup></td>
+                        <td>FinSpd</td>
+                    </tr>
+                </thead>
+            </table>
+            <perfect-scrollbar class="scroller" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20">
+                <table class="table table-condensed rcapper-horse-race-lg">
+                    <tbody ng-repeat="runner in trainer.runners">
+                        <tr>
+                            <td class="col-lg-1">
+                                <a ui-sref="ratings.date({ raceDate: '{{ runner.date }}' })">{{ runner.date }}</a>
+                            </td>
+                            <td class="col-lg-2">{{ runner.race_type }} <span class="text-muted">({{ runner.value | currency: $: 0 }})</span></td>
+                            <td class="col-lg-3"></td>
+                            <td class="col-lg-1 pos p{{ runner.pos }}" rowspan="2">{{ runner.pos }}</td>
+                            <td class="col-lg-3 horse" rowspan="2">{{ runner.horse }}</td>
+                            <td class="col-lg-1 fintime">{{ runner.fintime }}</td>
+                            <td class="col-lg-1 RRtg" rowspan="2">{{ runner.RRtg | number: 0 }}</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a ui-sref="ratings.date.race({ raceDate: '{{ runner.date }}', raceId: '{{ runner.race }}' })">{{ runner.race }}</a>
+                            </td>
+                            <td>{{ runner.dist }}f <span class="text-muted">({{ runner.surf }})</span></td>
+                            <td class="jockey">{{ runner.jockey }}</td>
+                            <td>{{ runner.fs2f | number: 3 }}{{ runner.fs2_5f | number: 3 }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </perfect-scrollbar>
+        </div>
+    </div>
+</div>
+<br>

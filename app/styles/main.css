@@ -355,7 +355,7 @@ table.rcapper-horse-race-md {
 }
 table.rcapper-horse-race-md>thead>tr>td,
 table.rcapper-horse-race-md>tbody>tr>td {
-    font-size: 14px;
+    font-size: 12px;
     vertical-align: middle;
     text-align: center;
 }
@@ -406,7 +406,7 @@ table.rcapper-horse-race-lg>tbody>tr>td.p1 {
 }
 table.rcapper-horse-race-lg>tbody>tr>td.RRtg {
     color: #D9220F;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
 }
 table.rcapper-horse-race-lg>thead>tr>td.trainer,
