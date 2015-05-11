@@ -15,7 +15,9 @@
             </thead>
             <tbody>
                 <tr ng-repeat="winner in winners">
-                    <td class="trainer">{{ winner.trainer }}</td>
+                    <td class="trainer">
+                        <a ui-sref="ratings.trainer({ trainer: '{{ winner.trainer_id }}' })"><span class="glyphicon glyphicon-plus-sign"></span></a> {{ winner.trainer }} 
+                    </td>
                     <td class="jockey">{{ winner.jockey }}</td>
                     <td class="horse">{{ winner.horse }}</td>
                     <td class="RRtg">{{ winner.RRtg | number: 0 }}</td>

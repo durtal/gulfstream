@@ -73,7 +73,9 @@
 					<a ui-sref="ratings.date({ raceDate: '{{ race.date }}' })">{{ race.date }}</a>
 				</td>
 				<td class="col-lg-2">{{ race.details.race_type }} <span class="text-muted">({{ race.details.value | currency: $ : 0 }})</span></td>
-				<td class="col-lg-3 trainer">{{ race.runners.trainer }}</td>
+				<td class="col-lg-3 trainer">
+					{{ race.runners.trainer }} <a ui-sref="ratings.trainer({ trainer: '{{ race.runners.trainer_id }}' })"><span class="glyphicon glyphicon-plus-sign"></span></a>
+				</td>
 				<td class="col-lg-1 pos p{{ race.runners.pos }}" rowspan="2">{{ race.runners.pos }}</td>
 				<td class="col-lg-3 horse p{{ race.runners.pos }}" rowspan="2">{{ race.runners.horse }}</td>
 				<td class="col-lg-1 fintime">{{ race.runners.fintime | number: 2 }}</td>

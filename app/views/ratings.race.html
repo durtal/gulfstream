@@ -28,7 +28,9 @@
         </thead>
         <tbody>
             <tr ng-repeat="runner in race.runners">
-                <td class="trainer">{{ runner.trainer }}</td>
+                <td class="trainer">
+                    <a ui-sref="ratings.trainer({ trainer: '{{ runner.trainer_id }}' })"><span class="glyphicon glyphicon-plus-sign"></span></a> {{ runner.trainer }}
+                </td>
                 <td class="jockey">{{ runner.jockey }} <sup class="text-muted">{{ runner.j_clm }}</sup></td>
                 <td>{{ runner.wgt }}</td>
                 <td class="pos p{{runner.pos}}">{{ runner.pos }}</td>
