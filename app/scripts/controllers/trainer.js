@@ -12,15 +12,22 @@ angular.module('gulfstreamApp')
 
         $scope.trainer = trainer;
         $scope.trainer_form = $scope.trainer.trainer_form;
-        console.log($scope.trainer);
 
         var start = new Date();
-        start.setMonth(start.getMonth() - 3);
-        console.log(start);
+        start.setMonth(start.getMonth() - 5);
 
         $scope.config = {
-            start: new Date(2015, 2),
-            data: $scope.trainer_form
+            start: start,
+            data: $scope.trainer_form,
+            itemName: "% horses beaten",
+            cellSize: 18,
+            domainGutter: 5,
+            subDomainTextFormat: "%d",
+            label: {
+        		position: "right",
+        		width: 46,
+        		rotate: "left"
+        	}
         }
 
         $scope.runners = _($scope.trainer.runners).chain()
