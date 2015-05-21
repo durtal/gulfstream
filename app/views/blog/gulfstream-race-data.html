@@ -1,0 +1,84 @@
+<div id="race-data" class="section level2">
+<h2>Race Data</h2>
+<p>As mentioned in an earlier post (and elsewhere in the app), the app contains data for horses who have raced 5 time or more at Gulfstream Park since December 2012. A recent addition to the app made individual races available, and thereby including every runner I have rated, you can read about that update <a href="http://durtal.github.io/gulfstream/#/blog/Update-27-04-15">here</a>. This means, that a more complete dataset can be built rather than the incomplete dataset collected in an older <a href="http://durtal.github.io/gulfstream/#/blog/gulfstream-data">post</a>.</p>
+<p>This post will walk through loading the JSON into <a href="http://www.r-project.org/">R</a>, and converting it into a neat dataframe. A subset of this data can also be found in my <a href="https://github.com/durtal/RcappeR">RcappeR</a> package.</p>
+<div id="load-libraries" class="section level3">
+<h3>Load libraries</h3>
+<p>We need a couple of libraries, one to convert the JSON into a list (<code>jsonlite</code>) and a second (<code>plyr</code>) to help with turning the list into a dataframe. We’ll also need a couple of helper functions found in this <a href="https://gist.github.com/durtal/f4c02bda609bb79b59d0">gist</a>, the helper functions are <code>gulf_races</code> and <code>gulf_races_helper</code>, the former calls the latter.</p>
+<pre class="r"><code>library(jsonlite)
+library(plyr)
+
+# we'll use the source_gist function from devtools so
+# install.packages(&quot;devtools&quot;)
+devtools::source_gist(&quot;https://gist.github.com/durtal/f4c02bda609bb79b59d0&quot;)</code></pre>
+</div>
+<div id="read-json-into-r" class="section level3">
+<h3>Read JSON into R</h3>
+<p>The <code>fromJSON</code> function from <code>jsonlite</code> is used, it will attempt to convert the data to a dataframe, but as the JSON contains some nested elements, an example of a single race object will follow, we need to tell <code>from JSON</code> not to simplify to a dataframe.</p>
+<pre class="r"><code>races_json &lt;- fromJSON(txt = &quot;https://raw.githubusercontent.com/durtal/gulfstream/master/app/data/gulfstream-races.json&quot;, simplifyDataFrame = FALSE)</code></pre>
+<p>We should now have a large list in our workspace, at the time of writing (2015-05-21) the list has <strong>3879</strong> unique races.</p>
+</div>
+<div id="a-single-race" class="section level3">
+<h3>A Single Race</h3>
+<p>We can view what the JSON looks like, each race will have the following structure.</p>
+<pre><code>## {
+##   &quot;date&quot;: [&quot;01-01-13&quot;],
+##   &quot;date_race&quot;: [&quot;01-01-13_1&quot;],
+##   &quot;race&quot;: [1],
+##   &quot;details&quot;: {
+##     &quot;race_type&quot;: [&quot;mdn clm&quot;],
+##     &quot;dist&quot;: [6],
+##     &quot;surf&quot;: [&quot;dirt&quot;],
+##     &quot;value&quot;: [17500]
+##   },
+##   &quot;conditions&quot;: {
+##     &quot;race_cond&quot;: [&quot;null&quot;],
+##     &quot;clm_price&quot;: [12500],
+##     &quot;f_m&quot;: [false],
+##     &quot;runup&quot;: [10],
+##     &quot;going&quot;: [&quot;fast&quot;],
+##     &quot;cor&quot;: [&quot;mdn clm - (0,1.49e+04]&quot;]
+##   }
+## }</code></pre>
+<p>Each race object will contain a runners object, which will contain data on the individual runners in a race, each runner has the following variables:</p>
+<pre><code>##  [1] &quot;trainer&quot;    &quot;jockey&quot;     &quot;j_clm&quot;      &quot;age&quot;        &quot;wgt&quot;       
+##  [6] &quot;gate&quot;       &quot;pos&quot;        &quot;horse&quot;      &quot;fintime&quot;    &quot;fs2_5f&quot;    
+## [11] &quot;fs2f&quot;       &quot;RRtg&quot;       &quot;trainer_id&quot; &quot;jockey_id&quot;</code></pre>
+</div>
+<div id="convert-to-dataframe" class="section level3">
+<h3>Convert to Dataframe</h3>
+<p>Thanks to the helper functions the list can be converted to a dataframe easily, due to the nested structure it can take some time. <code>gulf_races</code> uses <code>plyr::ldply</code> function and includes the progress bar as a function argument (which is not used here, but change “none” to “text” or “time”).</p>
+<pre class="r"><code>races &lt;- gulf_races(races = races_json, .progress = &quot;none&quot;)</code></pre>
+<p>This should return a dataframe with 27 variables, a few of the variables are in character format, due to <code>jsonlite</code> I believe, but should really be in numeric format, an example is the <em>fintime</em> variable. A look at the first few rows:</p>
+<pre class="r"><code>head(races)</code></pre>
+<pre><code>##       date  date_race race race_type dist surf value race_cond clm_price
+## 1 01-01-13 01-01-13_1    1   mdn clm    6 dirt 17500      null     12500
+## 2 01-01-13 01-01-13_1    1   mdn clm    6 dirt 17500      null     12500
+## 3 01-01-13 01-01-13_1    1   mdn clm    6 dirt 17500      null     12500
+## 4 01-01-13 01-01-13_1    1   mdn clm    6 dirt 17500      null     12500
+## 5 01-01-13 01-01-13_1    1   mdn clm    6 dirt 17500      null     12500
+## 6 01-01-13 01-01-13_1    1   mdn clm    6 dirt 17500      null     12500
+##     f_m runup going                    cor           trainer
+## 1 FALSE    10  fast mdn clm - (0,1.49e+04] nicholas gonzalez
+## 2 FALSE    10  fast mdn clm - (0,1.49e+04]  anthony pecoraro
+## 3 FALSE    10  fast mdn clm - (0,1.49e+04]    edwin t broome
+## 4 FALSE    10  fast mdn clm - (0,1.49e+04]   edward plesa jr
+## 5 FALSE    10  fast mdn clm - (0,1.49e+04]    rodolfo garcia
+## 6 FALSE    10  fast mdn clm - (0,1.49e+04]         luis duco
+##                jockey j_clm age wgt gate pos             horse fintime
+## 1 jermaine bridgmohan     0   3 122    6   1 don'tgetmestarted   72.43
+## 2     joseph rocco jr     0   3 122    1   2   dream of scipio   74.18
+## 3        gabriel saez     0   3 122    8   3           beltram   74.54
+## 4      elvis trujillo     0   3 122    7   4 gold bitten tiger   74.65
+## 5        hugo sanchez     5   3 117    5   5  simon's a winner   74.68
+## 6     kent desormeaux     0   3 122    2   6         i'm noble   75.08
+##   fs2_5f  fs2f             RRtg        trainer_id           jockey_id
+## 1     NA 0.951 65.0497598522185 nicholas_gonzalez jermaine_bridgmohan
+## 2     NA 0.912 35.2997598522185  anthony_pecoraro     joseph_rocco_jr
+## 3     NA 0.915 29.1797598522185    edwin_t_broome        gabriel_saez
+## 4     NA 0.949 27.3097598522185   edward_plesa_jr      elvis_trujillo
+## 5     NA 0.914 21.7997598522185    rodolfo_garcia        hugo_sanchez
+## 6     NA 0.931 19.9997598522185         luis_duco     kent_desormeaux</code></pre>
+<p>The variable <em>date_race</em> serves as a unique race id, it can be seen in the above rows, that the rows contain runners from the same race, run on <strong>01-01-13</strong> in race number <strong>1</strong> and the runners are ordering according to the <em>pos</em> (position) variable. The race can be seen in the app <a href="http://durtal.github.io/gulfstream/#/ratings/date/01-01-13/race/1">here</a>.</p>
+</div>
+</div>

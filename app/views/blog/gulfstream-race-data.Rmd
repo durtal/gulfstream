@@ -1,0 +1,68 @@
+---
+output: html_fragment
+---
+
+## Race Data
+
+As mentioned in an earlier post (and elsewhere in the app), the app contains data for horses who have raced 5 time or more at Gulfstream Park since December 2012.  A recent addition to the app made individual races available, and thereby including every runner I have rated, you can read about that update [here](http://durtal.github.io/gulfstream/#/blog/Update-27-04-15).  This means, that a more complete dataset can be built rather than the incomplete dataset collected in an older [post](http://durtal.github.io/gulfstream/#/blog/gulfstream-data).
+
+This post will walk through loading the JSON into [R](http://www.r-project.org/), and converting it into a neat dataframe.  A subset of this data can also be found in my [RcappeR](https://github.com/durtal/RcappeR) package.
+
+### Load libraries
+
+We need a couple of libraries, one to convert the JSON into a list (`jsonlite`) and a second (`plyr`) to help with turning the list into a dataframe.  We'll also need a couple of helper functions found in this [gist](https://gist.github.com/durtal/f4c02bda609bb79b59d0), the helper functions are `gulf_races` and `gulf_races_helper`, the former calls the latter.
+
+```{r message=FALSE, warning=FALSE}
+library(jsonlite)
+library(plyr)
+
+# we'll use the source_gist function from devtools so
+# install.packages("devtools")
+devtools::source_gist("https://gist.github.com/durtal/f4c02bda609bb79b59d0")
+```
+
+### Read JSON into R
+
+The `fromJSON` function from `jsonlite` is used, it will attempt to convert the data to a dataframe, but as the JSON contains some nested elements, an example of a single race object will follow, we need to tell `from JSON` not to simplify to a dataframe.
+
+```{r message=FALSE, warning=FALSE, cache=TRUE}
+races_json <- fromJSON(txt = "https://raw.githubusercontent.com/durtal/gulfstream/master/app/data/gulfstream-races.json", simplifyDataFrame = FALSE)
+```
+
+We should now have a large list in our workspace, at the time of writing (`r Sys.Date()`) the list has **`r length(races_json)`** unique races.
+
+### A Single Race
+
+We can view what the JSON looks like, each race will have the following structure.
+
+```{r echo=FALSE}
+race <- (toJSON(races_json[[1]][c("date", "date_race", "race", "details", "conditions")], pretty = TRUE))
+cat(race)
+```
+
+Each race object will contain a runners object, which will contain data on the individual runners in a race, each runner has the following variables:
+
+```{r echo=FALSE}
+names(races_json[[1]]$runners[[1]])
+```
+
+### Convert to Dataframe
+
+Thanks to the helper functions the list can be converted to a dataframe easily, due to the nested structure it can take some time.  `gulf_races` uses `plyr::ldply` function and includes the progress bar as a function argument (which is not used here, but change "none" to "text" or "time").
+
+```{r cache=TRUE}
+races <- gulf_races(races = races_json, .progress = "none")
+```
+
+This should return a dataframe with `r length(names(races))` variables, a few of the variables are in character format, due to `jsonlite` I believe, but should really be in numeric format, an example is the _fintime_ variable.  A look at the first few rows:
+
+```{r}
+head(races)
+```
+
+```{r echo=FALSE}
+dr1 <- head(races$date, 1)
+dr2 <- head(races$race, 1)
+race_u <- paste0("http://durtal.github.io/gulfstream/#/ratings/date/", dr1, "/race/", dr2)
+```
+The variable _date\_race_ serves as a unique race id, it can be seen in the above rows, that the rows contain runners from the same race, run on **`r head(races$date, 1)`** in race number **`r head(races$race, 1)`** and the runners are ordering according to the _pos_ (position) variable.  The race can be seen in the app [here](`r race_u`).
