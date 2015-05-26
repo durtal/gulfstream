@@ -362,13 +362,13 @@ table.rcapper-horse-race-md>tbody>tr>td {
 table.rcapper-horse-race-md>thead>tr>td.horse,
 table.rcapper-horse-race-md>tbody>tr>td.horse {
     text-align: right;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 table.rcapper-horse-race-md>thead>tr>td.pos,
 table.rcapper-horse-race-md>tbody>tr>td.pos {
     text-align: left;
-    font-size: 16px;
+    font-size: 18px;
 }
 table.rcapper-horse-race-md>tbody>tr>td.p1 {
     color: #00871E;

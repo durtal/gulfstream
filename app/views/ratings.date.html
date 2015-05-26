@@ -16,7 +16,7 @@
             <tbody>
                 <tr ng-repeat="winner in winners">
                     <td class="trainer">
-                        <a ui-sref="ratings.trainer({ trainer: '{{ winner.trainer_id }}' })"><span class="glyphicon glyphicon-plus-sign"></span></a> {{ winner.trainer }} 
+                        <a ui-sref="ratings.trainer({ trainer: '{{ winner.trainer_id }}' })"><span class="glyphicon glyphicon-plus-sign"></span></a> {{ winner.trainer }}
                     </td>
                     <td class="jockey">{{ winner.jockey }}</td>
                     <td class="horse">{{ winner.horse }}</td>
@@ -28,8 +28,8 @@
     </div>
     <div class="col-sm-6">
         <h2>Ratings Distribution</h2>
-        <sub>The range of ratings goes from 0 to 130, the highest rated performance by any horse is Dreaming Of Julia, who rated 127 when winning on the <a ui-sref="ratings.date.race({ raceDate: '30-03-13', raceId: '8' })">30/3/13</a>, performance ratings sometimes drop below 0, but are ignored in these plots.  The strength of a card could be seen via the distribution of ratings; lesser cards, probably midweek containing Maiden Claimers and Claimers, will have a distribution toward the lower end of the range, strong cards, probably Saturdays with plenty of Stakes races, such as the card Dreaming Of Julia ran on, will have a distribution toward the upper end of the histogram.</sub>
-
+        <sub>The range of ratings goes from 0 to 130, the highest rated performance by any horse is Dreaming Of Julia, who rated 129 when winning on the <a ui-sref="ratings.date.race({ raceDate: '30-03-13', raceId: '8' })">30/3/13</a>, performance ratings sometimes drop below 0, but are ignored in these plots.  The strength of a card could be seen via the distribution of ratings; lesser cards, probably midweek containing Maiden Claimers and Claimers, will have a distribution toward the lower end of the range, strong cards, probably Saturdays with plenty of Stakes races, such as the card Dreaming Of Julia ran on, will have a distribution toward the upper end of the histogram.</sub>
+        
         <rcapper-d3-histogram data="ratings" fill="#3D1995" min=0 max=130></rcapper-d3-histogram>
     </div>
 </div>

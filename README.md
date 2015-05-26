@@ -22,6 +22,11 @@ Things I have planned include:
 * weekly handicapping posts, looking at the most recent races, should also serve as vignettes for my [RcappeR](https://github.com/durtal/RcappeR) package
 * more specific, detailed, track profiles
 * race previews
+* trainer and jockey pages
+
+#### Recent additions
+
+* new date/race views to view individual races
 
 #### Contribute
 
