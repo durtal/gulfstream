@@ -142,7 +142,7 @@ table thead>tr>td {
     border-bottom: 2px solid #1D035E;
 }
 
-/* rcapper-d3-histogram styles */
+/* d3 styles */
 .axis {
     stroke: #424242;
     fill: none;
@@ -150,7 +150,9 @@ table thead>tr>td {
 }
 .axis text {
     font-family: sans-serif;
-    font-size: 12px;
+    font-size: 11px;
+    fill: #424242;
+    stroke: none;
 }
 
 /* SLIDER STYLES */
