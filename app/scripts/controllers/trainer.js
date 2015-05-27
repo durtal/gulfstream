@@ -14,7 +14,7 @@ angular.module('gulfstreamApp')
         $scope.trainer_form = $scope.trainer.trainer_form;
 
         var start = new Date();
-        start.setMonth(start.getMonth() - 5);
+        start.setMonth(start.getMonth() - 2);
 
         $scope.config = {
             start: start,
@@ -27,7 +27,9 @@ angular.module('gulfstreamApp')
         		position: "right",
         		width: 46,
         		rotate: "left"
-        	}
+        	},
+            previousSelector: "#previousMonth",
+        	nextSelector: "#nextMonth"
         }
 
         $scope.runners = _($scope.trainer.runners).chain()
@@ -36,4 +38,7 @@ angular.module('gulfstreamApp')
                 return num >= 0;
             })
             .value();
+        if ($scope.runners.length < 50) {
+            $('#trainer-dist').css('visibility', 'hidden');
+        }
     });
