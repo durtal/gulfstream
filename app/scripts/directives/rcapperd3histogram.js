@@ -82,6 +82,8 @@ angular.module('gulfstreamApp')
             var hist = d3.layout.histogram()
                 .frequency(false)
                 .bins(bins)(data);
+
+            console.log(x.domain());
             // create y scale function
             var y = d3.scale.linear() // watch
                 .domain([0, d3.max(hist, function(d) {
@@ -113,7 +115,6 @@ angular.module('gulfstreamApp')
             bar.append('rect') // watch
                 .attr('class', 'bar')
                 .attr('width', x(hist[0].dx))
-                .attr('height', height - margin.botttom)
                 .transition()
                 .delay(function(d, i) {
                   return i * 100;
