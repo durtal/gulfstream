@@ -111,18 +111,19 @@ angular.module('gulfstreamApp')
                     return 'translate(' + x2(d.x) + ',' + y(d.y) + ')';
                 })
                 .style('fill', attr.fill);
-            // apend rect's to bars
-            bar.append('rect') // watch
+            // append rect's to bars
+            bar.append('rect')
                 .attr('class', 'bar')
                 .attr('width', x(hist[0].dx))
                 .transition()
                 .delay(function(d, i) {
-                  return i * 100;
+                    return i * 100
                 })
                 .duration(1000)
                 .attr('height', function(d) {
                     return height - y(d.y);
-                });
+                })
+                .style('opacity', 1);
             // add the x-axis
             chart.append('g') // watch
                 .attr('class', 'x axis')
