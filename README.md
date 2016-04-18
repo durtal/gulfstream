@@ -1,5 +1,7 @@
 ### GULFSTREAM PARK app
 
+**No longer being worked on, but feel free to use the data, etc**
+
 This is a web app built using [AngularJS](https://angularjs.org/) to display my ratings for horses who have raced at Gulfstream Park since 2012.  The ratings are calculated using an R package I wrote, called [RcappeR](https://github.com/durtal/RcappeR), which is free to use (and contribute to).
 
 The app also contains track profiles for the distance/surface combinations, and looks at [Trakus](http://www.trakus.com) data, these profiles use R and the [rmarkdown](http://rmarkdown.rstudio.com/) package.
